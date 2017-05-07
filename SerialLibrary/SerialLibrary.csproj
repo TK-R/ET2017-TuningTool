@@ -45,12 +45,6 @@
     <Compile Include="DataTools.cs" />
     <Compile Include="SerialState.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PInvokeSerialPort\PInvokeSerialPort.csproj">
-      <Project>{aec711a5-aa9b-4127-a82c-c4d8fda9741a}</Project>
-      <Name>PInvokeSerialPort</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

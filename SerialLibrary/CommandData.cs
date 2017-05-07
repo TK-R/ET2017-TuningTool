@@ -2,7 +2,6 @@
 
 namespace SerialLibrary
 {
-
     /// <summary>
     /// 電文コード
     /// </summary>
@@ -44,7 +43,7 @@ namespace SerialLibrary
     /// <summary>
     /// 入力信号電文データ領域
     /// </summary>
-    [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 1)]
+    [StructLayout(LayoutKind.Explicit, Size = 28, Pack = 1)]
     public struct InputSignalData
     {
         /// <summary>
@@ -62,77 +61,71 @@ namespace SerialLibrary
         /// </summary>
         [FieldOffset(4)]
         public ushort Motor3Radian;
-
         /// <summary>
         /// タッチセンサから 0:OFF 1:ON
         /// </summary>
         [FieldOffset(6)]
         public byte TouchSenser;
-
         /// <summary>
         /// 超音波センサから取得した距離（cm)
         /// </summary>
         [FieldOffset(7)]
         public ushort SonicDistance;
-
         /// <summary>
         /// カラーセンサから取得したRGB値(R)
         /// </summary>
         [FieldOffset(9)]
-        public ushort ColorR;
+        public byte ColorR;
+        /// <summary>
+        /// カラーセンサから取得したRGB値(R)
+        /// </summary>
+        [FieldOffset(10)]
+        public byte ColorG;
         /// <summary>
         /// カラーセンサから取得したRGB値(R)
         /// </summary>
         [FieldOffset(11)]
-        public ushort ColorG;
-        /// <summary>
-        /// カラーセンサから取得したRGB値(R)
-        /// </summary>
-        [FieldOffset(13)]
-        public ushort ColorB;
+        public byte ColorB;
         /// <summary>
         /// 環境光
         /// </summary>
-        [FieldOffset(15)]
+        [FieldOffset(12)]
         public byte EnvironmentalLight;
         /// <summary>
         /// 反射光
         /// </summary>
-        [FieldOffset(17)]
+        [FieldOffset(13)]
         public byte ReflectedLight;
         /// <summary>
         /// /加速度センサから取得した加速度値(X)
         /// </summary>
-        [FieldOffset(19)]
+        [FieldOffset(14)]
         public ushort AxesX;
         /// <summary>
         /// /加速度センサから取得した加速度値(Y)
         /// </summary>
-        [FieldOffset(21)]
+        [FieldOffset(16)]
         public ushort AxesY;
         /// <summary>
         /// /加速度センサから取得した加速度値(Z)
         /// </summary>
-        [FieldOffset(23)]
+        [FieldOffset(18)]
         public ushort AxesZ;
-
         /// <summary>
         /// 温度センサから取得した温度(摂氏)
         /// </summary>
-        [FieldOffset(25)]
+        [FieldOffset(20)]
         public float Temperature;
-
         /// <summary>
         /// バッテリ電流(mA)
         /// </summary>
-        [FieldOffset(29)]
+        [FieldOffset(24)]
         public ushort BatteryCurrent;
         /// <summary>
         /// バッテリ電圧(V)
         /// </summary>
-        [FieldOffset(31)]
+        [FieldOffset(26)]
         public ushort BatteryVoltage;
-
     }
 
     /// <summary>

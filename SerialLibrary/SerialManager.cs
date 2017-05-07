@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-//using PInvokeSerialPort;
 using System.IO.Ports;
 using System.Threading;
 
@@ -11,19 +10,43 @@ namespace SerialLibrary
 {
     public class SerialManager
     {
-        private static SerialPort Serial;
+        /// <summary>
+        /// シリアルポートのインスタンス
+        /// </summary>
+        private SerialPort Serial;
 
+        /// <summary>
+        /// シリアルステートマシンの現在のステート
+        /// </summary>
         public SerialState CurrentState;
 
+        private InputSignalData _recentInputSignal;
         /// <summary>
         /// 最後に受信したの入力電文のデータ領域
         /// </summary>
-        internal InputSignalData RecentInputSignal;
+        internal InputSignalData RecentInputSignal
+        {
+            set
+            {
+                _recentInputSignal = value;
+                ReceiveInputSignal?.Invoke(_recentInputSignal);
+            }
+            get { return _recentInputSignal; }
+        }
 
+        private OutputSignalData _recentOutputSignal;
         /// <summary>
         /// 最後に受信した送信する出力電文のデータ領域
         /// </summary>
-        internal OutputSignalData RecentOutputSignal;
+        internal OutputSignalData RecentOutputSignal
+        {
+            set
+            {
+                _recentOutputSignal = value;
+                ReceiveOutputSignal?.Invoke(_recentOutputSignal);
+            }
+            get { return _recentOutputSignal; }
+        }
 
         /// <summary>
         /// シリアル通信でデータを送受信中ならtrueを返す
@@ -34,19 +57,29 @@ namespace SerialLibrary
         /// データを受信済ならtrue
         /// 読み込み処理を実施するとfalse
         /// </summary>
-        public bool InputReceived { internal set; get; }
+        public bool InputReceivedFlag { internal set; get; }
 
         /// <summary>
         /// データを受信済みならtrue
         /// 読み込み処理を実施するとfalse
         /// </summary>
-        public bool OutputReceived { internal set; get; }
+        public bool OutputReceivedFlag { internal set; get; }
 
         /// <summary>
         /// 無限ループで動作する受信スレッド
         /// </summary>
         private Thread ReceiveThread;
-        
+
+        /// <summary>
+        /// 出力情報電文を受信した際にコールするデリゲート
+        /// </summary>
+        public Action<OutputSignalData> ReceiveOutputSignal;
+
+        /// <summary>
+        /// 入力情報電文を受信した際にコールするデリゲート
+        /// </summary>
+        public Action<InputSignalData> ReceiveInputSignal;
+
         /// <summary>
         /// ポート名称を指定してシリアル通信を開始する
         /// 既に開始済みの場合にもtrueを返す
@@ -60,10 +93,13 @@ namespace SerialLibrary
                 return true;
 
             CurrentState = new HeaderState(this);
-            
+
             try
             {
                 Serial = new SerialPort(portName, 115200, Parity.Odd, 8, StopBits.One);
+                Serial.ReadTimeout = 100;
+                Serial.WriteTimeout = 100;
+
                 Serial.Open();
 
                 // 受信スレッドを起動
@@ -88,17 +124,35 @@ namespace SerialLibrary
         public void Stop()
         {
             Runnning = false;
+
+            InputReceivedFlag = false;
+            OutputReceivedFlag = false;
+
+            ReceiveInputSignal = null;
+            ReceiveOutputSignal = null;
+
+            Thread.Sleep(100);
+
             ReceiveThread.Abort();
-            InputReceived = false;
-            OutputReceived = false;
-            Serial.Close();
+
+            try
+            {
+                Serial.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
+        /// <summary>
+        /// 受信スレッドで無限動作する受信メソッド
+        /// </summary>
         private void Receive()
         {
             var buff = new byte[1024];
-            
-            while (true)
+
+            while (Runnning)
             {
                 try
                 {
@@ -106,13 +160,14 @@ namespace SerialLibrary
 
                     for (int i = 0; i < readSize; i++)
                         CurrentState.Receive(buff[i]);
-                }catch(TimeoutException)
+                }
+                catch (TimeoutException)
                 {
+                    // TODO
                 }
             }
         }
-        
-  
+
 
         /// <summary>
         /// 電文送信処理
@@ -148,7 +203,7 @@ namespace SerialLibrary
                 }
 
                 var header = new Header { Head = 0xff, Command = (byte)command, Size = (ushort)size };
-                
+
                 // シリアル送信のため、バイナリにシリアライズ
                 var headBin = DataTools.RawSerialize(header);
                 var dataBin = DataTools.RawSerialize(dataStruct);
@@ -168,10 +223,10 @@ namespace SerialLibrary
             {
                 return false;
             }
-            
+
             return true;
         }
-        
+
         /// <summary>
         /// 保持している最新の入力信号電文を返す
         /// </summary>
@@ -182,9 +237,9 @@ namespace SerialLibrary
             input = RecentInputSignal;
             // TODO 受信フラグの操作
 
-            if (InputReceived)
+            if (InputReceivedFlag)
             {
-                InputReceived = false;
+                InputReceivedFlag = false;
                 return true;
             }
 
@@ -201,16 +256,13 @@ namespace SerialLibrary
             output = RecentOutputSignal;
             // TODO 受信フラグの操作
 
-            if (OutputReceived)
+            if (OutputReceivedFlag)
             {
-                OutputReceived = false;
+                OutputReceivedFlag = false;
                 return true;
             }
 
             return false;
-
         }
-
     }
-
 }

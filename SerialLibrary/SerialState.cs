@@ -79,7 +79,7 @@ namespace SerialLibrary
             {
                 // チェックサムが一致したら、構造体を構築
                 Context.RecentOutputSignal = DataTools.RawDeserialize<OutputSignalData>(buff.ToArray(), 0);
-                Context.OutputReceived = true;
+                Context.OutputReceivedFlag = true;
             }
 
             Context.CurrentState = new HeaderState(Context);
@@ -98,7 +98,7 @@ namespace SerialLibrary
             {
                 // チェックサムが一致したら、構造体を構築
                 Context.RecentInputSignal = DataTools.RawDeserialize<InputSignalData>(buff.ToArray(), 0);
-                Context.InputReceived = true;
+                Context.InputReceivedFlag = true;
             }
 
             Context.CurrentState = new HeaderState(Context);
