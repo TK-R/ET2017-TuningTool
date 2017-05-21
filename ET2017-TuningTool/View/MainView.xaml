@@ -11,7 +11,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     GlowBrush="{DynamicResource AccentColorBrush}"
-    Title="EV3 DEBUG TOOL" Height="611.5" Width="800">
+    Title="EV3 TOONING TOOL" Height="611.5" Width="800">
 
     <Window.DataContext>
         <local:MainViewModel/>
@@ -29,6 +29,7 @@
         <Grid Grid.Column="0" Margin="2,4,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100*"/>
+                <RowDefinition Height="200"/>
                 <RowDefinition Height="30*"/>
             </Grid.RowDefinitions>
             <GroupBox Grid.Row="0" Header="ROBOT STATUS" Margin="2" >
@@ -41,11 +42,8 @@
                         <RowDefinition Height="800*"/>
                         <RowDefinition Height="200*"/>
                     </Grid.RowDefinitions>
+                    <Grid Grid.Column="0" Grid.Row="0"/>
                     <Grid Grid.Column="0" Grid.Row="0">
-                        <Image
-                               Source="/ET2017-TuningTool;component/Image/EV3.jpg" HorizontalAlignment="Left" Width="301" Margin="0,-10,0,10" />
-                    </Grid>
-                    <Grid Grid.Column="0" Grid.Row="1">
                         <TextBlock HorizontalAlignment="Left"
                                    Margin="10,10,0,0"
                                    TextWrapping="Wrap" 
@@ -88,7 +86,7 @@
                                    TextWrapping="Wrap" 
                                    Text="Sensing Color : " 
                                    VerticalAlignment="Top"/>
-                        
+
                         <TextBlock HorizontalAlignment="Left"
                             Margin="100,10,0,0"
                             TextWrapping="Wrap" 
@@ -104,7 +102,23 @@
                     </Grid>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Row="1" Header="LOG" Margin="2" >
+            <GroupBox Grid.Row="1" Header="FIELD" Margin="2" >
+                <Grid>
+                    <Label Content="初期位置コード：" FontSize="12" Margin="0,3,536,119"/>
+                    <TextBox Text="{Binding InitialPositionCode, ValidatesOnDataErrors=True}"  TextAlignment="Right" Margin="87,3,450,121"/>
+                    <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Height="114" VerticalAlignment="Bottom" />
+                    <Canvas HorizontalAlignment="Left" Height="121"  VerticalAlignment="Top" Width="293" Margin="0,25,0,0">
+                        <Ellipse Fill="Yellow" Height="20" Width="20" Canvas.Left="{Binding YellowPoint.X, Mode=TwoWay}"  Canvas.Top="{Binding YellowPoint.Y, Mode=TwoWay}" Stroke="Black" />
+                        <Ellipse Fill="Green" Height="20" Width="20" Canvas.Left="{Binding GreenPoint.X}" Canvas.Top="{Binding GreenPoint.Y}" Stroke="Black" />
+                        <Ellipse Fill="Blue" Height="20" Width="20" Canvas.Left="{Binding BluePoint.X}" Canvas.Top="{Binding BluePoint.Y}" Stroke="Black" />
+                        <Ellipse Fill="Red" Height="20" Width="20" Canvas.Left="{Binding RedPoint.X}" Canvas.Top="{Binding RedPoint.Y}" Stroke="Black" />
+                        <Ellipse Fill="Black" Height="20" Width="20" Canvas.Left="{Binding BlackPoint.X}" Canvas.Top="{Binding BlackPoint.Y}" Stroke="Black"  />
+                    </Canvas>
+                    <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="186,2,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
+
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Row="2" Header="LOG" Margin="2" >
                 <Grid>
                     <TextBlock  x:Name="textBlock"  TextWrapping="Wrap" Text="TextBlock"/>
                 </Grid>

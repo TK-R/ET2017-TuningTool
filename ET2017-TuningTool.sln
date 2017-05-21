@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ET2017-TuningTool", "ET2017-TuningTool\ET2017-TuningTool.csproj", "{605DD1F8-CD29-4BCC-AC6E-92A4D3133BED}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ET2017-TuningTool", "ET2017
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialLibrary", "SerialLibrary\SerialLibrary.csproj", "{37DE327A-2CB3-4001-AD65-5CBC65192FD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ET2017-TuningToolTests", "ET2017-TuningToolTests\ET2017-TuningToolTests.csproj", "{12D54121-9C36-494B-8F67-120273445DB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{D3BE4904-52F0-4FBD-8718-2C2E6FA35C69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,8 +38,19 @@ Global
 		{37DE327A-2CB3-4001-AD65-5CBC65192FD0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37DE327A-2CB3-4001-AD65-5CBC65192FD0}.Release|x86.ActiveCfg = Release|Any CPU
 		{37DE327A-2CB3-4001-AD65-5CBC65192FD0}.Release|x86.Build.0 = Release|Any CPU
+		{12D54121-9C36-494B-8F67-120273445DB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12D54121-9C36-494B-8F67-120273445DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12D54121-9C36-494B-8F67-120273445DB8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{12D54121-9C36-494B-8F67-120273445DB8}.Debug|x86.Build.0 = Debug|Any CPU
+		{12D54121-9C36-494B-8F67-120273445DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12D54121-9C36-494B-8F67-120273445DB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12D54121-9C36-494B-8F67-120273445DB8}.Release|x86.ActiveCfg = Release|Any CPU
+		{12D54121-9C36-494B-8F67-120273445DB8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{12D54121-9C36-494B-8F67-120273445DB8} = {D3BE4904-52F0-4FBD-8718-2C2E6FA35C69}
 	EndGlobalSection
 EndGlobal
