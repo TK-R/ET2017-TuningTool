@@ -12,6 +12,9 @@ using SerialLibrary;
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Globalization;
+using ET2017_TuningTool.Model;
 
 namespace ET2017_TuningTool
 {
@@ -19,12 +22,13 @@ namespace ET2017_TuningTool
     {
         public DelegateCommand ConnectCommand { get; }
         public DelegateCommand DisconnectCommand { get; }
+        public DelegateCommand DecodeCommand { get; set; }
 
         /// <summary>
         /// シリアル監視クラスへの参照
         /// </summary>
         private SerialManager Serial;
-        
+
         private string[] _SerialPortNames;
         /// <summary>
         /// シリアルポート一覧
@@ -45,6 +49,55 @@ namespace ET2017_TuningTool
             set => SetProperty(ref _SelectedPortName, value);
         }
 
+        private int _InitialPositionCode = 0;
+        /// <summary>
+        /// 入力された初期位置コード
+        /// </summary>
+        public int InitialPositionCode
+        {
+            get => _InitialPositionCode;
+            set => SetProperty(ref _InitialPositionCode, value);
+        }
+
+        #region ブロックの座標データ
+        private Point _YellowPoins;
+        public Point YellowPoint { get { return _YellowPoins; } set { SetProperty(ref _YellowPoins, value); } }
+
+        private Point _BlackPoint;
+        public Point BlackPoint { get { return _BlackPoint; } set { SetProperty(ref _BlackPoint, value); } }
+
+        private Point _RedPoint;
+        public Point RedPoint { get { return _RedPoint; } set { SetProperty(ref _RedPoint, value); } }
+
+        private Point _BluePoint;
+        public Point BluePoint { get { return _BluePoint; } set { SetProperty(ref _BluePoint, value); } }
+
+        private Point _GreenPoint = new Point(126, 68);
+        public Point GreenPoint { get { return _GreenPoint; } set { SetProperty(ref _GreenPoint, value); } }
+
+        /// <summary>
+        /// ブロックの座標を保持する構造体
+        /// </summary>
+        static readonly Point[] BlockPositionArray =
+        {
+            new Point(1, 9),
+            new Point(82, 9),
+            new Point(168, 9),
+            new Point(254, 9),
+            new Point(42, 34),
+            new Point(126,34),
+            new Point(210, 34),
+            new Point(84, 58),
+            new Point(169, 58),
+            new Point(19, 77),
+            new Point(236, 77),
+            new Point(61, 100),
+            new Point(108, 100),
+            new Point(146, 100),
+            new Point(192, 100),
+        };
+        #endregion
+        
         #region 出力信号電文情報
 
         private int _movePower;
@@ -106,6 +159,8 @@ namespace ET2017_TuningTool
         public MainViewModel()
         {
             SerialPortNames =  SerialPort.GetPortNames();
+
+            // 接続コマンド押下イベントを定義
             ConnectCommand = new DelegateCommand(
                 () => 
                 {
@@ -139,6 +194,20 @@ namespace ET2017_TuningTool
                 () =>
                 {
                     Serial.Stop();
+                });
+
+            DecodeCommand = new DelegateCommand(
+                () =>
+                {
+                    // 初期位置コードを求める。
+                    var pos = BlockFieldModel.AdjustBlockPositionField(BlockFieldModel.GetPositionFromCode(InitialPositionCode));
+
+                    // 座標データを代入
+                    BlackPoint = BlockPositionArray[pos.Black - 1];
+                    RedPoint = BlockPositionArray[pos.Red - 1];
+                    YellowPoint = BlockPositionArray[pos.Yellow - 1];
+                    BluePoint = BlockPositionArray[pos.Blue - 1];
+                   
                 });
         }
 
