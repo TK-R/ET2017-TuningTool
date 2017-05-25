@@ -100,34 +100,44 @@ namespace ET2017_TuningTool
         
         #region 出力信号電文情報
 
-        private int _movePower;
+        private int _LeftMotorPower;
         /// <summary>
         /// 移動パワー（+で前進）
         /// </summary>
-        public int MovePower
+        public int LeftMotorPower
         {
-            get => _movePower;
-            set => SetProperty(ref _movePower, value);
+            get => _LeftMotorPower;
+            set => SetProperty(ref _LeftMotorPower, value);
         }
 
-        private int _steering;
+        private int _RightMotorPower;
         /// <summary>
         ///ステアリング（+の場合に右旋回）
         /// </summary>
-        public int Steering
+        public int RightMotorPower
         {
-            get => _steering;
-            set => SetProperty(ref _steering, value);
+            get => _RightMotorPower;
+            set => SetProperty(ref _RightMotorPower, value);
         }
 
         private int _armPower;
         /// <summary>
-        /// モータ3(ARM）パワー
+        /// アームモータパワー
         /// </summary>
         public int ArmPower
         {
             get => _armPower;
             set => SetProperty(ref _armPower, value);
+        }
+
+        private int _tailPower;
+        /// <summary>
+        /// 尻尾モータパワー
+        /// </summary>
+        public int TailPower
+        {
+            get =>_tailPower;
+            set => SetProperty(ref _tailPower, value); 
         }
 
         #endregion
@@ -180,9 +190,10 @@ namespace ET2017_TuningTool
                     // 出力信号電文受信時に、対応するプロパティを更新する処理を登録
                     Serial.ReceiveOutputSignal = received =>
                     {
-                        MovePower = received.MovePower;
-                        Steering = received.Steering;
+                        LeftMotorPower = received.Motor1Power;
+                        RightMotorPower = received.Motor2Power;
                         ArmPower = received.Motor3Power;
+                        TailPower = received.Motor4Power;
                     };
 
                     if (!Serial.Start(SelectedPortName))

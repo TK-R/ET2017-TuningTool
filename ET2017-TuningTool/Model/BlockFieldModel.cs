@@ -100,13 +100,12 @@ namespace ET2017_TuningTool.Model
                 new int[] { 4,  4,  5 },
                 new int[] { 5,  6,  6 },
                 new int[] { 6,  7,  7 },
-                new int[] { 9, 8,  8 },
+                new int[] { 9,  8,  8 },
                 new int[] { 10, 9,  10 },
                 new int[] { 11, 10, 11 },
                 new int[] { 12, 11, 13 },
                 new int[] { 13, 12, 14 },
                 new int[] { 15, 14, 15}
-
             };
 
             return new Position {
