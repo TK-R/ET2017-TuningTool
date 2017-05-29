@@ -3,10 +3,13 @@ using ET2017_TuningTool.Model.GraphModel;
 using LiveCharts;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
+using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using SerialLibrary;
 using System;
 using System.IO.Ports;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -16,8 +19,9 @@ namespace ET2017_TuningTool
     {
         public DelegateCommand ConnectCommand { get; }
         public DelegateCommand DisconnectCommand { get; }
-        public DelegateCommand DecodeCommand { get; set; }
+        public ReactiveCommand DecodeCommand { get; private set; }
 
+        #region シリアルポート関係
         /// <summary>
         /// シリアル監視クラスへの参照
         /// </summary>
@@ -43,31 +47,35 @@ namespace ET2017_TuningTool
             set => SetProperty(ref _SelectedPortName, value);
         }
 
-        private int _InitialPositionCode = 0;
-        /// <summary>
-        /// 入力された初期位置コード
-        /// </summary>
-        public int InitialPositionCode
-        {
-            get => _InitialPositionCode;
-            set => SetProperty(ref _InitialPositionCode, value);
-        }
+        #endregion
+
+        public ReactiveProperty<int> InitPostionCode { get; set; }
 
         #region ブロックの座標データ
-        private Point _YellowPoins;
-        public Point YellowPoint { get => _YellowPoins; set => SetProperty(ref _YellowPoins, value); }
-
-        private Point _BlackPoint;
-        public Point BlackPoint { get => _BlackPoint; set => SetProperty(ref _BlackPoint, value); }
-
-        private Point _RedPoint;
-        public Point RedPoint { get => _RedPoint; set => SetProperty(ref _RedPoint, value); }
-
-        private Point _BluePoint;
-        public Point BluePoint { get => _BluePoint; set => SetProperty(ref _BluePoint, value); }
-
-        private Point _GreenPoint = new Point(126, 68);
-        public Point GreenPoint { get => _GreenPoint; set => SetProperty(ref _GreenPoint, value); }
+        /// <summary>
+        /// フィールドのブロック情報管理クラス
+        /// </summary>
+        BlockFieldModel BlockField =  new BlockFieldModel();
+        /// <summary>
+        /// 黄色ブロックの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> Yellow { get; }
+        /// <summary>
+        /// 黒ブロックの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> Black { get; }
+        /// <summary>
+        /// 垢ブロックの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> Red { get; }
+        /// <summary>
+        /// 青ブロックの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> Blue { get; }
+        /// <summary>
+        /// 緑ブロックの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> Green { get; }
 
         /// <summary>
         /// ブロックの座標を保持する構造体
@@ -90,50 +98,6 @@ namespace ET2017_TuningTool
             new Point(146, 100),
             new Point(192, 100),
         };
-        #endregion
-        
-        #region 出力信号電文情報
-
-        private int _LeftMotorPower;
-        /// <summary>
-        /// 移動パワー（+で前進）
-        /// </summary>
-        public int LeftMotorPower
-        {
-            get => _LeftMotorPower;
-            set => SetProperty(ref _LeftMotorPower, value);
-        }
-
-        private int _RightMotorPower;
-        /// <summary>
-        ///ステアリング（+の場合に右旋回）
-        /// </summary>
-        public int RightMotorPower
-        {
-            get => _RightMotorPower;
-            set => SetProperty(ref _RightMotorPower, value);
-        }
-
-        private int _armPower;
-        /// <summary>
-        /// アームモータパワー
-        /// </summary>
-        public int ArmPower
-        {
-            get => _armPower;
-            set => SetProperty(ref _armPower, value);
-        }
-
-        private int _tailPower;
-        /// <summary>
-        /// 尻尾モータパワー
-        /// </summary>
-        public int TailPower
-        {
-            get =>_tailPower;
-            set => SetProperty(ref _tailPower, value); 
-        }
-
         #endregion
 
         #region 入力信号電文情報
@@ -184,6 +148,24 @@ namespace ET2017_TuningTool
         {
             SerialPortNames =  SerialPort.GetPortNames();
 
+            // ブロックの配置情報を登録
+            BlockField = new BlockFieldModel();
+            Yellow = BlockField.ObserveProperty(x => x.YelloPosition)
+                        .Select(p => BlockPositionArray[p - 1])
+                        .ToReactiveProperty();
+            Red = BlockField.ObserveProperty(x => x.RedPosition)
+                     .Select(p => BlockPositionArray[p - 1])
+                     .ToReactiveProperty();
+            Black = BlockField.ObserveProperty(x => x.BlackPosition)
+                       .Select(p => BlockPositionArray[p - 1])
+                       .ToReactiveProperty();
+            Blue = BlockField.ObserveProperty(x => x.BluePosition)
+                      .Select(p => BlockPositionArray[p - 1])
+                      .ToReactiveProperty();
+            Green = BlockField.ObserveProperty(x => x.GreenPosition)
+                       .Select(p => BlockPositionArray[p - 1])
+                       .ToReactiveProperty();
+            
             var ModelPairArray = new ModelPair[]
             {
                 new ModelPair { model = new SonarGraphModel(), value = GraphValue1 },
@@ -223,7 +205,6 @@ namespace ET2017_TuningTool
                     // 出力信号電文受信時に、対応するプロパティを更新する処理を登録
                     Serial.ReceiveOutputSignal = received =>
                     {
-                        TailPower = received.Motor4Power;
                     };
 
                     if (!Serial.Start(SelectedPortName))
@@ -237,18 +218,15 @@ namespace ET2017_TuningTool
                     Serial.Stop();
                 });
 
-            DecodeCommand = new DelegateCommand(
+
+            InitPostionCode = new ReactiveProperty<int>(0);
+            DecodeCommand = InitPostionCode.Select(i => i < 99999).ToReactiveCommand();
+
+            DecodeCommand.Subscribe(
                 () =>
                 {
                     // 初期位置コードを求める。
-                    var pos = BlockFieldModel.AdjustBlockPositionField(BlockFieldModel.GetPositionFromCode(InitialPositionCode));
-
-                    // 座標データを代入
-                    BlackPoint = BlockPositionArray[pos.Black - 1];
-                    RedPoint = BlockPositionArray[pos.Red - 1];
-                    YellowPoint = BlockPositionArray[pos.Yellow - 1];
-                    BluePoint = BlockPositionArray[pos.Blue - 1];
-                   
+                    BlockField.SetBlockPosition(InitPostionCode.Value, 1);
                 });
         }
 

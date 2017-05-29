@@ -164,14 +164,19 @@
             <GroupBox Grid.Row="1" Header="FIELD" Margin="2" >
                 <Grid>
                     <Label Content="初期位置コード：" FontSize="12" Margin="0,3,536,119"/>
-                    <TextBox Text="{Binding InitialPositionCode, ValidatesOnDataErrors=True}"  TextAlignment="Right" Margin="87,3,0,121" HorizontalAlignment="Left" Width="81"/>
+                    <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="87,3,0,121" HorizontalAlignment="Left" Width="81"/>
                     <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Height="114" VerticalAlignment="Bottom" />
                     <Canvas HorizontalAlignment="Left" Height="121"  VerticalAlignment="Top" Width="293" Margin="0,25,0,0">
-                        <Ellipse Fill="Yellow" Height="20" Width="20" Canvas.Left="{Binding YellowPoint.X, Mode=TwoWay}"  Canvas.Top="{Binding YellowPoint.Y, Mode=TwoWay}" Stroke="Black" />
-                        <Ellipse Fill="Green" Height="20" Width="20" Canvas.Left="{Binding GreenPoint.X}" Canvas.Top="{Binding GreenPoint.Y}" Stroke="Black" />
-                        <Ellipse Fill="Blue" Height="20" Width="20" Canvas.Left="{Binding BluePoint.X}" Canvas.Top="{Binding BluePoint.Y}" Stroke="Black" />
-                        <Ellipse Fill="Red" Height="20" Width="20" Canvas.Left="{Binding RedPoint.X}" Canvas.Top="{Binding RedPoint.Y}" Stroke="Black" />
-                        <Ellipse Fill="Black" Height="20" Width="20" Canvas.Left="{Binding BlackPoint.X}" Canvas.Top="{Binding BlackPoint.Y}" Stroke="Black"  />
+                        <Ellipse Fill="Yellow" Height="20" Width="20" Stroke="Black"
+                                   Canvas.Left="{Binding Yellow.Value.X}"  Canvas.Top="{Binding Yellow.Value.Y}"  />
+                        <Ellipse Fill="Green" Height="20" Width="20" Stroke="Black"
+                                   Canvas.Left="{Binding Green.Value.X}" Canvas.Top="{Binding Green.Value.Y}"  />
+                        <Ellipse Fill="Blue" Height="20" Width="20" Stroke="Black" 
+                                   Canvas.Left="{Binding Blue.Value.X}" Canvas.Top="{Binding Blue.Value.Y}"  />
+                        <Ellipse Fill="Red" Height="20" Width="20" Stroke="Black"
+                                   Canvas.Left="{Binding Red.Value.X}" Canvas.Top="{Binding Red.Value.Y}"  />
+                        <Ellipse Fill="Black" Height="20" Width="20" Stroke="Black"
+                                   Canvas.Left="{Binding Black.Value.X}" Canvas.Top="{Binding Black.Value.Y}"   />
                     </Canvas>
                     <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="186,2,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
 
