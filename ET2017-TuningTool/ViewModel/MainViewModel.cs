@@ -1,20 +1,14 @@
-﻿using Reactive.Bindings;
-using System;
-using System.Collections.Generic;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using ET2017_TuningTool.Model;
+using ET2017_TuningTool.Model.GraphModel;
+using LiveCharts;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
 using SerialLibrary;
-using System.Windows.Media;
-using System.Windows.Threading;
+using System;
+using System.IO.Ports;
+using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Globalization;
-using ET2017_TuningTool.Model;
+using System.Windows.Media;
 
 namespace ET2017_TuningTool
 {
@@ -61,19 +55,19 @@ namespace ET2017_TuningTool
 
         #region ブロックの座標データ
         private Point _YellowPoins;
-        public Point YellowPoint { get { return _YellowPoins; } set { SetProperty(ref _YellowPoins, value); } }
+        public Point YellowPoint { get => _YellowPoins; set => SetProperty(ref _YellowPoins, value); }
 
         private Point _BlackPoint;
-        public Point BlackPoint { get { return _BlackPoint; } set { SetProperty(ref _BlackPoint, value); } }
+        public Point BlackPoint { get => _BlackPoint; set => SetProperty(ref _BlackPoint, value); }
 
         private Point _RedPoint;
-        public Point RedPoint { get { return _RedPoint; } set { SetProperty(ref _RedPoint, value); } }
+        public Point RedPoint { get => _RedPoint; set => SetProperty(ref _RedPoint, value); }
 
         private Point _BluePoint;
-        public Point BluePoint { get { return _BluePoint; } set { SetProperty(ref _BluePoint, value); } }
+        public Point BluePoint { get => _BluePoint; set => SetProperty(ref _BluePoint, value); }
 
         private Point _GreenPoint = new Point(126, 68);
-        public Point GreenPoint { get { return _GreenPoint; } set { SetProperty(ref _GreenPoint, value); } }
+        public Point GreenPoint { get => _GreenPoint; set => SetProperty(ref _GreenPoint, value); }
 
         /// <summary>
         /// ブロックの座標を保持する構造体
@@ -166,9 +160,39 @@ namespace ET2017_TuningTool
 
         #endregion
 
+        #region グラフデータ
+        public ChartValues<double> GraphValue1 { get; set; } = new ChartValues<double>();
+        public ChartValues<double> GraphValue2 { get; set; } = new ChartValues<double>();
+        public ChartValues<double> GraphValue3 { get; set; } = new ChartValues<double>();
+        public ChartValues<double> GraphValue4 { get; set; } = new ChartValues<double>();
+        public ChartValues<double> GraphValue5 { get; set; } = new ChartValues<double>();
+
+        private double _GraphYMaxValue = 50;
+        public double GraphYMaxValue { get => _GraphYMaxValue; set => SetProperty(ref _GraphYMaxValue, value); }
+
+        private bool _AnimationEnable;
+        public bool AnimationEnable { get => _AnimationEnable; set => SetProperty(ref _AnimationEnable, value); }
+        #endregion
+
+        private class ModelPair
+        {
+            internal AbstractGraphModel model;
+            internal ChartValues<double> value;
+        }
+
         public MainViewModel()
         {
             SerialPortNames =  SerialPort.GetPortNames();
+
+            var ModelPairArray = new ModelPair[]
+            {
+                new ModelPair { model = new SonarGraphModel(), value = GraphValue1 },
+                new ModelPair { model = new ReflectedLightGraphModel(), value = GraphValue2 },
+                new ModelPair { model =  new TemparetureModel(), value = GraphValue3 },
+                new ModelPair { model = new BatteryVoltageModel(), value = GraphValue4 },
+                new ModelPair { model =  new BatteryCurrentModel(), value = GraphValue5 }
+            };
+
 
             // 接続コマンド押下イベントを定義
             ConnectCommand = new DelegateCommand(
@@ -179,20 +203,26 @@ namespace ET2017_TuningTool
                     // 入力信号電文受信時に、対応するプロパティを更新する処理を登録
                     Serial.ReceiveInputSignal = received => {
                         ReflectedLight = received.ReflectedLight;
-
                         // UI要素なのでUIスレッドで動作すること。
                         Application.Current.Dispatcher.Invoke(new Action(() => {
                             SensorColor = new SolidColorBrush(Color.FromArgb(255, received.ColorR, received.ColorG, received.ColorB));
                         }));
 
+
+                        AnimationEnable = false; // 画面要素をすべて更新するまでアニメーションOFF
+                        var flag = (GraphValue1.Count > GraphYMaxValue);
+                        foreach(var mp in ModelPairArray)
+                        {
+                            if (flag) mp.value.RemoveAt(0);
+                            mp.value.Add(mp.model.GetValue(received));
+                        }
+                        AnimationEnable = true; // 画面要素をすべて更新したのでアニメーションON
+                        
                     };
 
                     // 出力信号電文受信時に、対応するプロパティを更新する処理を登録
                     Serial.ReceiveOutputSignal = received =>
                     {
-                        LeftMotorPower = received.Motor1Power;
-                        RightMotorPower = received.Motor2Power;
-                        ArmPower = received.Motor3Power;
                         TailPower = received.Motor4Power;
                     };
 

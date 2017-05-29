@@ -97,8 +97,8 @@ namespace SerialLibrary
             try
             {
                 Serial = new SerialPort(portName, 115200, Parity.Odd, 8, StopBits.One);
-                Serial.ReadTimeout = 1000;
-                Serial.WriteTimeout = 1000;
+                Serial.ReadTimeout = SerialPort.InfiniteTimeout;
+                Serial.WriteTimeout = SerialPort.InfiniteTimeout;
 
                 Serial.Open();
 
