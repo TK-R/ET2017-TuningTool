@@ -5,9 +5,7 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using SerialLibrary;
 using System;
-using System.IO.Ports;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
@@ -17,41 +15,29 @@ namespace ET2017_TuningTool
 {
     public class MainViewModel : BindableBase
     {
-        public DelegateCommand ConnectCommand { get; }
-        public DelegateCommand DisconnectCommand { get; }
+        public ReactiveCommand ConnectCommand { get; private set; }
+
+        public ReactiveCommand DisconnectCommand { get; private set; }
+
         public ReactiveCommand DecodeCommand { get; private set; }
 
         #region シリアルポート関係
-        /// <summary>
-        /// シリアル監視クラスへの参照
-        /// </summary>
-        private SerialManager Serial;
 
-        private string[] _SerialPortNames;
-        /// <summary>
-        /// シリアルポート一覧
-        /// </summary>
-        public string[] SerialPortNames
-        {
-            get => _SerialPortNames;
-            set => SetProperty(ref _SerialPortNames, value);
-        }
+        SerialModel SerialMod;
 
-        private string _SelectedPortName;
-        /// <summary>
-        /// 選択されたシリアルポート名
-        /// </summary>
-        public string SelectedPortName
-        {
-            get => _SelectedPortName;
-            set => SetProperty(ref _SelectedPortName, value);
-        }
+        public ReactiveProperty<string> SelectPortName { get; set; } = new ReactiveProperty<string>();
 
+        public ReadOnlyReactiveProperty<string[]> SerialPortNames { get; set; }
+
+        public ReactiveProperty<bool> SerialConnected { get; }
         #endregion
 
-        public ReactiveProperty<int> InitPostionCode { get; set; }
-
         #region ブロックの座標データ
+
+        /// <summary>
+        /// 初期配置コード
+        /// </summary>
+        public ReactiveProperty<int> InitPostionCode { get; set; } = new ReactiveProperty<int>(0);
         /// <summary>
         /// フィールドのブロック情報管理クラス
         /// </summary>
@@ -146,8 +132,6 @@ namespace ET2017_TuningTool
 
         public MainViewModel()
         {
-            SerialPortNames =  SerialPort.GetPortNames();
-
             // ブロックの配置情報を登録
             BlockField = new BlockFieldModel();
             Yellow = BlockField.ObserveProperty(x => x.YelloPosition)
@@ -175,59 +159,48 @@ namespace ET2017_TuningTool
                 new ModelPair { model =  new BatteryCurrentModel(), value = GraphValue5 }
             };
 
-
+            SerialMod = new SerialModel();
+            SerialPortNames = SerialMod.ObserveProperty(s => s.SerialPortNames).ToReadOnlyReactiveProperty();
+            SerialConnected = SerialMod.ObserveProperty(s => s.Connected).Delay(TimeSpan.FromMilliseconds(500)).ToReactiveProperty();
+            
             // 接続コマンド押下イベントを定義
-            ConnectCommand = new DelegateCommand(
-                () => 
+            ConnectCommand = SerialConnected
+                .CombineLatest(SelectPortName,(connected, selectPort) => 
+                !connected &&  !string.IsNullOrEmpty(selectPort)) // 未接続かつシリアルポート選択済み
+                .ToReactiveCommand();
+            ConnectCommand.Subscribe(_ => SerialMod.StartSerial(SelectPortName.Value));
+
+            // 入力信号電文受信時に、対応するプロパティを更新する処理を登録
+
+            /*
+                ReflectedLight = received.ReflectedLight;
+                // UI要素なのでUIスレッドで動作すること。
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    SensorColor = new SolidColorBrush(Color.FromArgb(255, received.ColorR, received.ColorG, received.ColorB));
+                }));
+
+
+                AnimationEnable = false; // 画面要素をすべて更新するまでアニメーションOFF
+                var flag = (GraphValue1.Count > GraphYMaxValue);
+                foreach(var mp in ModelPairArray)
                 {
-                    Serial = new SerialManager();
-                    
-                    // 入力信号電文受信時に、対応するプロパティを更新する処理を登録
-                    Serial.ReceiveInputSignal = received => {
-                        ReflectedLight = received.ReflectedLight;
-                        // UI要素なのでUIスレッドで動作すること。
-                        Application.Current.Dispatcher.Invoke(new Action(() => {
-                            SensorColor = new SolidColorBrush(Color.FromArgb(255, received.ColorR, received.ColorG, received.ColorB));
-                        }));
+                    if (flag) mp.value.RemoveAt(0);
+                    mp.value.Add(mp.model.GetValue(received));
+                }
+                AnimationEnable = true; // 画面要素をすべて更新したのでアニメーションON
+              */
 
 
-                        AnimationEnable = false; // 画面要素をすべて更新するまでアニメーションOFF
-                        var flag = (GraphValue1.Count > GraphYMaxValue);
-                        foreach(var mp in ModelPairArray)
-                        {
-                            if (flag) mp.value.RemoveAt(0);
-                            mp.value.Add(mp.model.GetValue(received));
-                        }
-                        AnimationEnable = true; // 画面要素をすべて更新したのでアニメーションON
-                        
-                    };
+            // 切断コマンドはシリアル通信が接続中のみ実行可能なコマンドとして定義する
+            DisconnectCommand = SerialConnected.ToReactiveCommand();
+            DisconnectCommand.Subscribe(_ => SerialMod.StopSerial());
 
-                    // 出力信号電文受信時に、対応するプロパティを更新する処理を登録
-                    Serial.ReceiveOutputSignal = received =>
-                    {
-                    };
+            // 初期位置コードを求める。    
+            DecodeCommand = InitPostionCode
+                .CombineLatest(SerialConnected, (i, c)  => c && i < 99999)
+                .ToReactiveCommand();
+            DecodeCommand.Subscribe( _ => BlockField.SetBlockPosition(InitPostionCode.Value, 1));
 
-                    if (!Serial.Start(SelectedPortName))
-                        Console.WriteLine("hogeeeee");
-                    
-                });
-
-            DisconnectCommand = new DelegateCommand(
-                () =>
-                {
-                    Serial.Stop();
-                });
-
-
-            InitPostionCode = new ReactiveProperty<int>(0);
-            DecodeCommand = InitPostionCode.Select(i => i < 99999).ToReactiveCommand();
-
-            DecodeCommand.Subscribe(
-                () =>
-                {
-                    // 初期位置コードを求める。
-                    BlockField.SetBlockPosition(InitPostionCode.Value, 1);
-                });
         }
 
     }

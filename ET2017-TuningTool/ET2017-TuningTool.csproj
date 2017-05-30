@@ -157,6 +157,7 @@
     <Compile Include="Model\EV3Model.cs" />
     <Compile Include="Model\GraphModel\AbstractGraphModel.cs" />
     <Compile Include="Model\GraphModel\InputGraphModel.cs" />
+    <Compile Include="Model\SerialModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>

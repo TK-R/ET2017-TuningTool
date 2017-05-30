@@ -97,8 +97,8 @@ namespace SerialLibrary
             try
             {
                 Serial = new SerialPort(portName, 115200, Parity.Odd, 8, StopBits.One);
-                Serial.ReadTimeout = SerialPort.InfiniteTimeout;
-                Serial.WriteTimeout = SerialPort.InfiniteTimeout;
+                Serial.ReadTimeout = 500;
+                Serial.WriteTimeout = 500;
 
                 Serial.Open();
 
@@ -130,10 +130,9 @@ namespace SerialLibrary
 
             ReceiveInputSignal = null;
             ReceiveOutputSignal = null;
-
-            Thread.Sleep(100);
-
+            Thread.Sleep(500);
             ReceiveThread.Abort();
+            Thread.Sleep(500);
 
             try
             {
