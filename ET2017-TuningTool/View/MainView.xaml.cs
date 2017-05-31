@@ -25,9 +25,5 @@ namespace ET2017_TuningTool
             InitializeComponent();
         }
 
-        private void DisconnectButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

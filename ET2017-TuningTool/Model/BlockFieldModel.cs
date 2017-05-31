@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism.Mvvm;
+using Reactive.Bindings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ET2017_TuningTool.Model
 {
-    public class BlockFieldModel
+    public class BlockFieldModel : BindableBase
     {
         public class Position
         {
@@ -15,6 +17,58 @@ namespace ET2017_TuningTool.Model
             public int Yellow { get; set; } = 1;
             public int Blue { get; set; } = 1;
             public int Green { get; set; } = 1;
+        }
+
+        private int _YellowPosition = 1;
+        public int YelloPosition
+        {
+            get { return _YellowPosition; }
+            set { SetProperty(ref _YellowPosition, value); }
+        }
+
+        private int _RedPosition = 1;
+        public int RedPosition
+        {
+            get { return _RedPosition; }
+            set { SetProperty(ref _RedPosition, value); }
+        }
+
+        private int _BlackPosition = 1;
+        public int BlackPosition
+        {
+            get { return _BlackPosition; }
+            set { SetProperty(ref _BlackPosition, value); }
+        }
+
+        private int _BluePosition = 1;
+        public int BluePosition
+        {
+            get { return _BluePosition; }
+            set { SetProperty(ref _BluePosition, value); }
+        }
+
+        private int _GreenPosition = 1;
+        public int GreenPosition
+        {
+            get { return _GreenPosition; }
+            set { SetProperty(ref _GreenPosition, value); }
+        }
+
+        /// <summary>
+        /// 初期配置と緑ブロックの位置から、ブロック位置を変動する
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="greenPosition"></param>
+        public void SetBlockPosition(int code, int greenPosition)
+        {
+            var pos = AdjustBlockPositionField(GetPositionFromCode(code));
+
+            // 値の更新
+            BlackPosition = pos.Black;
+            BluePosition = pos.Blue;
+            RedPosition = pos.Red;
+            YelloPosition = pos.Yellow;
+            GreenPosition = greenPosition;
         }
 
         /// <summary>
@@ -91,9 +145,14 @@ namespace ET2017_TuningTool.Model
             };
         }
 
+        /// <summary>
+        /// ブロックの位置にオフセット値を加えた値を返す
+        /// </summary>
+        /// <param name="pos">オフセットを加味しないポジション</param>
+        /// <returns>オフセットを加味したポジション</returns>
         public static Position AdjustBlockPositionField(Position pos)
         {
-            int[][] table = new int[][] {
+            int[][] offsetTable = new int[][] {
                 //         赤, 黄, 青
                 new int[] { 2,  1,  1 },
                 new int[] { 3,  2,  3 },
@@ -110,9 +169,9 @@ namespace ET2017_TuningTool.Model
 
             return new Position {
                 Black = pos.Black,            // 黒ブロックは値のアジャストなし
-                Red = table[pos.Red - 1][0],
-                Yellow = table[pos.Yellow -1][1],
-                Blue = table[pos.Blue -1][2]
+                Red = offsetTable[pos.Red - 1][0],
+                Yellow = offsetTable[pos.Yellow -1][1],
+                Blue = offsetTable[pos.Blue -1][2]
             };
         }
     }
