@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     GlowBrush="{DynamicResource AccentColorBrush}"
-    Title="EV3 TOONING TOOL" Height="611.5" Width="800">
+    Title="EV3 TOONING TOOL" Height="850" Width="800">
 
     <Window.DataContext>
         <local:MainViewModel/>
@@ -32,39 +32,73 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="100*"/>
                 <RowDefinition Height="200"/>
-                <RowDefinition Height="30*"/>
+                <RowDefinition Height="250"/>
             </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0" Header="ROBOT STATUS" Margin="2" >
+            <GroupBox Grid.Row="0" Header="ROBOT STATUS" Margin="4,1,0,3" >
                 <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="lvc:CartesianChart">
+                            <Setter Property="DisableAnimations" Value="True" />
+                            <Setter Property="Hoverable" Value="False"/>
+                            <Setter Property="DataTooltip" Value="{x:Null}" />
+                            <Setter Property="AnimationsSpeed" Value="0" />
+                            <Setter Property="Background" Value="Black" />
+                        </Style>
+                        <Style TargetType="lvc:LineSeries">
+                            <Setter Property="StrokeThickness" Value="1.5"></Setter>
+                            <Setter Property="PointGeometry" Value="{x:Null}"></Setter>
+                            <Setter Property="LineSmoothness" Value="0"></Setter>
+                            <Setter Property="Fill" Value="Transparent"></Setter>
+                        </Style>
+                    </Grid.Resources>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="100*"/>
-                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="180" />
                         <ColumnDefinition Width="100*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1">
-                        <Grid.Resources>
-                            <Style TargetType="lvc:LineSeries">
-                                <Setter Property="StrokeThickness" Value="1.5"></Setter>
-                                <Setter Property="PointGeometry" Value="{x:Null}"></Setter>
-                                <Setter Property="LineSmoothness" Value="0"></Setter>
-                                <Setter Property="Fill" Value="Transparent"></Setter>
-                            </Style>
-                        </Grid.Resources>
-                        <lvc:CartesianChart AnimationsSpeed="0" 
-                                            Hoverable="False"
-                                            DataTooltip="{x:Null}" 
-                                            Background="Transparent"
-                                            DisableAnimations="{Binding AnimationEnable}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100*"/>
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="90*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Column="0" Grid.Row="0">
+                        <ListBox ItemsSource="{Binding InputModels}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="15" Fill="{Binding Brush}" />
+                                        <Grid Width="5"/>
+                                        <TextBlock TextAlignment="Left" Width="70" Text="{Binding Name}" />
+                                        <TextBlock TextAlignment="Right" Width="45" Text="{Binding RawValue}" />
+                                        <TextBlock TextAlignment="Right" Width="25" Text="{Binding Unit}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <TextBlock HorizontalAlignment="Left"
+                                   Margin="10,212,0,0"
+                                   TextWrapping="Wrap" 
+                                   Text="Sensing Color : " 
+                                   VerticalAlignment="Top"/>
+                        <Rectangle Fill="{Binding SensorColor.Value}" 
+                                   HorizontalAlignment="Left" 
+                                   VerticalAlignment="Top"
+                                   Height="14"                                  
+                                   Margin="100,212,0,0"
+                                   Stroke="Black"  Width="70"/>
+                    </Grid>
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <lvc:CartesianChart>
                             <lvc:CartesianChart.Series>
-                                <lvc:LineSeries Values="{Binding GraphValue1}"/>
-                                <lvc:LineSeries Values="{Binding GraphValue2}"/>
-                                <lvc:LineSeries Values="{Binding GraphValue3}"/>
-                                <lvc:LineSeries Values="{Binding GraphValue4}"/>
-                                <lvc:LineSeries Values="{Binding GraphValue5}"/>
+                                <lvc:LineSeries Values="{Binding Path=InputGraphValueList[0].Value}" Stroke="{Binding Path=InputModels[0].Brush}" />
+                                <lvc:LineSeries Values="{Binding Path=InputGraphValueList[1].Value}" Stroke="{Binding Path=InputModels[1].Brush}"/>
+                                <lvc:LineSeries Values="{Binding Path=InputGraphValueList[2].Value}" Stroke="{Binding Path=InputModels[2].Brush}"/>
+                                <lvc:LineSeries Values="{Binding Path=InputGraphValueList[3].Value}" Stroke="{Binding Path=InputModels[3].Brush}"/>
+                                <lvc:LineSeries Values="{Binding Path=InputGraphValueList[4].Value}" Stroke="{Binding Path=InputModels[4].Brush}"/>
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis IsMerged="True" MaxValue="{Binding GraphYMaxValue}" MinValue="0">
+                                <lvc:Axis IsMerged="True" MaxValue="{Binding GraphYMaxCount.Value}" MinValue="0">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator StrokeThickness="1" StrokeDashArray="2">
                                             <lvc:Separator.Stroke>
@@ -87,54 +121,32 @@
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
                     </Grid>
-                    <Grid Grid.Column="0" Grid.Row="0">
-                        <TextBlock HorizontalAlignment="Left"
-                                   Margin="10,10,0,0"
-                                   TextWrapping="Wrap" 
-                                   Text="Reflected Light : " 
-                                   VerticalAlignment="Top"/>
-                        <TextBlock HorizontalAlignment="Left"
-                                   Margin="10,29,0,0"
-                                   TextWrapping="Wrap" 
-                                   Text="Sensing Color : " 
-                                   VerticalAlignment="Top"/>
-                        <TextBlock HorizontalAlignment="Left"
-                            Margin="100,10,0,0"
-                            TextWrapping="Wrap" 
-                            Text="{Binding ReflectedLight}" 
-                            VerticalAlignment="Top"/>
-
-                        <Rectangle Fill="{Binding SensorColor}" 
-                                   HorizontalAlignment="Left" 
-                                   VerticalAlignment="Top"
-                                   Height="14"                                  
-                                   Margin="100,29,0,0"
-                                   Stroke="Black"  Width="22"/>
+                    <Grid Grid.Row="2" Grid.Column="0">
+                        <ListBox ItemsSource="{Binding OutputModels}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="15" Fill="{Binding Brush}" />
+                                        <Grid Width="5"/>
+                                        <TextBlock TextAlignment="Left" Width="70" Text="{Binding Name}" />
+                                        <TextBlock TextAlignment="Right" Width="50" Text="{Binding RawValue}" />
+                                        <TextBlock TextAlignment="Right" Width="20" Text="{Binding Unit}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </Grid>
-                    <Grid Grid.Column="3">
-                        <Grid.Resources>
-                            <Style TargetType="lvc:LineSeries">
-                                <Setter Property="StrokeThickness" Value="1.5"></Setter>
-                                <Setter Property="PointGeometry" Value="{x:Null}"></Setter>
-                                <Setter Property="LineSmoothness" Value="0"></Setter>
-                                <Setter Property="Fill" Value="Transparent"></Setter>
-                            </Style>
-                        </Grid.Resources>
-
-                        <lvc:CartesianChart AnimationsSpeed="0" 
-                                            Hoverable="False"
-                                            DataTooltip="{x:Null}" 
-                                            Background="Transparent"
-                                            DisableAnimations="{Binding AnimationEnable}">
+                    <Grid Grid.Row="2" Grid.Column="1">
+                        <lvc:CartesianChart>
                             <lvc:CartesianChart.Series>
-                                <lvc:LineSeries Values="{Binding GraphValue1}"/>
-                                <lvc:LineSeries Values="{Binding GraphValue2}"/>
-                                <lvc:LineSeries Values="{Binding GraphValue3}"/>
-                                <lvc:LineSeries Values="{Binding GraphValue4}"/>
-                                <lvc:LineSeries Values="{Binding GraphValue5}"/>
+                                <lvc:LineSeries Values="{Binding Path=OutputGraphValueList[0].Value}" Stroke="{Binding Path=OutputModels[0].Brush}"/>
+                                <lvc:LineSeries Values="{Binding Path=OutputGraphValueList[1].Value}" Stroke="{Binding Path=OutputModels[1].Brush}"/>
+                                <lvc:LineSeries Values="{Binding Path=OutputGraphValueList[2].Value}" Stroke="{Binding Path=OutputModels[2].Brush}"/>
+                                <lvc:LineSeries Values="{Binding Path=OutputGraphValueList[3].Value}" Stroke="{Binding Path=OutputModels[3].Brush}"/>
+
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
-                                <lvc:Axis IsMerged="True" MaxValue="{Binding GraphYMaxValue}" MinValue="0">
+                                <lvc:Axis IsMerged="True" MaxValue="{Binding GraphYMaxCount.Value}" MinValue="0">
                                     <lvc:Axis.Separator>
                                         <lvc:Separator StrokeThickness="1" StrokeDashArray="2">
                                             <lvc:Separator.Stroke>
@@ -161,7 +173,7 @@
                     </Grid>
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Row="1" Header="FIELD" Margin="2" >
+            <GroupBox Grid.Row="1" Header="BONUS" Margin="2" >
                 <Grid>
                     <Label Content="初期位置コード：" FontSize="12" Margin="0,3,536,119"/>
                     <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="87,3,0,121" HorizontalAlignment="Left" Width="81"/>
@@ -180,21 +192,23 @@
                     </Canvas>
                     <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="186,2,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
 
+                    <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" Height="114" VerticalAlignment="Bottom" Margin="293,0,53,0" />
+
                 </Grid>
             </GroupBox>
-            <GroupBox Grid.Row="2" Header="LOG" Margin="2" >
+            <GroupBox Grid.Row="2" Header="FIELD" Margin="2" >
                 <Grid>
-                    <TextBlock  x:Name="textBlock"  TextWrapping="Wrap" Text="TextBlock"/>
+                    <Image Source="/ET2017-TuningTool;component/Image/Field.png" VerticalAlignment="Bottom" Margin="41,0,0,0" HorizontalAlignment="Left" Width="297" />
                 </Grid>
             </GroupBox>
         </Grid>
         <Grid Grid.Column="1" Margin="0,4,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="190"/>
+                <RowDefinition Height="190"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" >
                 <GroupBox Header="STATE - CONTROL" Margin="2" VerticalAlignment="Top">
                     <Grid>
                         <Button x:Name="StartButton" Content="START" Width="75" Margin="0,0,0,102" HorizontalAlignment="Left"/>
@@ -210,7 +224,6 @@
                         <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="0,0,0,34" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="120" />
                         <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="0,0,0,108" Height="24" HorizontalAlignment="Left" Width="120"
                                   ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}"/>
-
                     </Grid>
                 </GroupBox>
             </Grid>

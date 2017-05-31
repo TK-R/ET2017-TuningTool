@@ -155,9 +155,11 @@
     </Compile>
     <Compile Include="Model\BlockFieldModel.cs" />
     <Compile Include="Model\EV3Model.cs" />
-    <Compile Include="Model\GraphModel\AbstractGraphModel.cs" />
-    <Compile Include="Model\GraphModel\InputGraphModel.cs" />
+    <Compile Include="Model\GraphModel\AbstractValueModel.cs" />
+    <Compile Include="Model\GraphModel\InputValueModel.cs" />
+    <Compile Include="Model\GraphModel\OutputValueModel.cs" />
     <Compile Include="Model\SerialModel.cs" />
+    <Compile Include="RxUtil.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -220,6 +222,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\BlockSortField.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Field.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

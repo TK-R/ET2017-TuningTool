@@ -1,11 +1,11 @@
 ﻿using ET2017_TuningTool.Model;
 using ET2017_TuningTool.Model.GraphModel;
 using LiveCharts;
-using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
@@ -13,17 +13,26 @@ using System.Windows.Media;
 
 namespace ET2017_TuningTool
 {
-    public class MainViewModel : BindableBase
+    public class MainViewModel : BindableBase, IDisposable
     {
+        #region コマンド
+        /// <summary>
+        /// シリアルポート接続コマンド
+        /// </summary>
         public ReactiveCommand ConnectCommand { get; private set; }
-
+        /// <summary>
+        /// シリアルポート切断コマンド
+        /// </summary>
         public ReactiveCommand DisconnectCommand { get; private set; }
-
+        /// <summary>
+        /// 初期位置コードのデコードコマンド
+        /// </summary>
         public ReactiveCommand DecodeCommand { get; private set; }
+        #endregion
 
         #region シリアルポート関係
 
-        SerialModel SerialMod;
+        SerialModel Serial;
 
         public ReactiveProperty<string> SelectPortName { get; set; } = new ReactiveProperty<string>();
 
@@ -88,47 +97,37 @@ namespace ET2017_TuningTool
 
         #region 入力信号電文情報
 
-        private SolidColorBrush _SensorColor;
-        /// <summary>
-        /// カラーセンサの色情報
-        /// </summary>
-        public SolidColorBrush SensorColor
-        {
-            get => _SensorColor;
-            set => SetProperty(ref _SensorColor, value);
-        }
+        public ReadOnlyReactiveProperty<SolidColorBrush> SensorColor { get; }
 
-        private int _reflectedLight;
-        /// <summary>
-        /// 反射光
-        /// </summary>
-        public int ReflectedLight
-        {
-            get => _reflectedLight;
-            set => SetProperty(ref _reflectedLight, value);
-        }
-
+        public ReadOnlyReactiveProperty<int> ReflectedLight { get; }
         #endregion
 
-        #region グラフデータ
-        public ChartValues<double> GraphValue1 { get; set; } = new ChartValues<double>();
-        public ChartValues<double> GraphValue2 { get; set; } = new ChartValues<double>();
-        public ChartValues<double> GraphValue3 { get; set; } = new ChartValues<double>();
-        public ChartValues<double> GraphValue4 { get; set; } = new ChartValues<double>();
-        public ChartValues<double> GraphValue5 { get; set; } = new ChartValues<double>();
+        /// <summary>
+        /// グラフに表示する入力値データを格納する
+        /// </summary>
+        public List<ReadOnlyReactiveProperty<ChartValues<double>>> InputGraphValueList { get; set; } 
+            = new List<ReadOnlyReactiveProperty<ChartValues<double>>>();
 
-        private double _GraphYMaxValue = 50;
-        public double GraphYMaxValue { get => _GraphYMaxValue; set => SetProperty(ref _GraphYMaxValue, value); }
+        /// <summary>
+        /// グラフに表示する出力値データを格納する
+        /// </summary>
+        public List<ReadOnlyReactiveProperty<ChartValues<double>>> OutputGraphValueList { get; set; }
+            = new List<ReadOnlyReactiveProperty<ChartValues<double>>>();
 
-        private bool _AnimationEnable;
-        public bool AnimationEnable { get => _AnimationEnable; set => SetProperty(ref _AnimationEnable, value); }
-        #endregion
+        /// <summary>
+        /// グラフのY軸の個数を規定する
+        /// </summary>
+        public ReadOnlyReactiveProperty<int> GraphYMaxCount { get; }
 
-        private class ModelPair
-        {
-            internal AbstractGraphModel model;
-            internal ChartValues<double> value;
-        }
+        /// <summary>
+        /// 入力値モデルを格納するリスト
+        /// </summary>
+        public List<InputValueModel> InputModels { get; set; } = new List<InputValueModel>();
+
+        /// <summary>
+        /// 出力値モデルを格納するリスト
+        /// </summary>
+        public List<OutputValueModel> OutputModels { get; set; } = new List<OutputValueModel>();
 
         public MainViewModel()
         {
@@ -149,51 +148,75 @@ namespace ET2017_TuningTool
             Green = BlockField.ObserveProperty(x => x.GreenPosition)
                        .Select(p => BlockPositionArray[p - 1])
                        .ToReactiveProperty();
-            
-            var ModelPairArray = new ModelPair[]
-            {
-                new ModelPair { model = new SonarGraphModel(), value = GraphValue1 },
-                new ModelPair { model = new ReflectedLightGraphModel(), value = GraphValue2 },
-                new ModelPair { model =  new TemparetureModel(), value = GraphValue3 },
-                new ModelPair { model = new BatteryVoltageModel(), value = GraphValue4 },
-                new ModelPair { model =  new BatteryCurrentModel(), value = GraphValue5 }
-            };
 
-            SerialMod = new SerialModel();
-            SerialPortNames = SerialMod.ObserveProperty(s => s.SerialPortNames).ToReadOnlyReactiveProperty();
-            SerialConnected = SerialMod.ObserveProperty(s => s.Connected).Delay(TimeSpan.FromMilliseconds(500)).ToReactiveProperty();
             
+            // 入力値モデルを生成
+            foreach (var t in InputValueModel.InputValueType)
+            {
+                var model = Activator.CreateInstance(t) as InputValueModel;
+                InputModels.Add(model);
+                var prop = model.ObserveProperty(m => m.GraphValue).ToReadOnlyReactiveProperty();
+                InputGraphValueList.Add(prop);
+            }
+
+            // 出力値モデルを生成
+            foreach (var t in OutputValueModel.OutputValueType)
+            {
+                var model = Activator.CreateInstance(t) as OutputValueModel;
+                OutputModels.Add(model);
+                var prop = model.ObserveProperty(m => m.GraphValue).ToReadOnlyReactiveProperty();
+                OutputGraphValueList.Add(prop);
+            }
+            
+            GraphYMaxCount = InputModels.First().ObserveProperty(m => m.GraphMaxCount).ToReadOnlyReactiveProperty();
+
+            // シリアルポートの情報を登録
+            Serial = new SerialModel();
+            // ポート名称一覧
+            SerialPortNames = Serial.ObserveProperty(s => s.SerialPortNames).ToReadOnlyReactiveProperty();
+            // 接続状態
+            SerialConnected = Serial.ObserveProperty(s => s.Connected).Delay(TimeSpan.FromMilliseconds(500)).ToReactiveProperty();
+
+
+            // 反射光の表示
+            ReflectedLight = Serial.ObserveProperty(s => s.RecentInputSignalData)
+                                   .Select(v => (int)v.ReflectedLight)
+                                   .ToReadOnlyReactiveProperty();
+
+            // センサカラーの表示
+            SensorColor = Serial.ObserveProperty(s => s.RecentInputSignalData)
+                                .ObserveOnDispatcher() // UIスレッドに戻す
+                                .Select(v => new SolidColorBrush(Color.FromArgb(255, v.ColorR, v.ColorG, v.ColorB)))
+                                .ToReadOnlyReactiveProperty();
+
+//           const int millWait = 250;
+
+            // 入力値の更新を登録
+            Serial.ObserveProperty(s => s.RecentInputSignalData)
+//                  .SkipTime(TimeSpan.FromMilliseconds(millWait))
+                  .Subscribe(r => 
+            {
+                foreach ( var m in InputModels)
+                    m.UpdateValue(r);
+            });
+            // 出力値の更新を登録
+            Serial.ObserveProperty(s => s.RecentOutputSignalData)
+ //                 .SkipTime(TimeSpan.FromMilliseconds(millWait))
+                  .Subscribe(r =>
+            {
+                foreach (var m in OutputModels) m.UpdateValue(r);
+            });
+
             // 接続コマンド押下イベントを定義
             ConnectCommand = SerialConnected
-                .CombineLatest(SelectPortName,(connected, selectPort) => 
-                !connected &&  !string.IsNullOrEmpty(selectPort)) // 未接続かつシリアルポート選択済み
+                .CombineLatest(SelectPortName, (connected, selectPort) =>
+                 !connected && !string.IsNullOrEmpty(selectPort)) // 未接続かつシリアルポート選択済み
                 .ToReactiveCommand();
-            ConnectCommand.Subscribe(_ => SerialMod.StartSerial(SelectPortName.Value));
-
-            // 入力信号電文受信時に、対応するプロパティを更新する処理を登録
-
-            /*
-                ReflectedLight = received.ReflectedLight;
-                // UI要素なのでUIスレッドで動作すること。
-                Application.Current.Dispatcher.Invoke(new Action(() => {
-                    SensorColor = new SolidColorBrush(Color.FromArgb(255, received.ColorR, received.ColorG, received.ColorB));
-                }));
-
-
-                AnimationEnable = false; // 画面要素をすべて更新するまでアニメーションOFF
-                var flag = (GraphValue1.Count > GraphYMaxValue);
-                foreach(var mp in ModelPairArray)
-                {
-                    if (flag) mp.value.RemoveAt(0);
-                    mp.value.Add(mp.model.GetValue(received));
-                }
-                AnimationEnable = true; // 画面要素をすべて更新したのでアニメーションON
-              */
-
-
+            ConnectCommand.Subscribe(_ => Serial.StartSerial(SelectPortName.Value));
+            
             // 切断コマンドはシリアル通信が接続中のみ実行可能なコマンドとして定義する
             DisconnectCommand = SerialConnected.ToReactiveCommand();
-            DisconnectCommand.Subscribe(_ => SerialMod.StopSerial());
+            DisconnectCommand.Subscribe(_ => Serial.StopSerial());
 
             // 初期位置コードを求める。    
             DecodeCommand = InitPostionCode
@@ -201,6 +224,16 @@ namespace ET2017_TuningTool
                 .ToReactiveCommand();
             DecodeCommand.Subscribe( _ => BlockField.SetBlockPosition(InitPostionCode.Value, 1));
 
+        }
+
+        /// <summary>
+        /// オブジェクト解放時には、シリアルポートを停止する
+        /// </summary>
+        public void  Dispose()
+        {
+            if (Serial != null)
+                Serial.StopSerial();
+            
         }
 
     }
