@@ -37,7 +37,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             Brush.Color = Colors.Red;
             MaxValue = 100;
             MinValue = -100;
-            Name = "モータ1出力";
+            Name = "Lモータ出力";
             Unit = "%";
         }
 
@@ -57,7 +57,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             Brush.Color = Colors.Blue;
             MaxValue = 100;
             MinValue = -100;
-            Name = "モータ2出力";
+            Name = "Rモータ出力";
             Unit = "%";
         }
 
@@ -76,7 +76,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             Brush.Color = Colors.Yellow;
             MaxValue = 100;
             MinValue = -100;
-            Name = "モータ3出力";
+            Name = "アームモータ出力";
             Unit = "%";
         }
 
@@ -95,7 +95,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             Brush.Color = Colors.Green;
             MaxValue = 100;
             MinValue = -100;
-            Name = "モータ4出力";
+            Name = "尻尾モータ出力";
             Unit = "%";
         }
 

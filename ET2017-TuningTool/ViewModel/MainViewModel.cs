@@ -168,6 +168,7 @@ namespace ET2017_TuningTool
                 OutputGraphValueList.Add(prop);
             }
             
+            // グラフ点数を定義
             GraphYMaxCount = InputModels.First().ObserveProperty(m => m.GraphMaxCount).ToReadOnlyReactiveProperty();
 
             // シリアルポートの情報を登録

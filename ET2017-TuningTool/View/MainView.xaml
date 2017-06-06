@@ -128,8 +128,8 @@
                                     <StackPanel Orientation="Horizontal">
                                         <Rectangle Width="15" Fill="{Binding Brush}" />
                                         <Grid Width="5"/>
-                                        <TextBlock TextAlignment="Left" Width="70" Text="{Binding Name}" />
-                                        <TextBlock TextAlignment="Right" Width="50" Text="{Binding RawValue}" />
+                                        <TextBlock TextAlignment="Left" Width="80" Text="{Binding Name}" />
+                                        <TextBlock TextAlignment="Right" Width="35" Text="{Binding RawValue}" />
                                         <TextBlock TextAlignment="Right" Width="20" Text="{Binding Unit}" />
                                     </StackPanel>
                                 </DataTemplate>

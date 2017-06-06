@@ -52,14 +52,16 @@ namespace ET2017_TuningTool.Model
             if (Connected)
                 return;
 
-            Serial = new SerialManager();
+            Serial = new SerialManager()
+            {
 
-            // 入力信号電文受信時に、対応するプロパティを更新する処理を登録
-            Serial.ReceiveInputSignal = received => RecentInputSignalData = received;
+                // 入力信号電文受信時に、対応するプロパティを更新する処理を登録
+                ReceiveInputSignal = received => RecentInputSignalData = received,
 
-            // 出力信号電文受信時に、対応するプロパティを更新する処理を登録
-            Serial.ReceiveOutputSignal = received => RecentOutputSignalData = received;
-            
+                // 出力信号電文受信時に、対応するプロパティを更新する処理を登録
+                ReceiveOutputSignal = received => RecentOutputSignalData = received
+            };
+
             // シリアル通信を開始
             Connected = Serial.Start(portName);
 
@@ -83,7 +85,11 @@ namespace ET2017_TuningTool.Model
         public InputSignalData RecentInputSignalData
         {
             get { return _RecentInputSignalData; }
-            set { SetProperty(ref _RecentInputSignalData, value); }
+            set {
+                // 同一の値を受信しても通知処理が実施されるように、SetProperyは使わない。
+                _RecentInputSignalData = value;
+                OnPropertyChanged("RecentInputSignalData");
+            }
         }
         
         private OutputSignalData _RecentOutputSignalData;
@@ -93,7 +99,11 @@ namespace ET2017_TuningTool.Model
         public OutputSignalData RecentOutputSignalData
         {
             get { return _RecentOutputSignalData; }
-            set { SetProperty(ref _RecentOutputSignalData, value); }
+            set {
+                // 同一の値を受信しても通知処理が実施されるように、SetProperyは使わない。
+                _RecentOutputSignalData = value;
+                OnPropertyChanged("RecentOutputSignalData");
+            }
         }
     }
 }

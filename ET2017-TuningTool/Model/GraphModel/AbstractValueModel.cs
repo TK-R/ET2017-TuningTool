@@ -61,7 +61,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             GraphValue.Clear();
         }
 
-        private int _GraphMaxCount = 40;
+        private int _GraphMaxCount = 100;
         public int GraphMaxCount
         {
             get { return _GraphMaxCount; }

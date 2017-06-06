@@ -76,7 +76,7 @@ namespace ET2017_TuningTool.Model.GraphModel
         {
             Brush.Color = Colors.Yellow;
             MaxValue = 10000;
-            MinValue = 5000;
+            MinValue = 0;
             Name = "バッテリ電圧";
             Unit = "mV";
         }
