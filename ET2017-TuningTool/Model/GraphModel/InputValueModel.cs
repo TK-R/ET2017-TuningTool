@@ -6,9 +6,12 @@ namespace ET2017_TuningTool.Model.GraphModel
 {
     public abstract class InputValueModel : AbstractValueModel
     {
+        // この順番を変えることで、グラフとリストの表示項目を変更できる
         public static Type[] InputValueType = new Type[]
         {
-            typeof(SonarGraphModel), // 超音波センサ
+            //         typeof(SonarGraphModel), // 超音波センサ
+            typeof(LeftMotorAngle), // 左モータ角度
+            typeof(RightMotorAngle), // 右モータ角度
             typeof(ReflectedLightGraphModel), // 反射光
             typeof(BatteryVoltageModel), // バッテリ電圧
             typeof(BatteryCurrentModel), // バッテリ電流
@@ -126,4 +129,41 @@ namespace ET2017_TuningTool.Model.GraphModel
             return data.Temperature;
         }
     }
+
+    public class LeftMotorAngle : InputValueModel
+    {
+        public LeftMotorAngle()
+        {
+            Brush.Color = Colors.White;
+            MaxValue = 50;
+            MinValue = 0;
+            Name = "左モータ角度";
+            Unit = "°";
+        }
+
+        internal override double GetInputValue(InputSignalData data)
+        {
+            return data.Motor1Radian;
+        }
+    }
+
+    public class RightMotorAngle : InputValueModel
+    {
+        public RightMotorAngle()
+        {
+            Brush.Color = Colors.Gray;
+            MaxValue = 50;
+            MinValue = 0;
+            Name = "右モータ角度";
+            Unit = "°";
+        }
+
+        internal override double GetInputValue(InputSignalData data)
+        {
+            return data.Motor2Radian;
+        }
+    }
+
+
+
 }

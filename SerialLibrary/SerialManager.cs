@@ -48,6 +48,20 @@ namespace SerialLibrary
             get { return _recentOutputSignal; }
         }
 
+
+        private PIDData _recentPIDData;
+        internal PIDData RecentPIDData
+        {
+            set
+            {
+                _recentPIDData = value;
+                ReceivePIDData?.Invoke(_recentPIDData);
+            }
+            get
+            {
+                return _recentPIDData;
+            }
+        }
         /// <summary>
         /// シリアル通信でデータを送受信中ならtrueを返す
         /// </summary>
@@ -79,6 +93,11 @@ namespace SerialLibrary
         /// 入力情報電文を受信した際にコールするデリゲート
         /// </summary>
         public Action<InputSignalData> ReceiveInputSignal;
+
+        /// <summary>
+        /// PID電文を受信した際にコールするデリゲート
+        /// </summary>
+        public Action<PIDData> ReceivePIDData;
 
         /// <summary>
         /// ポート名称を指定してシリアル通信を開始する
@@ -195,6 +214,10 @@ namespace SerialLibrary
                 {
                     size = Marshal.SizeOf(typeof(OutputSignalData));
                     command = COMMAND.OUTPUT_DATA_COMMAND;
+                }else if(dataStruct is PIDData)
+                {
+                    size = Marshal.SizeOf(typeof(PIDData));
+                    command = COMMAND.PID_DATA_COMMAND;
                 }
                 else
                 {

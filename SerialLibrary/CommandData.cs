@@ -13,7 +13,11 @@ namespace SerialLibrary
         /// <summary>
         /// 出力信号電文
         /// </summary>
-        OUTPUT_DATA_COMMAND = 0x02 
+        OUTPUT_DATA_COMMAND = 0x02,
+        /// <summary>
+        /// PID電文
+        /// </summary>
+        PID_DATA_COMMAND = 0x10,
     };
 
 
@@ -50,22 +54,22 @@ namespace SerialLibrary
         /// モータ1の角位置
         /// </summary>
         [FieldOffset(0)]
-        public ushort Motor1Radian;
+        public short Motor1Radian;
         /// <summary>
         /// モータ2の角位置
         /// </summary>
         [FieldOffset(2)]
-        public ushort Motor2Radian;
+        public short Motor2Radian;
         /// <summary>
         /// モータ3の角位置
         /// </summary>
         [FieldOffset(4)]
-        public ushort Motor3Radian;
+        public short Motor3Radian;
         /// <summary>
         /// モータ4の角位置
         /// </summary>
         [FieldOffset(6)]
-        public ushort Motor4Radian;
+        public short Motor4Radian;
         /// <summary>
         /// タッチセンサから 0:OFF 1:ON
         /// </summary>
@@ -161,6 +165,40 @@ namespace SerialLibrary
         public sbyte Motor4Power;
     }
 
+
+
+    /// <summary>
+    /// PIDゲインデータ
+    /// </summary>
+    [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 1)]
+    public struct PIDData
+    {
+        /// <summary>
+        /// 基準パワー
+        /// </summary>
+        [FieldOffset(0)]
+        public float BasePower;
+
+        /// <summary>
+        /// 比例ゲイン
+        /// </summary>
+        [FieldOffset(4)]
+        public float PGain;
+
+        /// <summary>
+        /// 積分ゲイン
+        /// </summary>
+        [FieldOffset(8)]
+        public float IGain;
+
+        /// <summary>
+        /// 微分ゲイン
+        /// </summary>
+        [FieldOffset(16)]
+        public float DGain;
+    }
+
+    
     [StructLayout(LayoutKind.Explicit, Size = 2, Pack = 1)]
     public struct ApplicationData
     {

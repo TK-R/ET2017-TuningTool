@@ -55,6 +55,8 @@ namespace SerialLibrary
                 case COMMAND.OUTPUT_DATA_COMMAND:
                     Context.CurrentState = new OutputDataState(Context);
                     break;
+                case COMMAND.PID_DATA_COMMAND:
+
                 default:
                     break;
             }
@@ -104,5 +106,24 @@ namespace SerialLibrary
             Context.CurrentState = new HeaderState(Context);
         }
     }
+
+    internal class PIDDataState : SerialState
+    {
+        internal PIDDataState(SerialManager manager) : base(manager) { }
+        internal override void Receive(byte data)
+        {
+            buff.Add(data);
+            if (buff.Count < Marshal.SizeOf(typeof(PIDData)) + 1) return;
+
+            if (buff.Last() == (byte)buff.Take(Marshal.SizeOf(typeof(PIDData))).Sum(t => t))
+            {
+                // チェックサムが一致したら、構造体を構築
+                Context.RecentPIDData = DataTools.RawDeserialize<PIDData>(buff.ToArray(), 0);
+            }
+
+            Context.CurrentState = new HeaderState(Context);
+        }
+    }
+
 
 }
