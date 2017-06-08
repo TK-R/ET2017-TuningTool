@@ -158,6 +158,7 @@
     <Compile Include="Model\GraphModel\AbstractValueModel.cs" />
     <Compile Include="Model\GraphModel\InputValueModel.cs" />
     <Compile Include="Model\GraphModel\OutputValueModel.cs" />
+    <Compile Include="Model\PIDModel.cs" />
     <Compile Include="Model\SerialModel.cs" />
     <Compile Include="RxUtil.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

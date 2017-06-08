@@ -165,8 +165,6 @@ namespace SerialLibrary
         public sbyte Motor4Power;
     }
 
-
-
     /// <summary>
     /// PIDゲインデータ
     /// </summary>
@@ -194,7 +192,7 @@ namespace SerialLibrary
         /// <summary>
         /// 微分ゲイン
         /// </summary>
-        [FieldOffset(16)]
+        [FieldOffset(12)]
         public float DGain;
     }
 

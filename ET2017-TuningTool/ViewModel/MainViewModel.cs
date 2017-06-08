@@ -4,6 +4,7 @@ using LiveCharts;
 using Microsoft.Practices.Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using SerialLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace ET2017_TuningTool
 
         #region シリアルポート関係
 
-        SerialModel Serial;
+        SerialModel Serial = new SerialModel();
 
         public ReactiveProperty<string> SelectPortName { get; set; } = new ReactiveProperty<string>();
 
@@ -96,12 +97,13 @@ namespace ET2017_TuningTool
         #endregion
 
         #region 入力信号電文情報
-
+        /// <summary>
+        /// センサカラー情報
+        /// </summary>
         public ReadOnlyReactiveProperty<SolidColorBrush> SensorColor { get; }
-
-        public ReadOnlyReactiveProperty<int> ReflectedLight { get; }
         #endregion
 
+        #region グラフ情報
         /// <summary>
         /// グラフに表示する入力値データを格納する
         /// </summary>
@@ -118,6 +120,14 @@ namespace ET2017_TuningTool
         /// グラフのY軸の個数を規定する
         /// </summary>
         public ReadOnlyReactiveProperty<int> GraphYMaxCount { get; }
+        #endregion
+
+        public ReactiveProperty<float> PIDPowerData { get; }
+        public ReactiveProperty<float> PIDPGainData { get; }
+        public ReactiveProperty<float> PIDIGainData { get; }
+        public ReactiveProperty<float> PIDDGainData { get; }
+
+        public PIDModel PID { get; set; } = new PIDModel();
 
         /// <summary>
         /// 入力値モデルを格納するリスト
@@ -171,30 +181,19 @@ namespace ET2017_TuningTool
             // グラフ点数を定義
             GraphYMaxCount = InputModels.First().ObserveProperty(m => m.GraphMaxCount).ToReadOnlyReactiveProperty();
 
-            // シリアルポートの情報を登録
-            Serial = new SerialModel();
             // ポート名称一覧
             SerialPortNames = Serial.ObserveProperty(s => s.SerialPortNames).ToReadOnlyReactiveProperty();
             // 接続状態
             SerialConnected = Serial.ObserveProperty(s => s.Connected).Delay(TimeSpan.FromMilliseconds(500)).ToReactiveProperty();
-
-
-            // 反射光の表示
-            ReflectedLight = Serial.ObserveProperty(s => s.RecentInputSignalData)
-                                   .Select(v => (int)v.ReflectedLight)
-                                   .ToReadOnlyReactiveProperty();
-
+            
             // センサカラーの表示
             SensorColor = Serial.ObserveProperty(s => s.RecentInputSignalData)
                                 .ObserveOnDispatcher() // UIスレッドに戻す
                                 .Select(v => new SolidColorBrush(Color.FromArgb(255, v.ColorR, v.ColorG, v.ColorB)))
                                 .ToReadOnlyReactiveProperty();
 
-//           const int millWait = 250;
-
             // 入力値の更新を登録
             Serial.ObserveProperty(s => s.RecentInputSignalData)
-//                  .SkipTime(TimeSpan.FromMilliseconds(millWait))
                   .Subscribe(r => 
             {
                 foreach ( var m in InputModels)
@@ -202,11 +201,17 @@ namespace ET2017_TuningTool
             });
             // 出力値の更新を登録
             Serial.ObserveProperty(s => s.RecentOutputSignalData)
- //                 .SkipTime(TimeSpan.FromMilliseconds(millWait))
                   .Subscribe(r =>
             {
                 foreach (var m in OutputModels) m.UpdateValue(r);
             });
+            // PIDの更新を登録
+            Serial.ObserveProperty(s => s.RecentPIDData)
+                  .Subscribe(r =>
+            {
+                PID.UpdatePID(r);
+            });
+            
 
             // 接続コマンド押下イベントを定義
             ConnectCommand = SerialConnected
@@ -224,6 +229,33 @@ namespace ET2017_TuningTool
                 .CombineLatest(SerialConnected, (i, c)  => c && i < 99999)
                 .ToReactiveCommand();
             DecodeCommand.Subscribe( _ => BlockField.SetBlockPosition(InitPostionCode.Value, 1));
+
+            // PIDゲインデータの通信を登録
+            PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty();
+            PIDPGainData = PID.ObserveProperty(p => p.PGain).ToReactiveProperty();
+            PIDIGainData = PID.ObserveProperty(p => p.IGain).ToReactiveProperty();
+            PIDDGainData = PID.ObserveProperty(p => p.DGain).ToReactiveProperty();
+
+            // 200ms値が確定したら、データを送信
+            void sendData()
+            {
+                // 接続中以外は何もしない
+                if (!Serial.Connected)
+                    return;
+
+                Serial.WriteData(new PIDData
+                {
+                    BasePower = PIDPowerData.Value,
+                    PGain = PIDPGainData.Value,
+                    IGain = PIDIGainData.Value,
+                    DGain = PIDDGainData.Value
+                });
+            }
+            var pidWait = TimeSpan.FromMilliseconds(500);
+            PIDPowerData.Throttle(pidWait).Subscribe(_ => sendData());
+            PIDPGainData.Throttle(pidWait).Subscribe(_ => sendData());
+            PIDIGainData.Throttle(pidWait).Subscribe(_ => sendData());
+            PIDDGainData.Throttle(pidWait).Subscribe(_ => sendData());
 
         }
 

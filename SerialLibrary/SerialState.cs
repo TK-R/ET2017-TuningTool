@@ -56,7 +56,8 @@ namespace SerialLibrary
                     Context.CurrentState = new OutputDataState(Context);
                     break;
                 case COMMAND.PID_DATA_COMMAND:
-
+                    Context.CurrentState = new PIDDataState(Context);
+                    break;
                 default:
                     break;
             }

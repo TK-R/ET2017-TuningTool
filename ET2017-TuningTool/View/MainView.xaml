@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     GlowBrush="{DynamicResource AccentColorBrush}"
-    Title="EV3 TOONING TOOL" Height="850" Width="800">
+    Title="EV3 TOONING TOOL" Height="850" Width="1000">
 
     <Window.DataContext>
         <local:MainViewModel/>
@@ -26,7 +26,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="460*"/>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Margin="2,4,0,0">
             <Grid.RowDefinitions>
@@ -204,25 +204,44 @@
         </Grid>
         <Grid Grid.Column="1" Margin="0,4,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="190"/>
+                <RowDefinition Height="300"/>
                 <RowDefinition Height="190"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" >
-                <GroupBox Header="STATE - CONTROL" Margin="2" VerticalAlignment="Top">
+                <GroupBox Header="STATE - CONTROL" Margin="2,2,2,2">
                     <Grid>
-                        <Button x:Name="StartButton" Content="START" Width="75" Margin="0,0,0,102" HorizontalAlignment="Left"/>
-                        <Button x:Name="StopButton" Content="STOP" Margin="0,37,0,65" HorizontalAlignment="Left" Width="75"/>
-                        <Button x:Name="ResetButton" Content="RESET" Margin="0,74,0,28" HorizontalAlignment="Left" Width="75"/>
+                        <Button x:Name="StartButton" Content="START" Width="84" Margin="0,0,0,214" HorizontalAlignment="Left"/>
+                        <Button x:Name="ResetButton" Content="RESET" Margin="94,0,0,214" HorizontalAlignment="Left" Width="84"/>
+                        <Label Content="出力:" Margin="0,47,0,175" Height="24"/>
+                        <Label Content="比例:" Margin="0,87,0,135" Height="24"/>
+                        <Label Content="積分:" Margin="0,127,0,95" Height="24"/>
+                        <Label Content="微分:" Margin="0,165,0,57" Height="24"/>
+                        <TextBlock Text="{Binding PIDPowerData.Value,StringFormat={}{0:N1}}" Margin="27,52,113,170" TextAlignment="Right" Height="24"/>
+                        <TextBlock Text="{Binding PIDPGainData.Value,StringFormat={}{0:N2}}" Margin="27,92,113,130" TextAlignment="Right" Height="24"/>
+                        <TextBlock Text="{Binding PIDIGainData.Value,StringFormat={}{0:N2}}" Margin="27,132,113,90" TextAlignment="Right" Height="24"/>
+                        <TextBlock Text="{Binding PIDDGainData.Value,StringFormat={}{0:N2}}" Margin="27,170,113,52" TextAlignment="Right" Height="24"/>
+                        <Slider Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignSlider}" 
+                                            ToolTip="MaterialDesignDiscreteSlider"
+                                            Value="{Binding PIDPowerData.Value}" Margin="75,49,0,175" HorizontalAlignment="Left" Width="93" />
+                        <Slider Minimum="0" Maximum="3" Style="{StaticResource MaterialDesignSlider}" 
+                                            ToolTip="MaterialDesignDiscreteSlider" 
+                                            Value="{Binding PIDPGainData.Value}" Margin="75,89,0,135" HorizontalAlignment="Left" Width="93" />
+                        <Slider Minimum="0" Maximum="3" Style="{StaticResource MaterialDesignSlider}" 
+                                            ToolTip="MaterialDesignDiscreteSlider" 
+                                            Value="{Binding PIDIGainData.Value}" Margin="75,129,0,95" HorizontalAlignment="Left" Width="93" />
+                        <Slider Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignSlider}" 
+                                            ToolTip="MaterialDesignDiscreteSlider" 
+                                            Value="{Binding PIDDGainData.Value}" Margin="75,169,0,57" HorizontalAlignment="Left" Width="93" />
                     </Grid>
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="1">
                 <GroupBox Header="BLUETOOTH" Margin="2" VerticalAlignment="Top" >
                     <Grid>
-                        <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="0,31,0,71" HorizontalAlignment="Left" Width="120" />
-                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="0,0,0,34" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="120" />
-                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="0,0,0,108" Height="24" HorizontalAlignment="Left" Width="120"
+                        <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="0,31,0,71" HorizontalAlignment="Left" Width="168" />
+                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="0,0,0,34" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="168" />
+                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="0,1,0,109" Height="24" HorizontalAlignment="Left" Width="168"
                                   ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}"/>
                     </Grid>
                 </GroupBox>

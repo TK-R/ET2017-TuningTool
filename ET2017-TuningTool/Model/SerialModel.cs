@@ -66,6 +66,11 @@ namespace ET2017_TuningTool.Model
             Connected = Serial.Start(portName);
 
         }
+        
+        public bool WriteData<StructT>(StructT dataStruct)
+        {
+            return Serial.WriteData(dataStruct);
+        }
 
         public void StopSerial()
         {
@@ -104,6 +109,13 @@ namespace ET2017_TuningTool.Model
                 _RecentOutputSignalData = value;
                 OnPropertyChanged("RecentOutputSignalData");
             }
+        }
+
+        private PIDData _RecentPIDData;
+        public PIDData RecentPIDData
+        {
+            get { return _RecentPIDData; }
+            set { SetProperty(ref _RecentPIDData, value); }
         }
     }
 }
