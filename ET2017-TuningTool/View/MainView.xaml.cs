@@ -24,10 +24,6 @@ namespace ET2017_TuningTool
         {
             InitializeComponent();
         }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
+       
     }
 }

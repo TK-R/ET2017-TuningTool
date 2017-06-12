@@ -57,7 +57,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
     public ReflectedLightGraphModel()
         {
-            Brush.Color = Colors.Blue;
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#1abc9c");
             MaxValue = 100;
             MinValue = 0;
             Name = "反射光";
@@ -77,7 +77,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public BatteryVoltageModel()
         {
-            Brush.Color = Colors.Yellow;
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#3498db");
             MaxValue = 10000;
             MinValue = 0;
             Name = "バッテリ電圧";
@@ -97,7 +97,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public BatteryCurrentModel()
         {
-            Brush.Color = Colors.Green;
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#9b59b6");
             MaxValue = 10000;
             MinValue = 0;
             Name = "バッテリ電流";
@@ -117,7 +117,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public TemparetureModel()
         {
-            Brush.Color = Colors.Purple;
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#34495e");
             MaxValue = 50;
             MinValue = 0;
             Name = "温度";
@@ -134,7 +134,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public LeftMotorAngle()
         {
-            Brush.Color = Colors.White;
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#e74c3c");
             MaxValue = 50;
             MinValue = 0;
             Name = "左モータ角度";
@@ -151,7 +151,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public RightMotorAngle()
         {
-            Brush.Color = Colors.Gray;
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#95a5a6");
             MaxValue = 50;
             MinValue = 0;
             Name = "右モータ角度";
