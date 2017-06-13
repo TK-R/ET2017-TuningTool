@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     GlowBrush="{DynamicResource AccentColorBrush}"
-    Title="EV3 TOONING TOOL" Height="850" Width="1000">
+    Title="EV3 TOONING TOOL" Height="850" Width="1000" Closing="MetroWindow_Closing">
 
     <Window.DataContext>
         <local:MainViewModel/>
@@ -210,11 +210,21 @@
         </Grid>
         <Grid Grid.Column="1" Margin="0,4,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="300"/>
                 <RowDefinition Height="190"/>
+                <RowDefinition Height="300"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" >
+            <Grid Grid.Row="0">
+                <GroupBox Header="BLUETOOTH" Margin="2" VerticalAlignment="Top" >
+                    <Grid>
+                        <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="5,37,0,65" HorizontalAlignment="Left" Width="168" />
+                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="5,0,0,23" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="168" />
+                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="6,1,0,109" Height="24" HorizontalAlignment="Left" Width="168"
+                                  ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}"/>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+            <Grid Grid.Row="1" >
                 <GroupBox Header="STATE - CONTROL" Margin="2,2,2,2">
                     <Grid>
                         <Button x:Name="StartButton" Content="START" Width="84" Margin="0,0,0,214" HorizontalAlignment="Left"/>
@@ -239,16 +249,6 @@
                         <Slider Minimum="0" Maximum="5" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
                                             Value="{Binding PIDDGainData.Value}" Margin="75,169,0,57" HorizontalAlignment="Left" Width="93" />
-                    </Grid>
-                </GroupBox>
-            </Grid>
-            <Grid Grid.Row="1">
-                <GroupBox Header="BLUETOOTH" Margin="2" VerticalAlignment="Top" >
-                    <Grid>
-                        <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="0,31,0,71" HorizontalAlignment="Left" Width="168" />
-                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="0,0,0,34" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="168" />
-                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="0,1,0,109" Height="24" HorizontalAlignment="Left" Width="168"
-                                  ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}"/>
                     </Grid>
                 </GroupBox>
             </Grid>

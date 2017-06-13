@@ -34,7 +34,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public Motor1Power()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#2c3e50");
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#E91E63");
             MaxValue = 100;
             MinValue = -100;
             Name = "Lモータ出力";
@@ -54,7 +54,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public Motor2Power()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#e67e22");
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#795548");
             MaxValue = 100;
             MinValue = -100;
             Name = "Rモータ出力";
@@ -73,7 +73,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public Motor3Power()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#f39c12");
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#34495e");
             MaxValue = 100;
             MinValue = -100;
             Name = "アームモータ出力";
@@ -92,10 +92,10 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public Motor4Power()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#7f8c8d");
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#f39c12");
             MaxValue = 100;
             MinValue = -100;
-            Name = "尻尾モータ出力";
+            Name = "尻尾モータ出力"; 
             Unit = "%";
         }
 

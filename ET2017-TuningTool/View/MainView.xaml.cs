@@ -24,6 +24,10 @@ namespace ET2017_TuningTool
         {
             InitializeComponent();
         }
-       
+
+        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            (DataContext as MainViewModel).Dispose();
+        }
     }
 }

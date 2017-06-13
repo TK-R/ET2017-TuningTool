@@ -1,6 +1,7 @@
 ﻿using ET2017_TuningTool.Model;
 using ET2017_TuningTool.Model.GraphModel;
 using LiveCharts;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -16,6 +17,7 @@ namespace ET2017_TuningTool
 {
     public class MainViewModel : BindableBase, IDisposable
     {
+
         #region コマンド
         /// <summary>
         /// シリアルポート接続コマンド
@@ -41,6 +43,7 @@ namespace ET2017_TuningTool
 
         public ReactiveProperty<bool> SerialConnected { get; }
         #endregion
+
 
         #region ブロックの座標データ
 

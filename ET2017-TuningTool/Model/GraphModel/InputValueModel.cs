@@ -15,7 +15,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             typeof(ReflectedLightGraphModel), // 反射光
             typeof(BatteryVoltageModel), // バッテリ電圧
             typeof(BatteryCurrentModel), // バッテリ電流
-            typeof(TemparetureModel), // 温度
+       //     typeof(TemparetureModel), // 温度
         };
 
 
@@ -117,10 +117,10 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public TemparetureModel()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#34495e");
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#95a5a6");
             MaxValue = 50;
-            MinValue = 0;
-            Name = "温度";
+            MinValue = 0; 
+             Name = "温度";
             Unit = "℃";
         }
 
@@ -151,10 +151,10 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public RightMotorAngle()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#95a5a6");
-            MaxValue = 50;
-            MinValue = 0;
-            Name = "右モータ角度";
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#7f8c8d");
+            MaxValue = 50; 
+             MinValue = 0; 
+             Name = "右モータ角度";
             Unit = "°";
         }
 
