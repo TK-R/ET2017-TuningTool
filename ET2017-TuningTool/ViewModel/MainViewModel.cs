@@ -9,14 +9,20 @@ using SerialLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 
 namespace ET2017_TuningTool
 {
+
     public class MainViewModel : BindableBase, IDisposable
     {
+        /// <summary>
+        /// Rpの一斉解放用のオブジェクト
+        /// </summary>
+        private CompositeDisposable Disposable { get; } = new CompositeDisposable();
 
         #region コマンド
         /// <summary>
@@ -148,27 +154,27 @@ namespace ET2017_TuningTool
             BlockField = new BlockFieldModel();
             Yellow = BlockField.ObserveProperty(x => x.YelloPosition)
                         .Select(p => BlockPositionArray[p - 1])
-                        .ToReactiveProperty();
+                        .ToReactiveProperty().AddTo(this.Disposable);
             Red = BlockField.ObserveProperty(x => x.RedPosition)
                      .Select(p => BlockPositionArray[p - 1])
-                     .ToReactiveProperty();
+                     .ToReactiveProperty().AddTo(this.Disposable);
             Black = BlockField.ObserveProperty(x => x.BlackPosition)
                        .Select(p => BlockPositionArray[p - 1])
-                       .ToReactiveProperty();
+                       .ToReactiveProperty().AddTo(this.Disposable);
             Blue = BlockField.ObserveProperty(x => x.BluePosition)
                       .Select(p => BlockPositionArray[p - 1])
-                      .ToReactiveProperty();
+                      .ToReactiveProperty().AddTo(this.Disposable);
             Green = BlockField.ObserveProperty(x => x.GreenPosition)
                        .Select(p => BlockPositionArray[p - 1])
-                       .ToReactiveProperty();
+                       .ToReactiveProperty().AddTo(this.Disposable);
 
-            
+
             // 入力値モデルを生成
             foreach (var t in InputValueModel.InputValueType)
             {
                 var model = Activator.CreateInstance(t) as InputValueModel;
                 InputModels.Add(model);
-                var prop = model.ObserveProperty(m => m.GraphValue).ToReadOnlyReactiveProperty();
+                var prop = model.ObserveProperty(m => m.GraphValue).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
                 InputGraphValueList.Add(prop);
             }
 
@@ -177,23 +183,23 @@ namespace ET2017_TuningTool
             {
                 var model = Activator.CreateInstance(t) as OutputValueModel;
                 OutputModels.Add(model);
-                var prop = model.ObserveProperty(m => m.GraphValue).ToReadOnlyReactiveProperty();
+                var prop = model.ObserveProperty(m => m.GraphValue).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
                 OutputGraphValueList.Add(prop);
             }
             
             // グラフ点数を定義
-            GraphYMaxCount = InputModels.First().ObserveProperty(m => m.GraphMaxCount).ToReadOnlyReactiveProperty();
+            GraphYMaxCount = InputModels.First().ObserveProperty(m => m.GraphMaxCount).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
 
             // ポート名称一覧
-            SerialPortNames = Serial.ObserveProperty(s => s.SerialPortNames).ToReadOnlyReactiveProperty();
+            SerialPortNames = Serial.ObserveProperty(s => s.SerialPortNames).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
             // 接続状態
-            SerialConnected = Serial.ObserveProperty(s => s.Connected).Delay(TimeSpan.FromMilliseconds(500)).ToReactiveProperty();
-            
+            SerialConnected = Serial.ObserveProperty(s => s.Connected).Delay(TimeSpan.FromMilliseconds(500)).ToReactiveProperty().AddTo(this.Disposable);
+
             // センサカラーの表示
             SensorColor = Serial.ObserveProperty(s => s.RecentInputSignalData)
                                 .ObserveOnDispatcher() // UIスレッドに戻す
                                 .Select(v => new SolidColorBrush(Color.FromArgb(255, v.ColorR, v.ColorG, v.ColorB)))
-                                .ToReadOnlyReactiveProperty();
+                                .ToReadOnlyReactiveProperty().AddTo(this.Disposable);
 
             // 入力値の更新を登録
             Serial.ObserveProperty(s => s.RecentInputSignalData)
@@ -220,24 +226,26 @@ namespace ET2017_TuningTool
             ConnectCommand = SerialConnected
                 .CombineLatest(SelectPortName, (connected, selectPort) =>
                  !connected && !string.IsNullOrEmpty(selectPort)) // 未接続かつシリアルポート選択済み
-                .ToReactiveCommand();
+                .ToReactiveCommand().AddTo(this.Disposable);
             ConnectCommand.Subscribe(_ => Serial.StartSerial(SelectPortName.Value));
             
             // 切断コマンドはシリアル通信が接続中のみ実行可能なコマンドとして定義する
-            DisconnectCommand = SerialConnected.ToReactiveCommand();
-            DisconnectCommand.Subscribe(_ => Serial.StopSerial());
+            DisconnectCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
+            DisconnectCommand.Subscribe(_ => {
+               Serial.StopSerial();
+            });
 
             // 初期位置コードを求める。    
             DecodeCommand = InitPostionCode
                 .CombineLatest(SerialConnected, (i, c)  => c && i < 99999)
-                .ToReactiveCommand();
+                .ToReactiveCommand().AddTo(this.Disposable);
             DecodeCommand.Subscribe( _ => BlockField.SetBlockPosition(InitPostionCode.Value, 1));
 
             // PIDゲインデータの通信を登録
-            PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty();
-            PIDPGainData = PID.ObserveProperty(p => p.PGain).ToReactiveProperty();
-            PIDIGainData = PID.ObserveProperty(p => p.IGain).ToReactiveProperty();
-            PIDDGainData = PID.ObserveProperty(p => p.DGain).ToReactiveProperty();
+            PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);
+            PIDPGainData = PID.ObserveProperty(p => p.PGain).ToReactiveProperty().AddTo(this.Disposable);
+            PIDIGainData = PID.ObserveProperty(p => p.IGain).ToReactiveProperty().AddTo(this.Disposable);
+            PIDDGainData = PID.ObserveProperty(p => p.DGain).ToReactiveProperty().AddTo(this.Disposable);
 
             PID.Power = 80;
             PID.PGain = 1.2f;
@@ -270,6 +278,8 @@ namespace ET2017_TuningTool
         /// </summary>
         public void  Dispose()
         {
+            this.Disposable.Dispose();
+
             if (Serial != null)
                 Serial.StopSerial();
             
