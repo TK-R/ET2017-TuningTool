@@ -17,7 +17,7 @@ namespace ET2017_TuningTool.Model.Tests
         [TestMethod()]
         public void GetPositionFromCodeTest()
         {
-            int black = 9, red = 0, yellow = 2, blue = 7;
+            int black = 10, red = 1, yellow = 3, blue = 8;
             int code = 12008;
 
             var position = BlockFieldModel.GetPositionFromCode(code);
@@ -29,7 +29,7 @@ namespace ET2017_TuningTool.Model.Tests
 
             code = 146;
             position = BlockFieldModel.GetPositionFromCode(code);
-            black = 0; red = 1; yellow = 2; blue = 3;
+            black = 1; red = 2; yellow = 3; blue = 4;
 
             Assert.AreEqual(black, position.Black);
             Assert.AreEqual(red, position.Red);
@@ -47,28 +47,28 @@ namespace ET2017_TuningTool.Model.Tests
             var codepos = new Position();
             var redtable = new int[] { 1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 14 };
 
-            for (var i = 0; i < 11; i++)
+            for (var i = 1; i <= 11; i++)
             {
                 codepos.Red = i;
                 var decodepos = BlockFieldModel.AdjustBlockPositionField(codepos);
-                Assert.AreEqual(redtable[i], decodepos.Red);
+                Assert.AreEqual(redtable[i - 1], decodepos.Red);
             }
 
             var yellowTable = new int[] { 0, 1, 3, 5, 6, 7, 8, 9, 10, 11, 13 };
-            for (var i = 0; i < 10; i++)
+            for (var i = 1; i <= 10; i++)
             {
                 codepos.Yellow = i;
                 var decodepos = BlockFieldModel.AdjustBlockPositionField(codepos);
-                Assert.AreEqual(yellowTable[i], decodepos.Yellow);
+                Assert.AreEqual(yellowTable[i - 1], decodepos.Yellow);
 
             }
 
             var blueTable = new int[] { 0, 2, 4, 5, 6, 7, 9, 10, 12, 13, 14 };
-            for (var i = 0; i < 10; i++)
+            for (var i = 1; i <= 10; i++)
             {
                 codepos.Blue = i;
                 var decodepos = BlockFieldModel.AdjustBlockPositionField(codepos);
-                Assert.AreEqual(blueTable[i], decodepos.Blue);
+                Assert.AreEqual(blueTable[i - 1], decodepos.Blue);
             }
         }
 
@@ -78,7 +78,7 @@ namespace ET2017_TuningTool.Model.Tests
             var BlockField = new BlockFieldModel();
 
             // 初期配置の整合性を確認
-            BlockField.SetBlockPosition(12008, 1);
+            BlockField.SetBlockPosition(12008, 0);
             
             Assert.AreEqual(BlockColor.Green, BlockField.PlaceArray[0].OnBlockColor);
             Assert.AreEqual(BlockColor.Red, BlockField.PlaceArray[1].OnBlockColor);
