@@ -37,6 +37,11 @@ namespace ET2017_TuningTool
         /// 初期位置コードのデコードコマンド
         /// </summary>
         public ReactiveCommand DecodeCommand { get; private set; }
+
+        /// <summary>
+        /// 次の配置場所を求めるコマンド
+        /// </summary>
+        public ReactiveCommand NextPositionCommand { get; private set; }
         #endregion
 
         #region シリアルポート関係
@@ -49,7 +54,6 @@ namespace ET2017_TuningTool
 
         public ReactiveProperty<bool> SerialConnected { get; }
         #endregion
-
 
         #region ブロックの座標データ
 
@@ -152,20 +156,20 @@ namespace ET2017_TuningTool
         {
             // ブロックの配置情報を登録
             BlockField = new BlockFieldModel();
-            Yellow = BlockField.ObserveProperty(x => x.YelloPosition)
-                        .Select(p => BlockPositionArray[p - 1])
+            Yellow = BlockField.ObserveProperty(x => x.YellowPosition)
+                        .Select(p => BlockPositionArray[p])
                         .ToReactiveProperty().AddTo(this.Disposable);
             Red = BlockField.ObserveProperty(x => x.RedPosition)
-                     .Select(p => BlockPositionArray[p - 1])
+                     .Select(p => BlockPositionArray[p])
                      .ToReactiveProperty().AddTo(this.Disposable);
             Black = BlockField.ObserveProperty(x => x.BlackPosition)
-                       .Select(p => BlockPositionArray[p - 1])
+                       .Select(p => BlockPositionArray[p])
                        .ToReactiveProperty().AddTo(this.Disposable);
             Blue = BlockField.ObserveProperty(x => x.BluePosition)
-                      .Select(p => BlockPositionArray[p - 1])
+                      .Select(p => BlockPositionArray[p])
                       .ToReactiveProperty().AddTo(this.Disposable);
             Green = BlockField.ObserveProperty(x => x.GreenPosition)
-                       .Select(p => BlockPositionArray[p - 1])
+                       .Select(p => BlockPositionArray[p])
                        .ToReactiveProperty().AddTo(this.Disposable);
 
 
@@ -236,10 +240,13 @@ namespace ET2017_TuningTool
             });
 
             // 初期位置コードを求める。    
-            DecodeCommand = InitPostionCode
-                .CombineLatest(SerialConnected, (i, c)  => c && i < 99999)
+            DecodeCommand = InitPostionCode.Select(c =>  c < 99999)
                 .ToReactiveCommand().AddTo(this.Disposable);
-            DecodeCommand.Subscribe( _ => BlockField.SetBlockPosition(InitPostionCode.Value, 1));
+            DecodeCommand.Subscribe( _ => BlockField.SetBlockPosition(InitPostionCode.Value, 0));
+
+            NextPositionCommand = InitPostionCode.Select(c => c < 99999)
+                                                 .ToReactiveCommand().AddTo(this.Disposable);
+            NextPositionCommand.Subscribe(_ => BlockField.ChangeNextPosition(0));
 
             // PIDゲインデータの通信を登録
             PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);

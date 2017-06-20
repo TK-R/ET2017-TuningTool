@@ -174,13 +174,13 @@
             </GroupBox>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="339" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <GroupBox Grid.Column="0" Header="BONUS" Margin="2" >
                     <Grid>
-                        <Label Content="初期位置コード：" FontSize="12" Margin="0,0,0,268" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
-                        <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="87,3,0,0" HorizontalAlignment="Left" Width="81" Height="25" VerticalAlignment="Top"/>
+                        <Label Content="初期位置:" FontSize="12" Margin="-6,0,0,268" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
+                        <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="60,2,0,0" HorizontalAlignment="Left" Width="46" Height="25" VerticalAlignment="Top"/>
                         <Image  Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,32,0,0" Height="114" VerticalAlignment="Top" />
                         <Canvas HorizontalAlignment="Left" Height="121"  VerticalAlignment="Top" Width="293" Margin="0,25,0,0">
                             <Ellipse Fill="Yellow" Height="20" Width="20" Stroke="Black"
@@ -194,16 +194,17 @@
                             <Ellipse Fill="Black" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Black.Value.X}" Canvas.Top="{Binding Black.Value.Y}"   />
                         </Canvas>
-                        <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="186,2,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
+                        <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="114,2,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
 
                         <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" Height="114" VerticalAlignment="Top" Margin="0,163,0,0" HorizontalAlignment="Left" Width="272" />
+                        <Button Content="NEXT" Command="{Binding NextPositionCommand}"  HorizontalAlignment="Left" Margin="204,2,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
 
                     </Grid>
                 </GroupBox>
 
                 <GroupBox Grid.Column="1" Header="FIELD" Margin="2" >
                     <Grid>
-                        <Image Source="/ET2017-TuningTool;component/Image/Field.png" Margin="10,9,0,0" HorizontalAlignment="Left" Width="433" Height="277" VerticalAlignment="Top" />
+                        <Image Source="/ET2017-TuningTool;component/Image/Field.png" Margin="10,0,0,0" HorizontalAlignment="Left" Width="433" Height="277" VerticalAlignment="Top" />
                     </Grid>
                 </GroupBox>
             </Grid>

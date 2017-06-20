@@ -5,53 +5,89 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ET2017_TuningTool.Model.Place;
 
 namespace ET2017_TuningTool.Model
 {
     public class BlockFieldModel : BindableBase
     {
-        public class Position
-        {
-            public int Black { get; set; } = 1;
-            public int Red { get; set; } = 1;
-            public int Yellow { get; set; } = 1;
-            public int Blue { get; set; } = 1;
-            public int Green { get; set; } = 1;
-        }
-
-        private int _YellowPosition = 1;
-        public int YelloPosition
+        #region ブロック位置
+        private int _YellowPosition = 0;
+        /// <summary>
+        /// 黄色ブロックの位置
+        /// </summary>
+        public int YellowPosition
         {
             get { return _YellowPosition; }
             set { SetProperty(ref _YellowPosition, value); }
         }
 
         private int _RedPosition = 1;
+        /// <summary>
+        /// 赤ブロックの位置
+        /// </summary>
         public int RedPosition
         {
             get { return _RedPosition; }
             set { SetProperty(ref _RedPosition, value); }
         }
 
-        private int _BlackPosition = 1;
+        private int _BlackPosition = 2;
+        /// <summary>
+        /// 黒ブロックの位置
+        /// </summary>
         public int BlackPosition
         {
             get { return _BlackPosition; }
             set { SetProperty(ref _BlackPosition, value); }
         }
 
-        private int _BluePosition = 1;
+        private int _BluePosition = 3;
+        /// <summary>
+        /// 青ブロックの位置
+        /// </summary>
         public int BluePosition
         {
             get { return _BluePosition; }
             set { SetProperty(ref _BluePosition, value); }
         }
 
-        private int _GreenPosition = 1;
+        private int _GreenPosition = 4;
+        /// <summary>
+        /// 緑ブロックの位置
+        /// </summary>
         public int GreenPosition
         {
             get { return _GreenPosition; }
             set { SetProperty(ref _GreenPosition, value); }
+        }
+        #endregion
+
+        public Place[] PlaceArray { private set; get; }
+
+        public BlockFieldModel()
+        {
+            // フィールド情報体を初期化
+            PlaceArray = Enumerable.Range(0, 15).Select(r => new Place { No = r }).ToArray();
+
+            PlaceArray = new Place[]
+            {
+                new Place{ No = 0, PlaceColor = BlockColor.Red },
+                new Place{ No = 1, PlaceColor = BlockColor.Blue },
+                new Place{ No = 2, PlaceColor = BlockColor.Yellow },
+                new Place{ No = 3, PlaceColor = BlockColor.Green },
+                new Place{ No = 4, PlaceColor = BlockColor.Yellow },
+                new Place{ No = 5, PlaceColor = BlockColor.Green },
+                new Place{ No = 6, PlaceColor = BlockColor.Red},
+                new Place{ No = 7, PlaceColor = BlockColor.Red },
+                new Place{ No = 8, PlaceColor = BlockColor.Blue},
+                new Place{ No = 9, PlaceColor = BlockColor.Green },
+                new Place{ No = 10, PlaceColor = BlockColor.Green},
+                new Place{ No = 11, PlaceColor = BlockColor.Green},
+                new Place{ No = 12, PlaceColor = BlockColor.Yellow},
+                new Place{ No = 13, PlaceColor = BlockColor.Red},
+                new Place{ No = 14, PlaceColor = BlockColor.Yellow },
+            };
         }
 
         /// <summary>
@@ -62,51 +98,95 @@ namespace ET2017_TuningTool.Model
         public void SetBlockPosition(int code, int greenPosition)
         {
             var pos = AdjustBlockPositionField(GetPositionFromCode(code));
+            pos.Green = greenPosition;
 
             // 値の更新
             BlackPosition = pos.Black;
             BluePosition = pos.Blue;
             RedPosition = pos.Red;
-            YelloPosition = pos.Yellow;
-            GreenPosition = greenPosition;
+            YellowPosition = pos.Yellow;
+            GreenPosition = pos.Green;
+
+            foreach (var p in PlaceArray)
+                p.OnBlockColor = BlockColor.None;
+
+            PlaceArray[BlackPosition].OnBlockColor = BlockColor.Black;
+            PlaceArray[BluePosition].OnBlockColor = BlockColor.Blue;
+            PlaceArray[RedPosition].OnBlockColor = BlockColor.Red;
+            PlaceArray[YellowPosition].OnBlockColor = BlockColor.Yellow;
+            PlaceArray[GreenPosition].OnBlockColor = BlockColor.Green;
+        }
+        
+        public void UpdatePositionFromPlace()
+        {
+            BlackPosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Black).FirstOrDefault().No;
+            BluePosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Blue).FirstOrDefault().No;
+            RedPosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Red).FirstOrDefault().No;
+            YellowPosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Yellow).FirstOrDefault().No;
+            GreenPosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Green).FirstOrDefault().No;
+
+        }
+    
+        public bool IsToMoveBlock(BlockColor block, BlockColor place)
+        {
+            // 一致している場合にはOK
+            if (block == BlockColor.None)
+                return false;
+            if (block == place)
+                return false;
+            if (block == BlockColor.Red && place == BlockColor.Black)
+                return false;
+            if (block == BlockColor.Black && place == BlockColor.Red)
+                return false;
+
+            return true;
         }
 
         /// <summary>
-        /// あるブロック置き場の状態を示す
+        /// ロボット位置から、次のブロックの位置を求める
         /// </summary>
-        public enum BlockPositionStatus
+        /// <param name="RobotPosition"></param>
+        public void ChangeNextPosition(int RobotPosition)
         {
-            /// <summary>
-            /// 配置なし
-            /// </summary>
-            None = 0,
-            /// <summary>
-            /// 黒ブロックが配置
-            /// </summary>
-            Black,
-            /// <summary>
-            /// 赤ブロックが配置
-            /// </summary>
-            Red,
-            /// <summary>
-            /// 黄ブロックが配置
-            /// </summary>
-            Yellow,
-            /// <summary>
-            /// 青ブロックが配置
-            /// </summary>
-            Blue,
-            /// <summary>
-            /// 緑ブロックが配置
-            /// </summary>
-            Green,
-        };
+            // 移動していない（=ブロック色と置き場の色が異なる置き場を検出）
+            var notMovedBlock = PlaceArray.Where(p => IsToMoveBlock(p.OnBlockColor, p.PlaceColor));
 
-        /// <summary>
-        /// ブロック配置場所のステータス
-        /// </summary>
-        private BlockPositionStatus[] BlockPositionField = new BlockPositionStatus[15];
+            if (notMovedBlock.Count() == 0)
+                return;
 
+            // 本来ならロボットの座標から算出する
+            var srcPlace = notMovedBlock.First();
+
+            int dstNo = 0;
+            switch (srcPlace.OnBlockColor)
+            {
+                case BlockColor.Black:
+                    dstNo = 7;
+                    break;
+                case BlockColor.Blue:
+                    dstNo = 8;
+                    break;
+                case BlockColor.Red:
+                    dstNo = 13;
+                    break;
+                case BlockColor.Yellow:
+                    dstNo = 12;
+                    break;
+                case BlockColor.Green:
+                    dstNo = 5;
+                    break;
+                default:
+                    return;    
+            }
+            var dstPlace = PlaceArray.Where(p => p.OnBlockColor == BlockColor.None)
+                                     .Where(p => p.No == dstNo).First();
+
+            dstPlace.OnBlockColor = srcPlace.OnBlockColor;
+            srcPlace.OnBlockColor = BlockColor.None;
+
+            UpdatePositionFromPlace();
+        }
+        
         /// <summary>
         /// 与えられた初期位置コードから、黒・赤・黄・青の値を求める
         /// </summary>
@@ -154,25 +234,95 @@ namespace ET2017_TuningTool.Model
         {
             int[][] offsetTable = new int[][] {
                 //         赤, 黄, 青
-                new int[] { 2,  1,  1 },
-                new int[] { 3,  2,  3 },
-                new int[] { 4,  4,  5 },
+                new int[] { 1,  0,  0 },
+                new int[] { 2,  1,  2 },
+                new int[] { 3,  3,  4 },
+                new int[] { 4,  5,  5 },
                 new int[] { 5,  6,  6 },
-                new int[] { 6,  7,  7 },
-                new int[] { 9,  8,  8 },
+                new int[] { 8,  7,  7 },
+                new int[] { 9,  8,  9 },
                 new int[] { 10, 9,  10 },
-                new int[] { 11, 10, 11 },
+                new int[] { 11, 10, 12 },
                 new int[] { 12, 11, 13 },
-                new int[] { 13, 12, 14 },
-                new int[] { 15, 14, 15}
+                new int[] { 14, 13, 14 }
             };
 
             return new Position {
-                Black = pos.Black,            // 黒ブロックは値のアジャストなし
+                Black = pos.Black - 1,            // 黒ブロックは一律-1
                 Red = offsetTable[pos.Red - 1][0],
                 Yellow = offsetTable[pos.Yellow -1][1],
                 Blue = offsetTable[pos.Blue -1][2]
             };
+        }
+    }
+
+    /// <summary>
+    /// ブロック配置場所を示すクラス
+    /// </summary>
+    public class Position
+    {
+        public int Black { get; set; } = 1;
+        public int Red { get; set; } = 1;
+        public int Yellow { get; set; } = 1;
+        public int Blue { get; set; } = 1;
+        public int Green { get; set; } = 1;
+    }
+
+    /// <summary>
+    /// ブロック置き場ごとのステータスを示すクラス
+    /// </summary>
+    public class Place
+    {
+        // 配置してあるブロックの情報
+        public BlockColor OnBlockColor { set; get; }
+        // 自身の番号
+        public int No { set; get; }
+        // 自身の色
+        public BlockColor PlaceColor { set; get; }
+
+        public override string ToString()
+        {
+            return "No:" + No + ",置き場色:" + PlaceColor.DisplayName() + ",ブロック:" + OnBlockColor.DisplayName();
+        }
+    }
+
+    /// <summary>
+    /// あるブロック置き場の状態を示す列挙体
+    /// </summary>
+    public enum BlockColor
+    {
+        /// <summary>
+        /// 配置なし
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// 黒ブロックが配置
+        /// </summary>
+        Black,
+        /// <summary>
+        /// 赤ブロックが配置
+        /// </summary>
+        Red,
+        /// <summary>
+        /// 黄ブロックが配置
+        /// </summary>
+        Yellow,
+        /// <summary>
+        /// 青ブロックが配置
+        /// </summary>
+        Blue,
+        /// <summary>
+        /// 緑ブロックが配置
+        /// </summary>
+        Green,
+    };
+
+    static class EnumHelper
+    {
+        public static string DisplayName(this BlockColor c)
+        {
+            string[] names = { "なし", "黒", "赤", "黄", "青", "緑" };
+            return names[(int)c];
         }
     }
 }

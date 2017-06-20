@@ -115,10 +115,11 @@ namespace SerialLibrary
 
             try
             {
-                Serial = new SerialPort(portName, 115200, Parity.Odd, 8, StopBits.One);
-                Serial.ReadTimeout = 100;
-                Serial.WriteTimeout = 100;
-
+                Serial = new SerialPort(portName, 115200, Parity.Odd, 8, StopBits.One)
+                {
+                    ReadTimeout = 100,
+                    WriteTimeout = 100
+                };
                 Serial.Open();
 
                 // 受信スレッドを起動
