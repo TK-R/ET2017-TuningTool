@@ -60,7 +60,7 @@ namespace ET2017_TuningTool
         /// <summary>
         /// 初期配置コード
         /// </summary>
-        public ReactiveProperty<int> InitPostionCode { get; set; } = new ReactiveProperty<int>(0);
+        public ReactiveProperty<int> InitPostionCode { get; set; } = new ReactiveProperty<int>(12008);
         /// <summary>
         /// フィールドのブロック情報管理クラス
         /// </summary>
@@ -89,7 +89,7 @@ namespace ET2017_TuningTool
         /// <summary>
         /// ブロックの座標を保持する構造体
         /// </summary>
-        static readonly Point[] BlockPositionArray =
+        private static readonly Point[] BlockPositionArray =
         {
             new Point(1, 9),
             new Point(82, 9),
