@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ET2017_TuningTool.Model
 {
+    /// <summary>
+    /// ブロック運搬ルール作成
+    /// </summary>
     public class BlockMoveRule
     {
         EV3Model RobotModel { get; set; }
@@ -87,7 +90,9 @@ namespace ET2017_TuningTool.Model
             {
                 // 移動していないブロックのうち、ロボットの距離が最も近いブロックを対象とする
                 srcPlace = MoveAvailableBlock.FindMin(n => n.GetDistance(RobotModel.Position));
-                dstPlace = MoveAvailablePlace.Where(p => TargetNo.Contains(p.No)).FindMin(p => p.GetDistance(RobotModel.Position));
+                dstPlace = MoveAvailablePlace.Where(p => TargetNo.Contains(p.No))
+                                             .Where(p => !FieldModel.IsToMoveBlock(p.PlaceColor, srcPlace.OnBlockColor))
+                                             .FindMin(p => p.GetDistance(RobotModel.Position));
             }
 
 
