@@ -1,6 +1,7 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +10,13 @@ namespace ET2017_TuningTool
 {
     public class EV3Model : BindableBase
     {
-        private int _state;
-        public int State
+
+        public Point _Position = new Point(5, 90);
+        public Point Position { set => SetProperty(ref _Position, value); get => _Position; }
+
+        public void ResetPosition()
         {
-            get { return _state; }
-            set { SetProperty(ref _state, value); }
+            Position = new Point(5, 90);
         }
     }
 }

@@ -55,7 +55,7 @@ namespace ET2017_TuningTool
         public ReactiveProperty<bool> SerialConnected { get; }
         #endregion
 
-        #region ブロックの座標データ
+        #region 座標データ
 
         /// <summary>
         /// 初期配置コード
@@ -74,7 +74,7 @@ namespace ET2017_TuningTool
         /// </summary>
         public ReactiveProperty<Point> Black { get; }
         /// <summary>
-        /// 垢ブロックの位置情報
+        /// 赤ブロックの位置情報
         /// </summary>
         public ReactiveProperty<Point> Red { get; }
         /// <summary>
@@ -85,6 +85,12 @@ namespace ET2017_TuningTool
         /// 緑ブロックの位置情報
         /// </summary>
         public ReactiveProperty<Point> Green { get; }
+
+        public EV3Model RobotModel { get; set; } = new EV3Model();
+        /// <summary>
+        /// ロボットの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> Robot { get; }
 
         /// <summary>
         /// ブロックの座標を保持する構造体
@@ -171,7 +177,8 @@ namespace ET2017_TuningTool
             Green = BlockField.ObserveProperty(x => x.GreenPosition)
                        .Select(p => BlockPositionArray[p])
                        .ToReactiveProperty().AddTo(this.Disposable);
-
+            Robot = RobotModel.ObserveProperty(r => r.Position)
+                              .ToReactiveProperty().AddTo(this.Disposable);
 
             // 入力値モデルを生成
             foreach (var t in InputValueModel.InputValueType)
@@ -242,11 +249,15 @@ namespace ET2017_TuningTool
             // 初期位置コードを求める。    
             DecodeCommand = InitPostionCode.Select(c =>  c < 99999)
                 .ToReactiveCommand().AddTo(this.Disposable);
-            DecodeCommand.Subscribe( _ => BlockField.SetBlockPosition(InitPostionCode.Value, 0));
+            DecodeCommand.Subscribe( _ =>
+            {
+                BlockField.SetBlockPosition(InitPostionCode.Value, 0);
+                RobotModel.ResetPosition();
+            });
 
             NextPositionCommand = InitPostionCode.Select(c => c < 99999)
                                                  .ToReactiveCommand().AddTo(this.Disposable);
-            NextPositionCommand.Subscribe(_ => BlockField.ChangeNextPosition(0));
+            NextPositionCommand.Subscribe(_ => new BlockMoveRule(RobotModel, BlockField).ChangeNextPosition());
 
             // PIDゲインデータの通信を登録
             PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);

@@ -84,10 +84,7 @@ namespace ET2017_TuningTool.Model.Tests
             Assert.AreEqual(BlockColor.Red, BlockField.PlaceArray[1].OnBlockColor);
             Assert.AreEqual(BlockColor.Yellow, BlockField.PlaceArray[3].OnBlockColor);
             Assert.AreEqual(BlockColor.Black, BlockField.PlaceArray[9].OnBlockColor);
-            Assert.AreEqual(BlockColor.Blue, BlockField.PlaceArray[10].OnBlockColor);
-
-            BlockField.ChangeNextPosition(0);
-            
+            Assert.AreEqual(BlockColor.Blue, BlockField.PlaceArray[10].OnBlockColor);            
         }
     }
 }

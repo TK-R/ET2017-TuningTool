@@ -193,6 +193,10 @@
                                    Canvas.Left="{Binding Red.Value.X}" Canvas.Top="{Binding Red.Value.Y}"  />
                             <Ellipse Fill="Black" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Black.Value.X}" Canvas.Top="{Binding Black.Value.Y}"   />
+                            <Image  Source="/ET2017-TuningTool;component/Image/robot.png" HorizontalAlignment="Left"
+                                   Canvas.Left="{Binding Robot.Value.X}" Canvas.Top="{Binding Robot.Value.Y}"
+                                    Width="30" Height="30" VerticalAlignment="Top" />
+
                         </Canvas>
                         <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="114,2,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
 

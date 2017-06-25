@@ -2,7 +2,7 @@
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Windows;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -148,52 +148,7 @@ namespace ET2017_TuningTool.Model
 
             return true;
         }
-
-        /// <summary>
-        /// ロボット位置から、次のブロックの位置を求める
-        /// </summary>
-        /// <param name="RobotPosition"></param>
-        public void ChangeNextPosition(int RobotPosition)
-        {
-            // 移動していない（=ブロック色と置き場の色が異なる置き場を検出）
-            var notMovedBlock = PlaceArray.Where(p => IsToMoveBlock(p.OnBlockColor, p.PlaceColor));
-
-            if (notMovedBlock.Count() == 0)
-                return;
-
-            // 本来ならロボットの座標から算出する
-            var srcPlace = notMovedBlock.First();
-
-            int dstNo = 0;
-            switch (srcPlace.OnBlockColor)
-            {
-                case BlockColor.Black:
-                    dstNo = 7;
-                    break;
-                case BlockColor.Blue:
-                    dstNo = 8;
-                    break;
-                case BlockColor.Red:
-                    dstNo = 13;
-                    break;
-                case BlockColor.Yellow:
-                    dstNo = 12;
-                    break;
-                case BlockColor.Green:
-                    dstNo = 5;
-                    break;
-                default:
-                    return;    
-            }
-            var dstPlace = PlaceArray.Where(p => p.OnBlockColor == BlockColor.None)
-                                     .Where(p => p.No == dstNo).First();
-
-            dstPlace.OnBlockColor = srcPlace.OnBlockColor;
-            srcPlace.OnBlockColor = BlockColor.None;
-
-            UpdatePositionFromPlace();
-        }
-        
+ 
         /// <summary>
         /// 与えられた初期位置コードから、黒・赤・黄・青の値を求める
         /// </summary>
@@ -299,6 +254,11 @@ namespace ET2017_TuningTool.Model
             new Point(192, 100)
         };
         
+        public Point GetPosition()
+        {
+            return PointArray[No];
+        }
+
         // 配置してあるブロックの情報
         public BlockColor OnBlockColor { set; get; }
         // 自身の番号
@@ -309,7 +269,7 @@ namespace ET2017_TuningTool.Model
         {
             return "No:" + No + ",置き場色:" + PlaceColor.DisplayName() + ",ブロック:" + OnBlockColor.DisplayName();
         }
-
+        
         /// <summary>
         /// Noから自身との座標差を求めて返す
         /// </summary>
@@ -321,7 +281,7 @@ namespace ET2017_TuningTool.Model
         }
 
         /// <summary>
-        /// あるポイントと自信のポイントとの距離を計算して返す
+        /// あるポイントと自身のポイントとの距離を計算して返す
         /// </summary>
         /// <param name="dst">対象のポイント</param>
         /// <returns>距離</returns>

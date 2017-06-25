@@ -154,13 +154,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\BlockFieldModel.cs" />
+    <Compile Include="Model\BlockMoveRule.cs" />
     <Compile Include="Model\EV3Model.cs" />
     <Compile Include="Model\GraphModel\AbstractValueModel.cs" />
     <Compile Include="Model\GraphModel\InputValueModel.cs" />
     <Compile Include="Model\GraphModel\OutputValueModel.cs" />
     <Compile Include="Model\PIDModel.cs" />
     <Compile Include="Model\SerialModel.cs" />
-    <Compile Include="RxUtil.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -184,6 +185,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -228,6 +230,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\Field.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\robot.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
