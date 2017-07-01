@@ -43,7 +43,7 @@ namespace ET2017_TuningTool.Model
             // 移動していない（=ブロック色と置き場の色が異なる置き場を検出）
             var notMovedBlock = FieldModel.PlaceArray
                 .Where(p => p.OnBlockColor != BlockColor.None)
-                .Where(p => !TargetNo.Contains(p.No) || FieldModel.IsToMoveBlock(p.OnBlockColor, p.PlaceColor));
+                .Where(p => !TargetNo.Contains(p.No) || FieldModel.AvailableMoveBlock(p.OnBlockColor, p.PlaceColor));
             
             // 完了している場合
             if (notMovedBlock.Count() == 0)
@@ -57,7 +57,7 @@ namespace ET2017_TuningTool.Model
             // 運搬可能なブロックを列挙する
             var MoveAvailableBlock =
                 notMovedBlock.Where(b => 
-                    MoveAvailablePlace.Where(p => !FieldModel.IsToMoveBlock(p.PlaceColor,b.OnBlockColor)).Count() != 0);
+                    MoveAvailablePlace.Where(p => !FieldModel.AvailableMoveBlock(p.PlaceColor,b.OnBlockColor)).Count() != 0);
             
             Place srcPlace ,dstPlace;
             if (MoveAvailableBlock.Count() == 0) // 運搬可能なブロックがなく、すでに埋まっているケース
@@ -91,7 +91,7 @@ namespace ET2017_TuningTool.Model
                 // 移動していないブロックのうち、ロボットの距離が最も近いブロックを対象とする
                 srcPlace = MoveAvailableBlock.FindMin(n => n.GetDistance(RobotModel.Position));
                 dstPlace = MoveAvailablePlace.Where(p => TargetNo.Contains(p.No))
-                                             .Where(p => !FieldModel.IsToMoveBlock(p.PlaceColor, srcPlace.OnBlockColor))
+                                             .Where(p => !FieldModel.AvailableMoveBlock(p.PlaceColor, srcPlace.OnBlockColor))
                                              .FindMin(p => p.GetDistance(RobotModel.Position));
             }
 

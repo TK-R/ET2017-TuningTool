@@ -129,16 +129,18 @@ namespace ET2017_TuningTool.Model
         }
     
         /// <summary>
-        /// 移動する必要があるブロックならTrueを返す
+        /// 移動する必要があるor移動可能なブロックならTrueを返す
         /// </summary>
         /// <param name="block">ブロック色</param>
-        /// <param name="place">置き場色</param>
-        /// <returns></returns>
-        public bool IsToMoveBlock(BlockColor block, BlockColor place)
+        /// <param name="place">移動先,または既に置かれている置き場色</param>
+        /// <returns>移動可能ならTrue</returns>
+        public bool AvailableMoveBlock(BlockColor block, BlockColor place)
         {
-            // 一致している場合にはOK
+            // 置かれていない場合にはOK
             if (block == BlockColor.None)
                 return false;
+
+            // 一致している場合にはOK
             if (block == place)
                 return false;
             if (block == BlockColor.Red && place == BlockColor.Black)
