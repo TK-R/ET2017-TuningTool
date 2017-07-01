@@ -7,15 +7,20 @@ namespace ET2017_TuningTool.Model.GraphModel
     public abstract class InputValueModel : AbstractValueModel
     {
         // この順番を変えることで、グラフとリストの表示項目を変更できる
+        // 上から5つがグラフに表示される
         public static Type[] InputValueType = new Type[]
         {
-            //         typeof(SonarGraphModel), // 超音波センサ
+            typeof(SonarGraphModel), // 超音波センサ
             typeof(LeftMotorAngle), // 左モータ角度
             typeof(RightMotorAngle), // 右モータ角度
-            typeof(ReflectedLightGraphModel), // 反射光
+            typeof(ReflectedLightGraphModel), // 反射
+            typeof(Angle), // 角位置
+            typeof(AngularVelocity), // 角速度
+            typeof(ColorRValue), // カラーセンサのR
+            typeof(ColorGValue), // カラーセンサのG
+            typeof(ColorBValue), // カラーセンサのB
             typeof(BatteryVoltageModel), // バッテリ電圧
             typeof(BatteryCurrentModel), // バッテリ電流
-       //     typeof(TemparetureModel), // 温度
         };
 
 
@@ -38,7 +43,7 @@ namespace ET2017_TuningTool.Model.GraphModel
         public SonarGraphModel()
         {
             Brush.Color = Colors.Red;
-            MaxValue = 3000; // 仮
+            MaxValue = 255; 
             MinValue = 0;
             Name = "超音波センサ";
             Unit = "cm";
@@ -55,7 +60,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     /// </summary>
     public class ReflectedLightGraphModel : InputValueModel
     {
-    public ReflectedLightGraphModel()
+        public ReflectedLightGraphModel()
         {
             Brush.Color = (Color)ColorConverter.ConvertFromString("#1abc9c");
             MaxValue = 100;
@@ -71,13 +76,55 @@ namespace ET2017_TuningTool.Model.GraphModel
     }
 
     /// <summary>
+    /// 角速度センサから取得した角位置
+    /// </summary>
+    public class Angle : InputValueModel
+    {
+        public Angle()
+        {
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#9b59b6");
+            Name = "角位置";
+            MaxValue = 30;
+            MinValue = -30;
+            Unit = "deg";
+        }
+
+        internal override double GetInputValue(InputSignalData data)
+        {
+            return data.Angle;
+        }
+    }
+    
+
+    /// <summary>
+    /// 角速度センサから取得した角速度
+    /// </summary>
+    public class AngularVelocity : InputValueModel
+    {
+        public AngularVelocity()
+        {
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#3498db");
+            Name = "角速度";
+            MaxValue = 360;
+            MinValue = -360;
+            Unit = "deg/s";
+        }
+
+        internal override double GetInputValue(InputSignalData data)
+        {
+            return data.AnglarVelocity;
+        }
+    }
+
+
+    /// <summary>
     /// バッテリ電圧
     /// </summary>
     public class BatteryVoltageModel : InputValueModel
     {
         public BatteryVoltageModel()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#3498db");
+            Brush.Color = Colors.Transparent;
             MaxValue = 10000;
             MinValue = 0;
             Name = "バッテリ電圧";
@@ -97,7 +144,7 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public BatteryCurrentModel()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#9b59b6");
+            Brush.Color = Colors.Transparent;
             MaxValue = 10000;
             MinValue = 0;
             Name = "バッテリ電流";
@@ -110,33 +157,17 @@ namespace ET2017_TuningTool.Model.GraphModel
         }
     }
 
+
     /// <summary>
-    /// 温度
+    /// 左モータの前回からの差分値
     /// </summary>
-    public class TemparetureModel : InputValueModel
-    {
-        public TemparetureModel()
-        {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#95a5a6");
-            MaxValue = 50;
-            MinValue = 0; 
-             Name = "温度";
-            Unit = "℃";
-        }
-
-        internal override double GetInputValue(InputSignalData data)
-        {
-            return data.Temperature;
-        }
-    }
-
     public class LeftMotorAngle : InputValueModel
     {
         public LeftMotorAngle()
         {
             Brush.Color = (Color)ColorConverter.ConvertFromString("#e74c3c");
             MaxValue = 50;
-            MinValue = 0;
+            MinValue = -50;
             Name = "左モータ角度";
             Unit = "°";
         }
@@ -147,14 +178,17 @@ namespace ET2017_TuningTool.Model.GraphModel
         }
     }
 
+    /// <summary>
+    /// 右モータの前回からの差分値
+    /// </summary>
     public class RightMotorAngle : InputValueModel
     {
         public RightMotorAngle()
         {
             Brush.Color = (Color)ColorConverter.ConvertFromString("#7f8c8d");
             MaxValue = 50; 
-             MinValue = 0; 
-             Name = "右モータ角度";
+            MinValue = -50; 
+            Name = "右モータ角度";
             Unit = "°";
         }
 
@@ -163,7 +197,65 @@ namespace ET2017_TuningTool.Model.GraphModel
             return data.Motor2Radian;
         }
     }
+    
+    /// <summary>
+    /// カラーセンサの赤
+    /// </summary>
+    public class ColorRValue : InputValueModel
+    {
+        public ColorRValue()
+        {
+            Brush.Color = Colors.Transparent;
+            MaxValue = 255;
+            MinValue = 0;
+            Name = "Color-R";
+            Unit = "";
+        }
 
+        internal override double GetInputValue(InputSignalData data)
+        {
+            return data.ColorR;
+        }
+    }
 
+    /// <summary>
+    /// カラーセンサの緑
+    /// </summary>
+    public class ColorGValue : InputValueModel
+    {
+        public ColorGValue()
+        {
+            Brush.Color = Colors.Transparent;
+            MaxValue = 255;
+            MinValue = 0;
+            Name = "Color-G";
+            Unit = "";
+        }
+
+        internal override double GetInputValue(InputSignalData data)
+        {
+            return data.ColorG;
+        }
+    }
+
+    /// <summary>
+    /// カラーセンサの青
+    /// </summary>
+    public class ColorBValue : InputValueModel
+    {
+        public ColorBValue()
+        {
+            Brush.Color = Colors.Transparent;
+            MaxValue = 255;
+            MinValue = 0;
+            Name = "Color-B";
+            Unit = "";
+        }
+
+        internal override double GetInputValue(InputSignalData data)
+        {
+            return data.ColorB;
+        }
+    }
 
 }

@@ -39,7 +39,7 @@ namespace ET2017_TuningTool.Model
         public SerialModel()
         {
             // ポート一覧を取得して、プロパティに保持する
-            SerialPortNames = SerialPort.GetPortNames();
+            SerialPortNames = SerialPort.GetPortNames().Distinct().ToArray();
         }
 
         /// <summary>

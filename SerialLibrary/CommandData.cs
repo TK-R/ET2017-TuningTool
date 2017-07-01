@@ -106,25 +106,25 @@ namespace SerialLibrary
         [FieldOffset(15)]
         public byte ReflectedLight;
         /// <summary>
-        /// /加速度センサから取得した加速度値(X)
+        /// 角速度センサから取得した角位置
         /// </summary>
         [FieldOffset(16)]
-        public ushort AxesX;
+        public short Angle;
         /// <summary>
-        /// /加速度センサから取得した加速度値(Y)
+        /// 角速度センサから取得した角速度
         /// </summary>
         [FieldOffset(18)]
-        public ushort AxesY;
+        public short AnglarVelocity;
         /// <summary>
-        /// /加速度センサから取得した加速度値(Z)
+        /// 予備1
         /// </summary>
         [FieldOffset(20)]
-        public ushort AxesZ;
+        public ushort reserved1;
         /// <summary>
-        /// 温度センサから取得した温度(摂氏)
+        /// 予備2
         /// </summary>
         [FieldOffset(22)]
-        public float Temperature;
+        public float reserved2;
         /// <summary>
         /// バッテリ電流(mA)
         /// </summary>

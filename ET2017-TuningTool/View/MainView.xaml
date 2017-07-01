@@ -51,7 +51,7 @@
                         </Style>
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="200" />
                         <ColumnDefinition Width="100*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -64,12 +64,13 @@
                         <ListBox ItemsSource="{Binding InputModels}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="-5">
                                         <Rectangle Width="15" Fill="{Binding Brush}" />
                                         <Grid Width="5"/>
-                                        <TextBlock TextAlignment="Left" Width="70" Text="{Binding Name}" />
-                                        <TextBlock TextAlignment="Right" Width="45" Text="{Binding RawValue}" />
-                                        <TextBlock TextAlignment="Right" Width="25" Text="{Binding Unit}" />
+                                        <TextBlock TextAlignment="Left" Width="80" Text="{Binding Name}" />
+                                        <TextBlock TextAlignment="Right" Width="30" Text="{Binding RawValue}" />
+                                        <Grid Width="7"/>
+                                        <TextBlock TextAlignment="Left" Width="35" Text="{Binding Unit}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -95,6 +96,7 @@
                                 <lvc:LineSeries Values="{Binding Path=InputGraphValueList[2].Value}" Stroke="{Binding Path=InputModels[2].Brush}"/>
                                 <lvc:LineSeries Values="{Binding Path=InputGraphValueList[3].Value}" Stroke="{Binding Path=InputModels[3].Brush}"/>
                                 <lvc:LineSeries Values="{Binding Path=InputGraphValueList[4].Value}" Stroke="{Binding Path=InputModels[4].Brush}"/>
+                                <lvc:LineSeries Values="{Binding Path=InputGraphValueList[5].Value}" Stroke="{Binding Path=InputModels[5].Brush}"/>
                             </lvc:CartesianChart.Series>
                             <lvc:CartesianChart.AxisX>
                                 <lvc:Axis IsMerged="True" MaxValue="{Binding GraphYMaxCount.Value}" MinValue="0">
@@ -124,12 +126,13 @@
                         <ListBox ItemsSource="{Binding OutputModels}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="-5">
                                         <Rectangle Width="15" Fill="{Binding Brush}" />
                                         <Grid Width="5"/>
                                         <TextBlock TextAlignment="Left" Width="80" Text="{Binding Name}" />
-                                        <TextBlock TextAlignment="Right" Width="35" Text="{Binding RawValue}" />
-                                        <TextBlock TextAlignment="Right" Width="20" Text="{Binding Unit}" />
+                                        <TextBlock TextAlignment="Right" Width="30" Text="{Binding RawValue}" />
+                                        <Grid Width="7"/>
+                                        <TextBlock TextAlignment="Left" Width="35" Text="{Binding Unit}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
