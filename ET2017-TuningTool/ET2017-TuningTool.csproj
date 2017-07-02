@@ -154,12 +154,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\BlockFieldModel.cs" />
+    <Compile Include="Model\BlockMoveCommand.cs" />
     <Compile Include="Model\BlockMoveRule.cs" />
     <Compile Include="Model\EV3Model.cs" />
     <Compile Include="Model\GraphModel\AbstractValueModel.cs" />
     <Compile Include="Model\GraphModel\InputValueModel.cs" />
     <Compile Include="Model\GraphModel\OutputValueModel.cs" />
     <Compile Include="Model\PIDModel.cs" />
+    <Compile Include="View\PointsToPathConverter.cs" />
     <Compile Include="Model\SerialModel.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

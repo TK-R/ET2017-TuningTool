@@ -1,12 +1,7 @@
 ﻿using Microsoft.Practices.Prism.Mvvm;
-using Reactive.Bindings;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static ET2017_TuningTool.Model.Place;
 
 namespace ET2017_TuningTool.Model
 {
@@ -62,6 +57,22 @@ namespace ET2017_TuningTool.Model
             get { return _GreenPosition; }
             set { SetProperty(ref _GreenPosition, value); }
         }
+
+        private Point[] _ApproachWayPointArray = new Point[0];
+        public Point[] ApproachWayPointArray
+        {
+            get { return _ApproachWayPointArray; }
+            set { SetProperty(ref _ApproachWayPointArray, value); }
+        }
+
+        private Point[] _MoveBlockWayArray = new Point[0];
+        public Point[] MoveBlockWayPointArray
+        {
+            get { return _ApproachWayPointArray; }
+            set { SetProperty(ref _ApproachWayPointArray, value); }
+        }
+
+
         #endregion
 
         public Place[] PlaceArray { private set; get; }
@@ -117,7 +128,8 @@ namespace ET2017_TuningTool.Model
             PlaceArray[YellowPosition].OnBlockColor = BlockColor.Yellow;
             PlaceArray[GreenPosition].OnBlockColor = BlockColor.Green;
         }
-        
+
+
         public void UpdatePositionFromPlace()
         {
             BlackPosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Black).FirstOrDefault().No;
@@ -125,32 +137,8 @@ namespace ET2017_TuningTool.Model
             RedPosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Red).FirstOrDefault().No;
             YellowPosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Yellow).FirstOrDefault().No;
             GreenPosition = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Green).FirstOrDefault().No;
-
         }
     
-        /// <summary>
-        /// 移動する必要があるor移動可能なブロックならTrueを返す
-        /// </summary>
-        /// <param name="block">ブロック色</param>
-        /// <param name="place">移動先,または既に置かれている置き場色</param>
-        /// <returns>移動可能ならTrue</returns>
-        public bool AvailableMoveBlock(BlockColor block, BlockColor place)
-        {
-            // 置かれていない場合にはOK
-            if (block == BlockColor.None)
-                return false;
-
-            // 一致している場合にはOK
-            if (block == place)
-                return false;
-            if (block == BlockColor.Red && place == BlockColor.Black)
-                return false;
-            if (block == BlockColor.Black && place == BlockColor.Red)
-                return false;
-
-            return true;
-        }
- 
         /// <summary>
         /// 与えられた初期位置コードから、黒・赤・黄・青の値を求める
         /// </summary>
@@ -218,6 +206,7 @@ namespace ET2017_TuningTool.Model
                 Blue = offsetTable[pos.Blue -1][2]
             };
         }
+
     }
 
     /// <summary>
@@ -256,9 +245,13 @@ namespace ET2017_TuningTool.Model
             new Point(192, 100)
         };
         
-        public Point GetPosition()
+        /// <summary>
+        /// 自身のフィールドをコピーしたブロック置き場ステータスを返す
+        /// </summary>
+        /// <returns>ブロック置き場</returns>
+        public Place Clone()
         {
-            return PointArray[No];
+            return MemberwiseClone() as Place;
         }
 
         // 配置してあるブロックの情報
@@ -273,13 +266,18 @@ namespace ET2017_TuningTool.Model
         }
         
         /// <summary>
-        /// Noから自身との座標差を求めて返す
+        /// 他のブロック置き場Noから自身との座標差を求めて返す
         /// </summary>
         /// <param name="no">フィールドNo</param>
         /// <returns>距離</returns>
         public double GetDistance(int no)
         {
             return GetDistance(PointArray[no]);
+        }
+
+        public Point GetPosition()
+        {
+            return PointArray[No];
         }
 
         /// <summary>

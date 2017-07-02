@@ -93,6 +93,16 @@ namespace ET2017_TuningTool
         public ReactiveProperty<Point> Robot { get; }
 
         /// <summary>
+        /// 運搬対象ブロックに接近する際の運搬経路のパス
+        /// </summary>
+        public ReactiveProperty<Point[]> ApproachWay { get; }
+
+        /// <summary>
+        /// ブロックを運搬先ブロック置き場に運搬する際のパス
+        /// </summary>
+        public ReactiveProperty<Point[]> MoveBlockWay { get; }
+
+        /// <summary>
         /// ブロックの座標を保持する構造体
         /// </summary>
         private static readonly Point[] BlockPositionArray =
@@ -113,6 +123,40 @@ namespace ET2017_TuningTool
             new Point(146, 100),
             new Point(192, 100),
         };
+
+        /// <summary>
+        /// ウェイポイントの座標を保持する構造体
+        /// </summary>
+        private static readonly Point[] WayPointArray =
+        {
+            new Point(49,9),
+            new Point(134,9),
+            new Point(219,9),
+            new Point(35,25),
+            new Point(74,25),
+            new Point(117,25),
+            new Point(160,25),
+            new Point(203,25),
+            new Point(239,25),
+            new Point(18,45),
+            new Point(71,45),
+            new Point(114,45),
+            new Point(157,45),
+            new Point(200,45),
+            new Point(254,45),
+            new Point(39,57),
+            new Point(232,57),
+            new Point(84,79),
+            new Point(107,79),
+            new Point(168,79),
+            new Point(191,79),
+            new Point(55,91),
+            new Point(222,91),
+            new Point(96,100),
+            new Point(136,100),
+            new Point(179,100)
+        };
+
         #endregion
 
         #region 入力信号電文情報
@@ -246,18 +290,31 @@ namespace ET2017_TuningTool
                Serial.StopSerial();
             });
 
-            // 初期位置コードを求める。    
+            var rule = new BlockMoveRule(RobotModel, BlockField);
+            
+            // 初期位置コードを求める
             DecodeCommand = InitPostionCode.Select(c =>  c < 99999)
                 .ToReactiveCommand().AddTo(this.Disposable);
             DecodeCommand.Subscribe( _ =>
             {
                 BlockField.SetBlockPosition(InitPostionCode.Value, 0);
                 RobotModel.ResetPosition();
+
+                rule = new BlockMoveRule(RobotModel, BlockField);
             });
 
+            // 運搬コマンドの経路を登録する
+            ApproachWay = BlockField.ObserveProperty(b => b.ApproachWayPointArray)
+                             .ToReactiveProperty().AddTo(this.Disposable);
+
+            MoveBlockWay = BlockField.ObserveProperty(b => b.MoveBlockWayPointArray)
+                             .ToReactiveProperty().AddTo(this.Disposable);
+
+            // ブロック情報更新
             NextPositionCommand = InitPostionCode.Select(c => c < 99999)
                                                  .ToReactiveCommand().AddTo(this.Disposable);
-            NextPositionCommand.Subscribe(_ => new BlockMoveRule(RobotModel, BlockField).ChangeNextPosition());
+
+            NextPositionCommand.Subscribe(_ => rule.Update(RobotModel, BlockField));
 
             // PIDゲインデータの通信を登録
             PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);

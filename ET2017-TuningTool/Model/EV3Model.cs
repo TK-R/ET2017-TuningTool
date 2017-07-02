@@ -16,7 +16,7 @@ namespace ET2017_TuningTool
 
         public void ResetPosition()
         {
-            Position = new Point(5, 90);
+            Position = new Point(0, 90);
         }
     }
 }

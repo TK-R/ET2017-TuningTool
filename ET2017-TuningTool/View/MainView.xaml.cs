@@ -29,5 +29,10 @@ namespace ET2017_TuningTool
         {
             (DataContext as MainViewModel).Dispose();
         }
+
+        private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine("x:" + e.GetPosition(this).X + "y:" + e.GetPosition(this).Y);
+        }
     }
 }
