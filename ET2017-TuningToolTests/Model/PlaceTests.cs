@@ -15,7 +15,7 @@ namespace ET2017_TuningTool.Model.Tests
         [TestMethod()]
         public void GetDistanceTest()
         {
-            var p = new Place { No = 0 };
+            var p = new BlockPlace { No = 0 };
             var dst = new Point { X = 4, Y = 13 };
 
             Assert.AreEqual(5, p.GetDistance(dst));

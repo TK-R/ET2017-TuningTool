@@ -75,30 +75,30 @@ namespace ET2017_TuningTool.Model
 
         #endregion
 
-        public Place[] PlaceArray { private set; get; }
+        public BlockPlace[] PlaceArray { private set; get; }
 
         public BlockFieldModel()
         {
             // フィールド情報体を初期化
-            PlaceArray = Enumerable.Range(0, 15).Select(r => new Place { No = r }).ToArray();
+            PlaceArray = Enumerable.Range(0, 15).Select(r => new BlockPlace { No = r }).ToArray();
 
-            PlaceArray = new Place[]
+            PlaceArray = new BlockPlace[]
             {
-                new Place{ No = 0, PlaceColor = BlockColor.Red },
-                new Place{ No = 1, PlaceColor = BlockColor.Blue },
-                new Place{ No = 2, PlaceColor = BlockColor.Yellow },
-                new Place{ No = 3, PlaceColor = BlockColor.Green },
-                new Place{ No = 4, PlaceColor = BlockColor.Yellow },
-                new Place{ No = 5, PlaceColor = BlockColor.Green },
-                new Place{ No = 6, PlaceColor = BlockColor.Red},
-                new Place{ No = 7, PlaceColor = BlockColor.Red },
-                new Place{ No = 8, PlaceColor = BlockColor.Blue},
-                new Place{ No = 9, PlaceColor = BlockColor.Green },
-                new Place{ No = 10, PlaceColor = BlockColor.Green},
-                new Place{ No = 11, PlaceColor = BlockColor.Green},
-                new Place{ No = 12, PlaceColor = BlockColor.Yellow},
-                new Place{ No = 13, PlaceColor = BlockColor.Red},
-                new Place{ No = 14, PlaceColor = BlockColor.Yellow },
+                new BlockPlace{ No = 0, PlaceColor = BlockColor.Red },
+                new BlockPlace{ No = 1, PlaceColor = BlockColor.Blue },
+                new BlockPlace{ No = 2, PlaceColor = BlockColor.Yellow },
+                new BlockPlace{ No = 3, PlaceColor = BlockColor.Green },
+                new BlockPlace{ No = 4, PlaceColor = BlockColor.Yellow },
+                new BlockPlace{ No = 5, PlaceColor = BlockColor.Green },
+                new BlockPlace{ No = 6, PlaceColor = BlockColor.Red},
+                new BlockPlace{ No = 7, PlaceColor = BlockColor.Red },
+                new BlockPlace{ No = 8, PlaceColor = BlockColor.Blue},
+                new BlockPlace{ No = 9, PlaceColor = BlockColor.Green },
+                new BlockPlace{ No = 10, PlaceColor = BlockColor.Green},
+                new BlockPlace{ No = 11, PlaceColor = BlockColor.Green},
+                new BlockPlace{ No = 12, PlaceColor = BlockColor.Yellow},
+                new BlockPlace{ No = 13, PlaceColor = BlockColor.Red},
+                new BlockPlace{ No = 14, PlaceColor = BlockColor.Yellow },
             };
         }
 
@@ -219,78 +219,6 @@ namespace ET2017_TuningTool.Model
         public int Yellow { get; set; } = 1;
         public int Blue { get; set; } = 1;
         public int Green { get; set; } = 1;
-    }
-
-    /// <summary>
-    /// ブロック置き場ごとのステータスを示すクラス
-    /// </summary>
-    public class Place
-    {
-        private static Point[] PointArray = new Point[]
-        {
-            new Point(1, 9),
-            new Point(82, 9),
-            new Point(168, 9),
-            new Point(254, 9),
-            new Point(42, 34),
-            new Point(126,34),
-            new Point(210, 34),
-            new Point(84, 58),
-            new Point(169, 58),
-            new Point(19, 77),
-            new Point(236, 77),
-            new Point(61, 100),
-            new Point(108, 100),
-            new Point(146, 100),
-            new Point(192, 100)
-        };
-        
-        /// <summary>
-        /// 自身のフィールドをコピーしたブロック置き場ステータスを返す
-        /// </summary>
-        /// <returns>ブロック置き場</returns>
-        public Place Clone()
-        {
-            return MemberwiseClone() as Place;
-        }
-
-        // 配置してあるブロックの情報
-        public BlockColor OnBlockColor { set; get; }
-        // 自身の番号
-        public int No { set; get; }
-        // 自身の色
-        public BlockColor PlaceColor { set; get; }
-        public override string ToString()
-        {
-            return "No:" + No + ",置き場色:" + PlaceColor.DisplayName() + ",ブロック:" + OnBlockColor.DisplayName();
-        }
-        
-        /// <summary>
-        /// 他のブロック置き場Noから自身との座標差を求めて返す
-        /// </summary>
-        /// <param name="no">フィールドNo</param>
-        /// <returns>距離</returns>
-        public double GetDistance(int no)
-        {
-            return GetDistance(PointArray[no]);
-        }
-
-        public Point GetPosition()
-        {
-            return PointArray[No];
-        }
-
-        /// <summary>
-        /// あるポイントと自身のポイントとの距離を計算して返す
-        /// </summary>
-        /// <param name="dst">対象のポイント</param>
-        /// <returns>距離</returns>
-        public double GetDistance(Point dst)
-        {
-            var src = PointArray[No];
-
-            return Math.Sqrt(Math.Pow(dst.X - src.X, 2) + Math.Pow(dst.Y - src.Y, 2));
-        }
     }
 
     /// <summary>
