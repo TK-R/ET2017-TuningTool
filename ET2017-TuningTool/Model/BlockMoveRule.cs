@@ -30,34 +30,34 @@ namespace ET2017_TuningTool.Model
         /// <summary>
         /// ライン情報の配列
         /// </summary>
-        Line[] LineArray { get; set; } =
+        public static Line[] LineArray { get; set; } =
         {
-            new Line{ No = 0, StartPlaceNo = 0, EndPlaceNo = 1, WayPoint = new Point(49,9) },
-            new Line{ No = 1, StartPlaceNo = 1, EndPlaceNo = 2, WayPoint = new Point(134,9) },
-            new Line{ No = 2, StartPlaceNo = 2, EndPlaceNo = 3, WayPoint = new Point(219,9) },
-            new Line{ No = 3, StartPlaceNo = 0, EndPlaceNo = 4, WayPoint = new Point(31,25) },
-            new Line{ No = 4, StartPlaceNo = 1, EndPlaceNo = 4, WayPoint = new Point(74,25) },
-            new Line{ No = 5, StartPlaceNo = 1, EndPlaceNo = 5, WayPoint = new Point(117,25) },
-            new Line{ No = 6, StartPlaceNo = 2, EndPlaceNo = 5, WayPoint = new Point(160,25) },
-            new Line{ No = 7, StartPlaceNo = 2, EndPlaceNo = 6, WayPoint = new Point(203,25) },
-            new Line{ No = 8, StartPlaceNo = 3, EndPlaceNo = 6, WayPoint = new Point(246,25) },
-            new Line{ No = 9, StartPlaceNo = 0, EndPlaceNo = 9, WayPoint = new Point(18,45) },
-            new Line{ No = 10, StartPlaceNo = 4, EndPlaceNo = 7, WayPoint = new Point(71,45) },
-            new Line{ No = 11, StartPlaceNo = 5, EndPlaceNo = 7, WayPoint = new Point(114,45) },
-            new Line{ No = 12, StartPlaceNo = 5, EndPlaceNo = 8, WayPoint = new Point(157,45) },
-            new Line{ No = 13, StartPlaceNo = 6, EndPlaceNo = 8, WayPoint = new Point(200,45) },
-            new Line{ No = 14, StartPlaceNo = 3, EndPlaceNo = 10, WayPoint = new Point(254,45) },
-            new Line{ No = 15, StartPlaceNo = 4, EndPlaceNo = 9, WayPoint = new Point(39,57) },
-            new Line{ No = 16, StartPlaceNo = 6, EndPlaceNo = 10, WayPoint = new Point(232,57) },
-            new Line{ No = 17, StartPlaceNo = 7, EndPlaceNo = 11, WayPoint = new Point(84,79) },
-            new Line{ No = 18, StartPlaceNo = 7, EndPlaceNo = 12, WayPoint = new Point(107,79) },
-            new Line{ No = 19, StartPlaceNo = 8, EndPlaceNo = 13, WayPoint = new Point(168,79) },
-            new Line{ No = 20, StartPlaceNo = 8, EndPlaceNo = 14, WayPoint = new Point(191,79) },
-            new Line{ No = 21, StartPlaceNo = 9, EndPlaceNo = 11, WayPoint = new Point(49,91) },
-            new Line{ No = 22, StartPlaceNo = 10, EndPlaceNo = 14, WayPoint = new Point(222,91) },
-            new Line{ No = 23, StartPlaceNo = 11, EndPlaceNo = 12, WayPoint = new Point(96,103) },
-            new Line{ No = 24, StartPlaceNo = 12, EndPlaceNo = 13, WayPoint = new Point(136,103) },
-            new Line{ No = 25, StartPlaceNo = 13, EndPlaceNo = 14, WayPoint = new Point(179,103) }
+            new Line{ No = 0, StartPlaceNo = 0, EndPlaceNo = 1, WayPoint = new Point(49,9), NearLineNo = new int[] {3, 4} },
+            new Line{ No = 1, StartPlaceNo = 1, EndPlaceNo = 2, WayPoint = new Point(134,9), NearLineNo = new int[] {5, 6} },
+            new Line{ No = 2, StartPlaceNo = 2, EndPlaceNo = 3, WayPoint = new Point(219,9), NearLineNo = new int[] {7, 8} },
+            new Line{ No = 3, StartPlaceNo = 0, EndPlaceNo = 4, WayPoint = new Point(31,25), NearLineNo = new int[] {0, 4, 9} },
+            new Line{ No = 4, StartPlaceNo = 1, EndPlaceNo = 4, WayPoint = new Point(74,25), NearLineNo = new int[] {0, 3, 5, 10, 11} },
+            new Line{ No = 5, StartPlaceNo = 1, EndPlaceNo = 5, WayPoint = new Point(117,25), NearLineNo = new int[] {1, 4, 6, 10, 11} },
+            new Line{ No = 6, StartPlaceNo = 2, EndPlaceNo = 5, WayPoint = new Point(160,25), NearLineNo = new int[] {1, 5, 7, 12, 13} },
+            new Line{ No = 7, StartPlaceNo = 2, EndPlaceNo = 6, WayPoint = new Point(203,25), NearLineNo = new int[] {2, 6, 8, 12, 13} },
+            new Line{ No = 8, StartPlaceNo = 3, EndPlaceNo = 6, WayPoint = new Point(246,25), NearLineNo = new int[] {2, 7,14 } },
+            new Line{ No = 9, StartPlaceNo = 0, EndPlaceNo = 9, WayPoint = new Point(18,45) ,NearLineNo = new int[] {3, 15} },
+            new Line{ No = 10, StartPlaceNo = 4, EndPlaceNo = 7, WayPoint = new Point(71,45) ,NearLineNo = new int[] {4, 5, 9, 11, 15, 17} },
+            new Line{ No = 11, StartPlaceNo = 5, EndPlaceNo = 7, WayPoint = new Point(114,45) ,NearLineNo = new int[] {4, 5, 10, 12, 18, 19, 24} },
+            new Line{ No = 12, StartPlaceNo = 5, EndPlaceNo = 8, WayPoint = new Point(157,45) ,NearLineNo = new int[] {6, 7, 11, 13, 18, 19, 24} },
+            new Line{ No = 13, StartPlaceNo = 6, EndPlaceNo = 8, WayPoint = new Point(200,45) ,NearLineNo = new int[] {6, 7, 12, 14, 16, 20, 22} },
+            new Line{ No = 14, StartPlaceNo = 3, EndPlaceNo = 10, WayPoint = new Point(254,45) ,NearLineNo = new int[] {8, 16} },
+            new Line{ No = 15, StartPlaceNo = 4, EndPlaceNo = 9, WayPoint = new Point(39,57) ,NearLineNo = new int[] {3, 9, 10, 17, 21} },
+            new Line{ No = 16, StartPlaceNo = 6, EndPlaceNo = 10, WayPoint = new Point(232,57) ,NearLineNo = new int[] {8, 13, 14, 20, 22} },
+            new Line{ No = 17, StartPlaceNo = 7, EndPlaceNo = 11, WayPoint = new Point(84,79) ,NearLineNo = new int[] {10, 15, 18, 21, 23} },
+            new Line{ No = 18, StartPlaceNo = 7, EndPlaceNo = 12, WayPoint = new Point(107,79) ,NearLineNo = new int[] {11, 12, 17, 19, 23, 24} },
+            new Line{ No = 19, StartPlaceNo = 8, EndPlaceNo = 13, WayPoint = new Point(168,79) ,NearLineNo = new int[] {11, 12, 18, 20, 24, 25} },
+            new Line{ No = 20, StartPlaceNo = 8, EndPlaceNo = 14, WayPoint = new Point(191,79) ,NearLineNo = new int[] {13, 16, 19, 12, 25} },
+            new Line{ No = 21, StartPlaceNo = 9, EndPlaceNo = 11, WayPoint = new Point(49,91) ,NearLineNo = new int[] {10, 15, 17} },
+            new Line{ No = 22, StartPlaceNo = 10, EndPlaceNo = 14, WayPoint = new Point(222,91), NearLineNo = new int[] {13, 16, 20} },
+            new Line{ No = 23, StartPlaceNo = 11, EndPlaceNo = 12, WayPoint = new Point(96,103), NearLineNo = new int[] {17,18} },
+            new Line{ No = 24, StartPlaceNo = 12, EndPlaceNo = 13, WayPoint = new Point(136,103), NearLineNo = new int[] {11, 12, 18, 19} },
+            new Line{ No = 25, StartPlaceNo = 13, EndPlaceNo = 14, WayPoint = new Point(179,103), NearLineNo = new int[] {19, 20}}
         };
         
         /// <summary>

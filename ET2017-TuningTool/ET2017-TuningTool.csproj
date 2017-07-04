@@ -157,6 +157,7 @@
     <Compile Include="Model\BlockMoveCommand.cs" />
     <Compile Include="Model\BlockMoveRule.cs" />
     <Compile Include="Model\BlockPlace.cs" />
+    <Compile Include="Model\Dijkstra.cs" />
     <Compile Include="Model\EV3Model.cs" />
     <Compile Include="Model\GraphModel\AbstractValueModel.cs" />
     <Compile Include="Model\GraphModel\InputValueModel.cs" />
