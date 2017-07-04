@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ET2017_TuningTool.Model;
 using System.Linq;
 
-namespace DijkstraMothod
+namespace ET2017_TuningTool.Model
 {
     /// <summary>
     /// ダイキストラ法における枝

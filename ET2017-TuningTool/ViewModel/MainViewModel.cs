@@ -297,6 +297,10 @@ namespace ET2017_TuningTool
                 .ToReactiveCommand().AddTo(this.Disposable);
             DecodeCommand.Subscribe( _ =>
             {
+                // 運搬経路は初期化
+                BlockField.ApproachWayPointArray = new Point[0];
+                BlockField.MoveBlockWayPointArray = new Point[0];
+
                 BlockField.SetBlockPosition(InitPostionCode.Value, 0);
                 RobotModel.ResetPosition();
 

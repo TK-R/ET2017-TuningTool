@@ -69,6 +69,8 @@ namespace DijkstraMothod.Tests
 
             route = di.GetRouteNodeNo(11, 22);
             CollectionAssert.AreEqual(new int[] { 11, 19, 20, 22 }, route);
+
+
         }
     }
 }

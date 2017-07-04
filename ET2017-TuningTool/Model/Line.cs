@@ -36,9 +36,14 @@ namespace ET2017_TuningTool.Model
         /// <returns></returns>
         public double GetDistance(Line dstLine)
         {
-            var src = this.WayPoint;
             var dst = dstLine.WayPoint;
 
+            return GetDistance(dst);
+        }
+
+        public double GetDistance(Point dst)
+        {
+            var src = this.WayPoint;
             return Math.Sqrt(Math.Pow(dst.X - src.X, 2) + Math.Pow(dst.Y - src.Y, 2));
         }
 

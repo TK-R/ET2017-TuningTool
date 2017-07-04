@@ -188,7 +188,7 @@
                         
                         <Label Content="初期位置:" FontSize="12" Margin="-6,0,0,268" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
                         <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="60,2,0,0" HorizontalAlignment="Left" Width="46" Height="25" VerticalAlignment="Top"/>
-                        <Image MouseLeftButtonDown="Image_MouseLeftButtonDown"  Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,32,0,0" Height="114" VerticalAlignment="Top" />
+                        <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,32,0,0" Height="114" VerticalAlignment="Top" />
                         <Canvas HorizontalAlignment="Left" Height="121"   VerticalAlignment="Top" Width="293" Margin="0,25,0,0">
                             <Ellipse Fill="Yellow" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Yellow.Value.X}"  Canvas.Top="{Binding Yellow.Value.Y}"  />
@@ -201,15 +201,15 @@
                             <Ellipse Fill="Black" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Black.Value.X}" Canvas.Top="{Binding Black.Value.Y}"   />
 
-                            <Path  Stroke="Purple" StrokeThickness="3" 
+                            <Path  Stroke="Purple" StrokeThickness="5" 
                                    Canvas.Top="10" Canvas.Left="0"
                                    Data="{Binding ApproachWay.Value, Converter={StaticResource ResourceKey=PointsToPathConverter}}"/>
                             
-                            <Path  Stroke="Orange" StrokeThickness="3" 
+                            <Path  Stroke="Orange" StrokeThickness="5" 
                                    Canvas.Top="10" Canvas.Left="0"
                                    Data="{Binding MoveBlockWay.Value, Converter={StaticResource ResourceKey=PointsToPathConverter}}"/>
 
-                            <Image  Source="/ET2017-TuningTool;component/Image/robot.png" HorizontalAlignment="Left"
+                            <Image  Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
                                    Canvas.Left="{Binding Robot.Value.X}" Canvas.Top="{Binding Robot.Value.Y}"
                                     Width="30" Height="30" VerticalAlignment="Top" />
 

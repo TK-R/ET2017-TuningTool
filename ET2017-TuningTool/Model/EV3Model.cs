@@ -18,5 +18,14 @@ namespace ET2017_TuningTool
         {
             Position = new Point(0, 90);
         }
+
+        /// <summary>
+        /// 画像のサイズを加味した、中心点の座標を返す
+        /// </summary>
+        /// <returns></returns>
+        public Point GetPosition()
+        {
+            return new Point { X = Position.X + 15, Y = Position.Y + 15 };
+        }
     }
 }

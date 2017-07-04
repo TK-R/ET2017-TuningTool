@@ -57,7 +57,8 @@ namespace ET2017_TuningTool.Model
             new Line{ No = 22, StartPlaceNo = 10, EndPlaceNo = 14, WayPoint = new Point(222,91), NearLineNo = new int[] {13, 16, 20} },
             new Line{ No = 23, StartPlaceNo = 11, EndPlaceNo = 12, WayPoint = new Point(96,103), NearLineNo = new int[] {17,18} },
             new Line{ No = 24, StartPlaceNo = 12, EndPlaceNo = 13, WayPoint = new Point(136,103), NearLineNo = new int[] {11, 12, 18, 19} },
-            new Line{ No = 25, StartPlaceNo = 13, EndPlaceNo = 14, WayPoint = new Point(179,103), NearLineNo = new int[] {19, 20}}
+            new Line{ No = 25, StartPlaceNo = 13, EndPlaceNo = 14, WayPoint = new Point(179,103), NearLineNo = new int[] {19, 20}},
+            new Line{ No = 26, StartPlaceNo = 9, EndPlaceNo = 9, WayPoint = new Point (18,90), NearLineNo = new int[] { 9,21}}
         };
         
         /// <summary>
@@ -72,7 +73,7 @@ namespace ET2017_TuningTool.Model
             // この配列への値操作はフィールドに影響を与えないため、計算に使用できる
             PlaceArray = field.PlaceArray.Select(p => p.Clone()).ToArray();
 
-            RobotPosition = robot.Position;
+            RobotPosition = robot.GetPosition();
 
             // ブロック運搬コマンドを生成する
             while (true)
@@ -150,24 +151,38 @@ namespace ET2017_TuningTool.Model
             dstPlace.OnBlockColor = srcPlace.OnBlockColor;
             srcPlace.OnBlockColor = BlockColor.None;
 
+            var di = new Dijkstra(LineArray);
+
+
+            var startWayPoint = LineArray.FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+
+            var approachWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
+                                                   l.EndPlaceNo == srcPlace.No)
+                                       .FindMin(l => l.GetDistance(RobotPosition)).No;     // そのうち、最もロボットに近い点
+
+            var moveStartWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
+                                                   l.EndPlaceNo == srcPlace.No) 
+                                             .FindMin(l => l.GetDistance(dstPlace.GetPosition())).No; // そのうち、最も終点に近い点
+
+            var dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
+                                                   l.EndPlaceNo == dstPlace.No).First().No;
+
+            
+            var approach = di.GetRouteNodeNo(startWayPoint, approachWayPoint);
+            var blockMove = di.GetRouteNodeNo(moveStartWayPoint, dstWayPoint);
+            
             var command = new BlockMoveCommand {
                 SourceBlockPlaceNo = srcPlace.No,
                 DestinationBlockPlaceNo = dstPlace.No,
                 TargetBlockColor = dstPlace.OnBlockColor,
-                // 仮
-                //                ApproachWay = Enumerable.Range(0, 26).Select(n => new Way { WayPointNo = n}).ToArray()
-                ApproachWay = new Way[] {
-
-                },
-
-                BlockMoveWay = new Way[] {
-                    new Way{ WayPointNo = 17 },
-
-                }
-
-
+                ApproachWay = approach.Select(a => new Way { WayPointNo = a }).ToArray(),
+                BlockMoveWay = blockMove.Select(a => new Way { WayPointNo = a }).ToArray(),
+                
             };
-            
+
+            // 運搬後のポジションに更新
+            RobotPosition = dstPlace.GetPosition();
+
             return command;
         }
 
@@ -217,7 +232,7 @@ namespace ET2017_TuningTool.Model
             // 接近時のパスをアップデート
             var approach = command.ApproachWay.Select(t => LineArray[t.WayPointNo].WayPoint).ToList();
             //ロボットの中心点座標を追加
-            approach.Insert(0, new Point { X = robot.Position.X + 15, Y = robot.Position.Y + 15 });
+            approach.Insert(0, robot.GetPosition());
             // 運搬元ブロック置き場の座標を追加
             approach.Add(srcPos);
 
@@ -241,10 +256,7 @@ namespace ET2017_TuningTool.Model
             // 経路情報を更新
             field.ApproachWayPointArray = approach.ToArray();
             field.MoveBlockWayPointArray = moveBlock.ToArray();
-
-
-
-
+            
             BlockMoveCommandList.Remove(command);
         }
     }

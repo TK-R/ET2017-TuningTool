@@ -54,5 +54,10 @@ namespace ET2017_TuningTool.Model
         /// ウェイポイントの座標
         /// </summary>
         public int WayPointNo { set; get; }
+
+        public override string ToString()
+        {
+            return "No: " + WayPointNo;
+        }
     }
 }
