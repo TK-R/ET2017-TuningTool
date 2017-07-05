@@ -58,82 +58,82 @@ namespace SerialLibrary
         /// <summary>
         /// モータ2の角位置
         /// </summary>
-        [FieldOffset(2)]
+        [FieldOffset(1)]
         public short Motor2Radian;
         /// <summary>
         /// モータ3の角位置
         /// </summary>
-        [FieldOffset(4)]
+        [FieldOffset(2)]
         public short Motor3Radian;
         /// <summary>
         /// モータ4の角位置
         /// </summary>
-        [FieldOffset(6)]
+        [FieldOffset(3)]
         public short Motor4Radian;
         /// <summary>
         /// タッチセンサから 0:OFF 1:ON
         /// </summary>
-        [FieldOffset(8)]
+        [FieldOffset(4)]
         public byte TouchSenser;
         /// <summary>
         /// 超音波センサから取得した距離（cm)
         /// </summary>
-        [FieldOffset(9)]
+        [FieldOffset(5)]
         public ushort SonicDistance;
         /// <summary>
         /// カラーセンサから取得したRGB値(R)
         /// </summary>
-        [FieldOffset(11)]
+        [FieldOffset(7)]
         public byte ColorR;
         /// <summary>
         /// カラーセンサから取得したRGB値(R)
         /// </summary>
-        [FieldOffset(12)]
+        [FieldOffset(8)]
         public byte ColorG;
         /// <summary>
         /// カラーセンサから取得したRGB値(R)
         /// </summary>
-        [FieldOffset(13)]
+        [FieldOffset(9)]
         public byte ColorB;
         /// <summary>
         /// 環境光
         /// </summary>
-        [FieldOffset(14)]
+        [FieldOffset(10)]
         public byte EnvironmentalLight;
         /// <summary>
         /// 反射光
         /// </summary>
-        [FieldOffset(15)]
+        [FieldOffset(11)]
         public byte ReflectedLight;
         /// <summary>
         /// 角速度センサから取得した角位置
         /// </summary>
-        [FieldOffset(16)]
+        [FieldOffset(12)]
         public short Angle;
         /// <summary>
         /// 角速度センサから取得した角速度
         /// </summary>
-        [FieldOffset(18)]
+        [FieldOffset(14)]
         public short AnglarVelocity;
         /// <summary>
         /// 予備1
         /// </summary>
-        [FieldOffset(20)]
+        [FieldOffset(16)]
         public ushort reserved1;
         /// <summary>
         /// 予備2
         /// </summary>
-        [FieldOffset(22)]
+        [FieldOffset(18)]
         public float reserved2;
         /// <summary>
         /// バッテリ電流(mA)
         /// </summary>
-        [FieldOffset(26)]
+        [FieldOffset(22)]
         public ushort BatteryCurrent;
         /// <summary>
         /// バッテリ電圧(V)
         /// </summary>
-        [FieldOffset(28)]
+        [FieldOffset(24)]
         public ushort BatteryVoltage;
     }
 
