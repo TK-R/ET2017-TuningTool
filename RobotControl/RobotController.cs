@@ -1,10 +1,15 @@
 ﻿using System;
 using SerialLibrary;
+using RobotController.GameStrategy;
+using RobotController.RobotStatus;
+using RobotController.BlockArrange;
+using System.Collections.Generic;
 
 namespace RobotController
 {
     public class RobotController
     {
+        
         /// <summary>
         /// 周期処理実行中ならTrue
         /// </summary>
