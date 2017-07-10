@@ -34,5 +34,6 @@ namespace ET2017_TuningTool
         {
             Console.WriteLine("x:" + e.GetPosition(this).X + "y:" + e.GetPosition(this).Y);
         }
+
     }
 }

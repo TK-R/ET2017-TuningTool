@@ -14,7 +14,7 @@ namespace ET2017_TuningTool.Model
         /// <summary>
         /// シリアル監視クラスへの参照
         /// </summary>
-        private SerialManager Serial;
+        public SerialManager Serial { private set; get; }
 
         private string[] _SerialPortNames;
         /// <summary>

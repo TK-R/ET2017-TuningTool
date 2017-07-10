@@ -13,6 +13,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
+using RobotController;
 
 namespace ET2017_TuningTool
 {
@@ -90,7 +91,8 @@ namespace ET2017_TuningTool
         /// <summary>
         /// ロボットの位置情報
         /// </summary>
-        public ReactiveProperty<Point> Robot { get; }
+        public ReactiveProperty<Point> RobotPos { get; }
+
 
         /// <summary>
         /// 運搬対象ブロックに接近する際の運搬経路のパス
@@ -192,6 +194,10 @@ namespace ET2017_TuningTool
 
         public PIDModel PID { get; set; } = new PIDModel();
 
+        public ReactiveProperty<bool> RobotPCControl { get; set; }
+
+        public RobotControl RobotController { get; set; }
+
         /// <summary>
         /// 入力値モデルを格納するリスト
         /// </summary>
@@ -221,7 +227,7 @@ namespace ET2017_TuningTool
             Green = BlockField.ObserveProperty(x => x.GreenPosition)
                        .Select(p => BlockPositionArray[p])
                        .ToReactiveProperty().AddTo(this.Disposable);
-            Robot = RobotModel.ObserveProperty(r => r.Position)
+            RobotPos = RobotModel.ObserveProperty(r => r.Position)
                               .ToReactiveProperty().AddTo(this.Disposable);
 
             // 入力値モデルを生成
@@ -289,6 +295,12 @@ namespace ET2017_TuningTool
             DisconnectCommand.Subscribe(_ => {
                Serial.StopSerial();
             });
+
+            // ロボット制御クラスを初期化する
+            RobotController = new RobotControl(Serial.Serial);
+            RobotPCControl = RobotController.ObserveProperty(r => r.Running)
+                                            .ToReactiveProperty().AddTo(this.Disposable);
+
 
             var rule = new BlockMoveRule(RobotModel, BlockField);
             

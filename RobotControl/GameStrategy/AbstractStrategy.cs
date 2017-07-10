@@ -1,4 +1,4 @@
-﻿using RobotControl.RobotStatus;
+﻿using RobotController.RobotStatus;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -28,6 +28,6 @@ namespace RobotController.GameStrategy
         /// <summary>
         /// 戦略管理クラスへの参照
         /// </summary>
-        public RobotController Context { set; get; }
+        public RobotControl Context { set; get; }
     }
 }

@@ -185,7 +185,7 @@
                         <Grid.Resources>
                             <local:PointsToPathConverter x:Key="PointsToPathConverter"/>
                         </Grid.Resources>
-                        
+
                         <Label Content="初期位置:" FontSize="12" Margin="-6,0,0,268" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
                         <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="60,2,0,0" HorizontalAlignment="Left" Width="46" Height="25" VerticalAlignment="Top"/>
                         <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,32,0,0" Height="114" VerticalAlignment="Top" />
@@ -204,7 +204,7 @@
                             <Path  Stroke="Purple" StrokeThickness="5" 
                                    Canvas.Top="10" Canvas.Left="0"
                                    Data="{Binding ApproachWay.Value, Converter={StaticResource ResourceKey=PointsToPathConverter}}"/>
-                            
+
                             <Path  Stroke="Orange" StrokeThickness="5" 
                                    Canvas.Top="10" Canvas.Left="0"
                                    Data="{Binding MoveBlockWay.Value, Converter={StaticResource ResourceKey=PointsToPathConverter}}"/>
@@ -244,36 +244,41 @@
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="1" >
-                <GroupBox Header="STATE - CONTROL" Margin="2,2,2,2">
+                <GroupBox Header="PID - CONTROL" Margin="2,2,2,2">
                     <Grid>
-                        <Button x:Name="StartButton" Content="START" Width="84" Margin="0,0,0,214" HorizontalAlignment="Left"/>
-                        <Button x:Name="ResetButton" Content="RESET" Margin="94,0,0,214" HorizontalAlignment="Left" Width="84"/>
-                        <Label Content="出力:" Margin="0,47,0,175" Height="24"/>
-                        <Label Content="比例:" Margin="0,87,0,135" Height="24"/>
-                        <Label Content="積分:" Margin="0,127,0,95" Height="24"/>
-                        <Label Content="微分:" Margin="0,165,0,57" Height="24"/>
-                        <TextBlock Text="{Binding PIDPowerData.Value,StringFormat={}{0:N1}}" Margin="27,52,113,170" TextAlignment="Right" Height="24"/>
-                        <TextBlock Text="{Binding PIDPGainData.Value,StringFormat={}{0:N2}}" Margin="27,92,113,130" TextAlignment="Right" Height="24"/>
-                        <TextBlock Text="{Binding PIDIGainData.Value,StringFormat={}{0:N2}}" Margin="27,132,113,90" TextAlignment="Right" Height="24"/>
-                        <TextBlock Text="{Binding PIDDGainData.Value,StringFormat={}{0:N2}}" Margin="27,170,113,52" TextAlignment="Right" Height="24"/>
+                        <ComboBox  materialDesign:HintAssist.Hint="State No" Margin="10,2,10,218" />
+                        <Label Content="出力:" Margin="0,50,0,172" Height="24"/>
+                        <Label Content="比例:" Margin="0,90,0,132" Height="24"/>
+                        <Label Content="積分:" Margin="0,130,0,92" Height="24"/>
+                        <Label Content="微分:" Margin="0,168,0,54" Height="24"/>
+                        <TextBlock Text="{Binding PIDPowerData.Value,StringFormat={}{0:N1}}" Margin="27,55,113,167" TextAlignment="Right" Height="24"/>
+                        <TextBlock Text="{Binding PIDPGainData.Value,StringFormat={}{0:N2}}" Margin="27,95,113,127" TextAlignment="Right" Height="24"/>
+                        <TextBlock Text="{Binding PIDIGainData.Value,StringFormat={}{0:N2}}" Margin="27,135,113,87" TextAlignment="Right" Height="24"/>
+                        <TextBlock Text="{Binding PIDDGainData.Value,StringFormat={}{0:N2}}" Margin="27,173,113,49" TextAlignment="Right" Height="24"/>
                         <Slider Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider"
-                                            Value="{Binding PIDPowerData.Value}" Margin="75,49,0,175" HorizontalAlignment="Left" Width="93" />
+                                            Value="{Binding PIDPowerData.Value}" Margin="75,52,0,172" HorizontalAlignment="Left" Width="93" />
                         <Slider Minimum="0" Maximum="2" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDPGainData.Value}" Margin="75,89,0,135" HorizontalAlignment="Left" Width="93" />
+                                            Value="{Binding PIDPGainData.Value}" Margin="75,92,0,132" HorizontalAlignment="Left" Width="93" />
                         <Slider Minimum="0" Maximum="1" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDIGainData.Value}" Margin="75,129,0,95" HorizontalAlignment="Left" Width="93" />
+                                            Value="{Binding PIDIGainData.Value}" Margin="75,132,0,92" HorizontalAlignment="Left" Width="93" />
                         <Slider Minimum="0" Maximum="5" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDDGainData.Value}" Margin="75,169,0,57" HorizontalAlignment="Left" Width="93" />
+                                            Value="{Binding PIDDGainData.Value}" Margin="75,172,0,54" HorizontalAlignment="Left" Width="93" />
                     </Grid>
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="2" Height="190" VerticalAlignment="Top">
                 <GroupBox Header="MESSAGE" Margin="2" >
                     <Grid>
+                        <Label Content="PC制御：" Margin="0,0,60,111"/>
+                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center"
+                                         ToolTip="Default ToggleButton Style" Margin="61,0,76,115" Height="21" IsChecked="{Binding PCControl}"/>
+                        <Button x:Name="StartButton" Content="START" Width="84" Margin="0,30,0,74" HorizontalAlignment="Left"/>
+                        <Button x:Name="ResetButton" Content="RESET" Margin="94,30,0,74" HorizontalAlignment="Left" Width="84"/>
+
                     </Grid>
                 </GroupBox>
             </Grid>

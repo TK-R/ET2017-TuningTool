@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RobotControl.RobotStatus
+namespace RobotController.RobotStatus
 {
 
     /// <summary>
