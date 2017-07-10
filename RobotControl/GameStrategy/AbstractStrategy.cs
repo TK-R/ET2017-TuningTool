@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RobotControl.RobotStatus;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,17 @@ namespace RobotController.GameStrategy
     public abstract class AbstractStrategy
     {
         /// <summary>
-        /// 定周期で実行される
+        /// 入力信号情報への参照
+        /// </summary>
+        public InputParameter InputData { private set; get; }
+
+        /// <summary>
+        /// 出力信号情報への参照
+        /// </summary>
+        public OutputParameter OutputData { private set; get; }
+
+        /// <summary>
+        /// 定周期で実行する処理
         /// </summary>
         public abstract void Run();
 
