@@ -16,15 +16,16 @@ namespace RobotController.GameStrategy
         public override void Run()
         {
             double pk = PIDParamList[0].PGain, pd = PIDParamList[0].DGain;
+            int center = 90;
             var power = 50;
 
             int prevDef = 0;
             var input = InputParameter.InputSignal;
             var output = OutputParameter.OutputSignal;
 
-            var light = HSLColor.FromRGB(input.ColorR, input.ColorG, input.ColorB).Luminosity * 100;
+            var light = input.ReflectedLight;
 
-            var diff = 50 - (int)light;
+            var diff = center - (int)light;
             var steering = pk * diff + (diff - prevDef) * pd;
             
 

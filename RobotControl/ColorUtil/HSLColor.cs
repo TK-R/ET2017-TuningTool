@@ -58,7 +58,7 @@ namespace RobotController.ColorUtil
                     H = 4f + (_R - _G) / _Delta;
                 }
             }
-
+            
             return new HSLColor(H, S, L);
         }
     }
