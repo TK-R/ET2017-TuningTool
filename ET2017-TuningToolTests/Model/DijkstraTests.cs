@@ -12,6 +12,7 @@ namespace DijkstraMothod.Tests
     [TestClass()]
     public class DijkstraTests
     {
+
         [TestMethod()]
         public void ExecuteTest()
         {

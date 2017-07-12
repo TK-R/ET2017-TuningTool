@@ -24,7 +24,7 @@ namespace SerialLibrary
         /// <summary>
         /// 最後に受信したの入力電文のデータ領域
         /// </summary>
-        internal InputSignalData RecentInputSignal
+        public InputSignalData RecentInputSignal
         {
             set
             {
@@ -38,7 +38,7 @@ namespace SerialLibrary
         /// <summary>
         /// 最後に受信した送信する出力電文のデータ領域
         /// </summary>
-        internal OutputSignalData RecentOutputSignal
+        public OutputSignalData RecentOutputSignal
         {
             set
             {

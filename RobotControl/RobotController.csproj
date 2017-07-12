@@ -94,6 +94,7 @@
     <Compile Include="BlockArrange\BlockMoveCommand.cs" />
     <Compile Include="BlockArrange\BlockPlace.cs" />
     <Compile Include="BlockArrange\Line.cs" />
+    <Compile Include="ColorUtil\HSLColor.cs" />
     <Compile Include="GameStrategy\AbstractStrategy.cs" />
     <Compile Include="GameStrategy\ArrangeBlockStrategy.cs" />
     <Compile Include="GameStrategy\LineTraceStrategy.cs" />

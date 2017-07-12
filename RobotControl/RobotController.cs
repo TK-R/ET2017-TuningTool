@@ -5,6 +5,7 @@ using RobotController.RobotStatus;
 using RobotController.BlockArrange;
 using System.Collections.Generic;
 using Microsoft.Practices.Prism.Mvvm;
+using System.Threading;
 
 namespace RobotController
 {
@@ -19,13 +20,58 @@ namespace RobotController
         /// <summary>
         /// シリアル通信監理クラスへの参照
         /// </summary>
-        private SerialManager Serial { set; get; }
+        public SerialManager Serial { set; get; }
 
+        /// <summary>
+        /// 現在の競技戦略
+        /// </summary>
         private AbstractStrategy CurrentStrategy { set; get; }
 
-        public RobotControl(SerialManager serial)
+        /// <summary>
+        /// 走行体の周期動作を模擬スレッド
+        /// </summary>
+        private Thread CyclicThread { set; get; }
+
+        private bool Killflag = false;
+        public void ThreadStop()
         {
-            Serial = serial;    
+            Killflag = true;
+        }
+
+        public RobotControl()
+        {
+            // 起動時の競技戦略を宣言
+            CurrentStrategy = new LineTraceStrategy();
+
+            // 周期動作を定義
+            CyclicThread = new Thread(_ =>
+            {
+                while (true)
+                {
+                    if (Killflag)
+                        break;
+
+                    // 20ms待って、すべての処理を繰り返す
+                    Thread.Sleep(20);
+
+                    // 実行中でなければ、次の周期へスキップ
+                    if (!Running || Serial == null || !Serial.Runnning)
+                        continue;
+                    
+                    // 入力動作
+                    InputParameter.InputSignal = Serial.RecentInputSignal;
+
+                    // 周期動作
+                    CurrentStrategy.Run();
+
+                    // 出力動作
+                    Serial.WriteData(OutputParameter.OutputSignal);
+                 }
+            });
+
+            // スレッドをスタート
+            CyclicThread.Start();
+            
         }
         
         public bool SetPIDParametor(List<PIDParametor> pid)
@@ -38,6 +84,11 @@ namespace RobotController
             }
 
             return false;
+        }
+
+        ~RobotControl()
+        {
+            CyclicThread.Abort();
         }
     }
 }

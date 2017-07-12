@@ -10,8 +10,8 @@ namespace RobotController.RobotStatus
     /// <summary>
     /// 出力信号情報
     /// </summary>
-    public class OutputParameter
+    public static class OutputParameter
     {
-        public OutputSignalData OutputData { private set; get; }
+        public static OutputSignalData OutputSignal { set; get; }
     }
 }

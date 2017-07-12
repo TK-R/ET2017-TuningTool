@@ -11,8 +11,9 @@ namespace RobotController.RobotStatus
     /// <summary>
     /// 入力信号情報
     /// </summary>
-    public class InputParameter
+    public static class InputParameter
     {
-        public InputSignalData InputData { private set; get; }
+        public static InputSignalData InputSignal { set; get; }
+        
     }
 }

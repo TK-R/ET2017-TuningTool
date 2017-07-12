@@ -14,12 +14,20 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
 using RobotController;
+using System.Reactive.Subjects;
+using System.Reactive;
 
 namespace ET2017_TuningTool
 {
 
     public class MainViewModel : BindableBase, IDisposable
     {
+
+        private Subject<Unit> CommitTrigger { get; } = new Subject<Unit>();
+
+        private IObservable<Unit> CommitAsObservable => this.CommitTrigger;
+
+
         /// <summary>
         /// Rpの一斉解放用のオブジェクト
         /// </summary>
@@ -194,7 +202,7 @@ namespace ET2017_TuningTool
 
         public PIDModel PID { get; set; } = new PIDModel();
 
-        public ReactiveProperty<bool> RobotPCControl { get; set; }
+        public ReactiveProperty<bool> PCControl { get; set; }
 
         public RobotControl RobotController { get; set; }
 
@@ -264,6 +272,7 @@ namespace ET2017_TuningTool
 
             // 入力値の更新を登録
             Serial.ObserveProperty(s => s.RecentInputSignalData)
+                  .SkipTime(TimeSpan.FromMilliseconds(200))
                   .Subscribe(r => 
             {
                 foreach ( var m in InputModels)
@@ -271,6 +280,7 @@ namespace ET2017_TuningTool
             });
             // 出力値の更新を登録
             Serial.ObserveProperty(s => s.RecentOutputSignalData)
+                  .SkipTime(TimeSpan.FromMilliseconds(200))
                   .Subscribe(r =>
             {
                 foreach (var m in OutputModels) m.UpdateValue(r);
@@ -288,7 +298,11 @@ namespace ET2017_TuningTool
                 .CombineLatest(SelectPortName, (connected, selectPort) =>
                  !connected && !string.IsNullOrEmpty(selectPort)) // 未接続かつシリアルポート選択済み
                 .ToReactiveCommand().AddTo(this.Disposable);
-            ConnectCommand.Subscribe(_ => Serial.StartSerial(SelectPortName.Value));
+            ConnectCommand.Subscribe(_ =>
+            {
+                Serial.StartSerial(SelectPortName.Value);
+                RobotController.Serial = Serial.Serial;
+            });
             
             // 切断コマンドはシリアル通信が接続中のみ実行可能なコマンドとして定義する
             DisconnectCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
@@ -297,10 +311,9 @@ namespace ET2017_TuningTool
             });
 
             // ロボット制御クラスを初期化する
-            RobotController = new RobotControl(Serial.Serial);
-            RobotPCControl = RobotController.ObserveProperty(r => r.Running)
-                                            .ToReactiveProperty().AddTo(this.Disposable);
-
+            RobotController = new RobotControl();
+            PCControl = RobotController.ToReactivePropertyAsSynchronized(r => r.Running)
+                                       .AddTo(this.Disposable);
 
             var rule = new BlockMoveRule(RobotModel, BlockField);
             
@@ -315,7 +328,6 @@ namespace ET2017_TuningTool
 
                 BlockField.SetBlockPosition(InitPostionCode.Value, 0);
                 RobotModel.ResetPosition();
-
                 rule = new BlockMoveRule(RobotModel, BlockField);
             });
 
@@ -341,6 +353,7 @@ namespace ET2017_TuningTool
             PID.Power = 80;
             PID.PGain = 1.2f;
             PID.DGain = 3.48f;
+
             // 200ms値が確定したら、データを送信
             void sendData()
             {
@@ -373,7 +386,8 @@ namespace ET2017_TuningTool
 
             if (Serial != null)
                 Serial.StopSerial();
-            
+
+            RobotController.ThreadStop();
         }
 
     }

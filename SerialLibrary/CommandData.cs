@@ -47,7 +47,7 @@ namespace SerialLibrary
     /// <summary>
     /// 入力信号電文データ領域
     /// </summary>
-    [StructLayout(LayoutKind.Explicit, Size = 30, Pack = 1)]
+    [StructLayout(LayoutKind.Explicit, Size = 26, Pack = 1)]
     public struct InputSignalData
     {
         /// <summary>
