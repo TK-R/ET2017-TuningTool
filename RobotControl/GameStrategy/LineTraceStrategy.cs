@@ -11,11 +11,11 @@ namespace RobotController.GameStrategy
     /// </summary>
     public class LineTraceStrategy : AbstractStrategy
     {
-        public List<PIDParametor> PIDParam { set; get; }
+        public List<PIDParametor> PIDParamList { set; get; }
 
         public override void Run()
         {
-            double pk = 0.5, pd = 4;
+            double pk = PIDParamList[0].PGain, pd = PIDParamList[0].DGain;
             var power = 50;
 
             int prevDef = 0;
@@ -27,6 +27,8 @@ namespace RobotController.GameStrategy
             var diff = 50 - (int)light;
             var steering = pk * diff + (diff - prevDef) * pd;
             
+
+
             if (light == 100)
             {
                 output.Motor1Power = 0;

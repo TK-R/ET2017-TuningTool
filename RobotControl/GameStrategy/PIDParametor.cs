@@ -9,22 +9,22 @@ namespace RobotController.GameStrategy
         /// <summary>
         /// ステートNo
         /// </summary>
-        int StateNo { get; set; }
+        public int StateNo { get; set; }
 
         /// <summary>
         /// 比例ゲイン
         /// </summary>
-        float PGain { get; set; }
+        public float PGain { get; set; }
 
         /// <summary>
         /// 積分ゲイン
         /// </summary>
-        float IGain { set; get; }
+        public float IGain { set; get; }
 
         /// <summary>
         ///  微分ゲイン
         /// </summary>
-        float DGain { set; get; }
+        public float DGain { set; get; }
 
 
     }

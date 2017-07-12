@@ -275,7 +275,7 @@
                     <Grid>
                         <Label Content="PC制御：" Margin="0,0,60,111"/>
                         <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center"
-                                         ToolTip="Default ToggleButton Style" Margin="61,0,76,115" Height="21" IsChecked="{Binding PCControl.Value, Mode=TwoWay}"/>
+                                         ToolTip="Default ToggleButton Style" Margin="61,0,76,115" Height="21" IsChecked="{Binding PCControlRobot.Value, Mode=TwoWay}"/>
                         <Button x:Name="StartButton" Content="START" Width="84" Margin="0,30,0,74" HorizontalAlignment="Left"/>
                         <Button x:Name="ResetButton" Content="RESET" Margin="94,30,0,74" HorizontalAlignment="Left" Width="84"/>
 

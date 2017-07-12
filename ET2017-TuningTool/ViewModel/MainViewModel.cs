@@ -202,7 +202,7 @@ namespace ET2017_TuningTool
 
         public PIDModel PID { get; set; } = new PIDModel();
 
-        public ReactiveProperty<bool> PCControl { get; set; }
+        public ReactiveProperty<bool> PCControlRobot { get; set; }
 
         public RobotControl RobotController { get; set; }
 
@@ -310,10 +310,6 @@ namespace ET2017_TuningTool
                Serial.StopSerial();
             });
 
-            // ロボット制御クラスを初期化する
-            RobotController = new RobotControl();
-            PCControl = RobotController.ToReactivePropertyAsSynchronized(r => r.Running)
-                                       .AddTo(this.Disposable);
 
             var rule = new BlockMoveRule(RobotModel, BlockField);
             
@@ -361,6 +357,9 @@ namespace ET2017_TuningTool
                 if (!Serial.Connected)
                     return;
 
+                // PC制御中なら、内部のコントローラにPIDパラメータを反映
+                SetControllerPID();
+
                 Serial.WriteData(new PIDData
                 {
                     BasePower = PIDPowerData.Value,
@@ -369,12 +368,37 @@ namespace ET2017_TuningTool
                     DGain = PIDDGainData.Value
                 });
             }
+
             var pidWait = TimeSpan.FromMilliseconds(500);
             PIDPowerData.Throttle(pidWait).Subscribe(_ => sendData());
             PIDPGainData.Throttle(pidWait).Subscribe(_ => sendData());
             PIDIGainData.Throttle(pidWait).Subscribe(_ => sendData());
             PIDDGainData.Throttle(pidWait).Subscribe(_ => sendData());
 
+
+            // ロボット制御クラスを初期化する
+            RobotController = new RobotControl();
+            PCControlRobot = RobotController.ToReactivePropertyAsSynchronized(r => r.Running)
+                                       .AddTo(this.Disposable);
+
+            SetControllerPID();
+
+        }
+
+        /// <summary>
+        /// 自身の保持するロボット制御コントローラにPID値をセットする
+        /// </summary>
+        private void SetControllerPID()
+        {
+            var pidList = new List<RobotController.GameStrategy.PIDParametor>()
+                    {
+                        new RobotController.GameStrategy.PIDParametor { StateNo = 0,
+                                                                        PGain = PIDPGainData.Value,
+                                                                        IGain = PIDIGainData.Value,
+                                                                        DGain = PIDDGainData.Value }
+                    };
+            RobotController.SetPIDParametor(pidList);
+            
         }
 
         /// <summary>

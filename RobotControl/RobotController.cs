@@ -79,7 +79,7 @@ namespace RobotController
             // 現在の戦略クラスがライントレースなら、PIDパラメータを更新
             if (CurrentStrategy is LineTraceStrategy lts)
             {
-                lts.PIDParam = pid;
+                lts.PIDParamList = pid;
                 return true;
             }
 
