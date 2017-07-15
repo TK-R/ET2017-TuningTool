@@ -15,10 +15,10 @@ namespace RobotController.GameStrategy
 
         public override void Run()
         {
-            double pk = PIDParamList[0].PGain, pd = PIDParamList[0].DGain;
+            var pid = PIDParamList[0];
+            double pk = pid.PGain, pd = pid.DGain, power = pid.Power;
             int center = 90;
-            var power = 50;
-
+          
             int prevDef = 0;
             var input = InputParameter.InputSignal;
             var output = OutputParameter.OutputSignal;
@@ -27,15 +27,9 @@ namespace RobotController.GameStrategy
 
             var diff = center - (int)light;
             var steering = pk * diff + (diff - prevDef) * pd;
-            
 
 
-            if (light == 100)
-            {
-                output.Motor1Power = 0;
-                output.Motor2Power = 0;
-            }
-            else if (steering > 0)
+            if (steering > 0)
             {
                 output.Motor1Power = (sbyte)(power + steering < 100 ? power + steering : 100);
                 output.Motor2Power = (sbyte)(power - steering > 0 ? power - steering : 0);

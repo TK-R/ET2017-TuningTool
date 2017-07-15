@@ -12,6 +12,11 @@ namespace RobotController.GameStrategy
         public int StateNo { get; set; }
 
         /// <summary>
+        /// 前進方向の出力値
+        /// </summary>
+        public double Power { get; set; }
+
+        /// <summary>
         /// 比例ゲイン
         /// </summary>
         public float PGain { get; set; }

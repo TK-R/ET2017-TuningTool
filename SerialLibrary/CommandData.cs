@@ -47,7 +47,7 @@ namespace SerialLibrary
     /// <summary>
     /// 入力信号電文データ領域
     /// </summary>
-    [StructLayout(LayoutKind.Explicit, Size = 26, Pack = 1)]
+    [StructLayout(LayoutKind.Explicit, Size = 29, Pack = 1)]
     public struct InputSignalData
     {
         /// <summary>
@@ -84,56 +84,56 @@ namespace SerialLibrary
         /// カラーセンサから取得したRGB値(R)
         /// </summary>
         [FieldOffset(7)]
-        public byte ColorR;
-        /// <summary>
-        /// カラーセンサから取得したRGB値(R)
-        /// </summary>
-        [FieldOffset(8)]
-        public byte ColorG;
+        public ushort ColorR;
         /// <summary>
         /// カラーセンサから取得したRGB値(R)
         /// </summary>
         [FieldOffset(9)]
-        public byte ColorB;
+        public ushort ColorG;
+        /// <summary>
+        /// カラーセンサから取得したRGB値(R)
+        /// </summary>
+        [FieldOffset(11)]
+        public ushort ColorB;
         /// <summary>
         /// 環境光
         /// </summary>
-        [FieldOffset(10)]
+        [FieldOffset(13)]
         public byte EnvironmentalLight;
         /// <summary>
         /// 反射光
         /// </summary>
-        [FieldOffset(11)]
+        [FieldOffset(14)]
         public byte ReflectedLight;
         /// <summary>
         /// 角速度センサから取得した角位置
         /// </summary>
-        [FieldOffset(12)]
+        [FieldOffset(15)]
         public short Angle;
         /// <summary>
         /// 角速度センサから取得した角速度
         /// </summary>
-        [FieldOffset(14)]
+        [FieldOffset(17)]
         public short AnglarVelocity;
         /// <summary>
         /// 予備1
         /// </summary>
-        [FieldOffset(16)]
+        [FieldOffset(19)]
         public ushort reserved1;
         /// <summary>
         /// 予備2
         /// </summary>
-        [FieldOffset(18)]
+        [FieldOffset(21)]
         public float reserved2;
         /// <summary>
         /// バッテリ電流(mA)
         /// </summary>
-        [FieldOffset(22)]
+        [FieldOffset(25)]
         public ushort BatteryCurrent;
         /// <summary>
         /// バッテリ電圧(V)
         /// </summary>
-        [FieldOffset(24)]
+        [FieldOffset(27)]
         public ushort BatteryVoltage;
     }
 

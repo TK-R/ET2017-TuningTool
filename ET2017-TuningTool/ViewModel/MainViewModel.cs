@@ -265,10 +265,10 @@ namespace ET2017_TuningTool
             SerialConnected = Serial.ObserveProperty(s => s.Connected).Delay(TimeSpan.FromMilliseconds(500)).ToReactiveProperty().AddTo(this.Disposable);
 
             // センサカラーの表示
-            SensorColor = Serial.ObserveProperty(s => s.RecentInputSignalData)
-                                .ObserveOnDispatcher() // UIスレッドに戻す
-                                .Select(v => new SolidColorBrush(Color.FromArgb(255, v.ColorR, v.ColorG, v.ColorB)))
-                                .ToReadOnlyReactiveProperty().AddTo(this.Disposable);
+            //SensorColor = Serial.ObserveProperty(s => s.RecentInputSignalData)
+            //                    .ObserveOnDispatcher() // UIスレッドに戻す
+            //                    .Select(v => new SolidColorBrush(Color.FromArgb(255, v.ColorR, v.ColorG, v.ColorB)))
+            //                    .ToReadOnlyReactiveProperty().AddTo(this.Disposable);
 
             // 入力値の更新を登録
             Serial.ObserveProperty(s => s.RecentInputSignalData)
@@ -393,6 +393,7 @@ namespace ET2017_TuningTool
             var pidList = new List<RobotController.GameStrategy.PIDParametor>()
                     {
                         new RobotController.GameStrategy.PIDParametor { StateNo = 0,
+                                                                        Power = PIDPowerData.Value,
                                                                         PGain = PIDPGainData.Value,
                                                                         IGain = PIDIGainData.Value,
                                                                         DGain = PIDDGainData.Value }
