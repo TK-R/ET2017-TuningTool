@@ -79,6 +79,9 @@
     <Reference Include="Microsoft.Practices.Prism.SharedInterfaces, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.11\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="ReactiveProperty, Version=3.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ReactiveProperty.3.6.0\lib\net45\ReactiveProperty.dll</HintPath>
     </Reference>
@@ -148,6 +151,7 @@
     <Compile Include="Model\GraphModel\InputValueModel.cs" />
     <Compile Include="Model\GraphModel\OutputValueModel.cs" />
     <Compile Include="Model\Line.cs" />
+    <Compile Include="Model\LogWriteModel.cs" />
     <Compile Include="Model\PIDModel.cs" />
     <Compile Include="View\PointsToPathConverter.cs" />
     <Compile Include="Model\SerialModel.cs" />

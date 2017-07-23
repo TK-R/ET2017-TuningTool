@@ -273,11 +273,15 @@ namespace ET2017_TuningTool
             // 入力値の更新を登録
             Serial.ObserveProperty(s => s.RecentInputSignalData)
                   .SkipTime(TimeSpan.FromMilliseconds(200))
-                  .Subscribe(r => 
+                  .Subscribe(r =>
             {
-                foreach ( var m in InputModels)
-                    m.UpdateValue(r);
+                foreach (var m in InputModels) m.UpdateValue(r);
             });
+
+            // ログ出力の登録
+            Serial.ObserveProperty(s => s.RecentInputSignalData)
+                  .Subscribe(r => LogWriteModel.Write(r));    
+
             // 出力値の更新を登録
             Serial.ObserveProperty(s => s.RecentOutputSignalData)
                   .SkipTime(TimeSpan.FromMilliseconds(200))
@@ -285,6 +289,11 @@ namespace ET2017_TuningTool
             {
                 foreach (var m in OutputModels) m.UpdateValue(r);
             });
+
+            // ログ出力の登録
+            Serial.ObserveProperty(s => s.RecentOutputSignalData)
+                  .Subscribe(r => LogWriteModel.Write(r));
+
             // PIDの更新を登録
             Serial.ObserveProperty(s => s.RecentPIDData)
                   .Subscribe(r =>
