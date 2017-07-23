@@ -1,4 +1,5 @@
-﻿using SerialLibrary;
+﻿using NLog;
+using SerialLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace ET2017_TuningTool.Model
         /// </summary>
         static List<OutputSignalData> OutputData = new List<OutputSignalData>();
 
+        private static Logger NLogger = LogManager.GetCurrentClassLogger();
 
         public static void Write(OutputSignalData output)
         {
@@ -55,8 +57,7 @@ namespace ET2017_TuningTool.Model
 
         private static void Write(InputSignalData input, OutputSignalData output)
         {
-            Console.WriteLine("Output:" + input.TouchSenser + ":" + output.Motor1Power);
-
+            NLogger.Info(input.BatteryCurrent+ "mA," + input.BatteryVoltage + "mV");
         }
     }
 }
