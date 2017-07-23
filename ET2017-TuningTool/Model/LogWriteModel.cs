@@ -55,9 +55,22 @@ namespace ET2017_TuningTool.Model
 
         }
 
+        static int No = 1;
         private static void Write(InputSignalData input, OutputSignalData output)
         {
-            NLogger.Info(input.BatteryCurrent+ "mA," + input.BatteryVoltage + "mV");
+            StringBuilder sb = new StringBuilder();
+            
+
+            // 文字列連結
+            sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}",
+                No,input.Motor1Radian, input.Motor2Radian, input.Motor3Radian, input.Motor4Radian,
+                input.TouchSenser, input.SonicDistance, input.ColorR, input.ColorG, input.ColorB,
+                input.ReflectedLight, input.Angle, input.AnglarVelocity, input.BatteryCurrent, input.BatteryVoltage,
+                output.Motor1Power, output.Motor2Power, output.Motor3Power, output.Motor4Power);
+
+            No++;
+
+            NLogger.Info(sb.ToString());
         }
     }
 }
