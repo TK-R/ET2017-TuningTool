@@ -54,22 +54,22 @@ namespace SerialLibrary
         /// モータ1の角位置
         /// </summary>
         [FieldOffset(0)]
-        public short Motor1Radian;
+        public sbyte Motor1Radian;
         /// <summary>
         /// モータ2の角位置
         /// </summary>
         [FieldOffset(1)]
-        public short Motor2Radian;
+        public sbyte Motor2Radian;
         /// <summary>
         /// モータ3の角位置
         /// </summary>
         [FieldOffset(2)]
-        public short Motor3Radian;
+        public sbyte Motor3Radian;
         /// <summary>
         /// モータ4の角位置
         /// </summary>
         [FieldOffset(3)]
-        public short Motor4Radian;
+        public sbyte Motor4Radian;
         /// <summary>
         /// タッチセンサから 0:OFF 1:ON
         /// </summary>
