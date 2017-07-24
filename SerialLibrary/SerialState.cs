@@ -59,6 +59,7 @@ namespace SerialLibrary
                     Context.CurrentState = new PIDDataState(Context);
                     break;
                 default:
+                    Context.CurrentState = new HeaderState(Context);
                     break;
             }
         }
