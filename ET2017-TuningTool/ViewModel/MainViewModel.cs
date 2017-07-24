@@ -289,7 +289,7 @@ namespace ET2017_TuningTool
             {
                 foreach (var m in OutputModels) m.UpdateValue(r);
             });
-
+            
             // ログ出力の登録
             Serial.ObserveProperty(s => s.RecentOutputSignalData)
                   .Subscribe(r => LogWriteModel.Write(r));
@@ -300,7 +300,10 @@ namespace ET2017_TuningTool
             {
                 PID.UpdatePID(r);
             });
-            
+
+            //自己位置情報の更新を登録
+            Serial.ObserveProperty(s => s.RecentSelfPositionData)
+                  .Subscribe(r => Console.WriteLine("X:" + r.PositionX + ",Y:" + r.PositionY + ",Angle:" + r.Angle));
 
             // 接続コマンド押下イベントを定義
             ConnectCommand = SerialConnected

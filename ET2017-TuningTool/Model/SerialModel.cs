@@ -59,7 +59,10 @@ namespace ET2017_TuningTool.Model
                 ReceiveInputSignal = received => RecentInputSignalData = received,
 
                 // 出力信号電文受信時に、対応するプロパティを更新する処理を登録
-                ReceiveOutputSignal = received => RecentOutputSignalData = received
+                ReceiveOutputSignal = received => RecentOutputSignalData = received,
+
+                // 自己位置情報電文受信時に、対応するプロパティを更新する処理を登録
+                ReceiveSelfPositionData = received => RecentSelfPositionData = received
             };
 
             // シリアル通信を開始
@@ -112,10 +115,23 @@ namespace ET2017_TuningTool.Model
         }
 
         private PIDData _RecentPIDData;
+        /// <summary>
+        /// 直近に受信したPID情報電文
+        /// </summary>
         public PIDData RecentPIDData
         {
             get { return _RecentPIDData; }
             set { SetProperty(ref _RecentPIDData, value); }
+        }
+
+        private SelfPositionData _RecentSelfPositionData;
+        /// <summary>
+        /// 直近に受信した自己位置情報電文
+        /// </summary>
+        public SelfPositionData RecentSelfPositionData
+        {
+            get { return _RecentSelfPositionData; }
+            set { SetProperty(ref _RecentSelfPositionData, value); }
         }
     }
 }

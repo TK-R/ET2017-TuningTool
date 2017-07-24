@@ -18,6 +18,10 @@ namespace SerialLibrary
         /// PID電文
         /// </summary>
         PID_DATA_COMMAND = 0x10,
+        /// <summary>
+        /// 自己位置情報電文
+        /// </summary>
+        SELF_POSITION_DATA_COMMAND = 0x30,
     };
 
 
@@ -202,7 +206,28 @@ namespace SerialLibrary
         public int State;
     }
 
-    
+    [StructLayout(LayoutKind.Explicit, Size = 10, Pack = 1)]
+    public struct SelfPositionData
+    {
+        /// <summary>
+        /// X座標(mm)
+        /// </summary>
+        [FieldOffset(0)]
+        public uint PositionX;
+
+        /// <summary>
+        /// Y座標(mm)
+        /// </summary>
+        [FieldOffset(4)]
+        public uint PositionY;
+
+        /// <summary>
+        /// 角度
+        /// </summary>
+        [FieldOffset(8)]
+        public ushort Angle;
+    }
+
     [StructLayout(LayoutKind.Explicit, Size = 2, Pack = 1)]
     public struct ApplicationData
     {

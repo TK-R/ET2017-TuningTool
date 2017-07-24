@@ -58,6 +58,9 @@ namespace SerialLibrary
                 case COMMAND.PID_DATA_COMMAND:
                     Context.CurrentState = new PIDDataState(Context);
                     break;
+                case COMMAND.SELF_POSITION_DATA_COMMAND:
+                    Context.CurrentState = new SelfPositionDataState(Context);
+                    break;
                 default:
                     Context.CurrentState = new HeaderState(Context);
                     break;
@@ -127,5 +130,23 @@ namespace SerialLibrary
         }
     }
 
+
+    internal class SelfPositionDataState : SerialState
+    {
+        internal SelfPositionDataState(SerialManager manager) : base(manager) { }
+        internal override void Receive(byte data)
+        {
+            buff.Add(data);
+            if (buff.Count < Marshal.SizeOf(typeof(SelfPositionData)) + 1) return;
+
+            if (buff.Last() == (byte)buff.Take(Marshal.SizeOf(typeof(SelfPositionData))).Sum(t => t))
+            {
+                // チェックサムが一致したら、構造体を構築
+                Context.RecentPositionData = DataTools.RawDeserialize<SelfPositionData>(buff.ToArray(), 0);
+            }
+
+            Context.CurrentState = new HeaderState(Context);
+        }
+    }
 
 }

@@ -22,7 +22,7 @@ namespace SerialLibrary
 
         private InputSignalData _recentInputSignal;
         /// <summary>
-        /// 最後に受信したの入力電文のデータ領域
+        /// 最後に受信した入力信号電文のデータ領域
         /// </summary>
         public InputSignalData RecentInputSignal
         {
@@ -36,7 +36,7 @@ namespace SerialLibrary
 
         private OutputSignalData _recentOutputSignal;
         /// <summary>
-        /// 最後に受信した送信する出力電文のデータ領域
+        /// 最後に受信した出力信号電文のデータ領域
         /// </summary>
         public OutputSignalData RecentOutputSignal
         {
@@ -48,8 +48,10 @@ namespace SerialLibrary
             get { return _recentOutputSignal; }
         }
 
-
         private PIDData _recentPIDData;
+        /// <summary>
+        /// 最後に受信したPID電文のデータ領域
+        /// </summary>
         internal PIDData RecentPIDData
         {
             set
@@ -62,6 +64,25 @@ namespace SerialLibrary
                 return _recentPIDData;
             }
         }
+
+        private SelfPositionData _recentPositionData;
+        /// <summary>
+        /// 最後に受信した自己位置情報電文のデータ領域
+        /// </summary>
+        internal SelfPositionData RecentPositionData
+        {
+            set
+            {
+                _recentPositionData = value;
+                ReceiveSelfPositionData?.Invoke(_recentPositionData);
+            }
+            get
+            {
+                return _recentPositionData;
+            }
+        }
+
+
         /// <summary>
         /// シリアル通信でデータを送受信中ならtrueを返す
         /// </summary>
@@ -93,11 +114,16 @@ namespace SerialLibrary
         /// 入力情報電文を受信した際にコールするデリゲート
         /// </summary>
         public Action<InputSignalData> ReceiveInputSignal;
-
+        
         /// <summary>
         /// PID電文を受信した際にコールするデリゲート
         /// </summary>
         public Action<PIDData> ReceivePIDData;
+
+        /// <summary>
+        /// 自己位置情報電文を受信した際にコールするデリゲート
+        /// </summary>
+        public Action<SelfPositionData> ReceiveSelfPositionData;
 
         /// <summary>
         /// ポート名称を指定してシリアル通信を開始する
@@ -150,6 +176,9 @@ namespace SerialLibrary
 
             ReceiveInputSignal = null;
             ReceiveOutputSignal = null;
+            ReceivePIDData = null;
+            ReceiveSelfPositionData = null;
+
             Thread.Sleep(500);
             ReceiveThread.Abort();
 
