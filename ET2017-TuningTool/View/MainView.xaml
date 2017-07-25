@@ -177,10 +177,10 @@
             </GroupBox>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="339" />
+                    <ColumnDefinition Width="300" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <GroupBox Grid.Column="0" Header="BONUS" Margin="2" >
+                <GroupBox Grid.Column="0" Header="ブロック並べ攻略" Margin="2" >
                     <Grid>
                         <Grid.Resources>
                             <local:PointsToPathConverter x:Key="PointsToPathConverter"/>
@@ -210,7 +210,7 @@
                                    Data="{Binding MoveBlockWay.Value, Converter={StaticResource ResourceKey=PointsToPathConverter}}"/>
 
                             <Image  Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
-                                   Canvas.Left="{Binding RobotPos.Value.X}" Canvas.Top="{Binding RobotPos.Value.Y}"
+                                   Canvas.Left="{Binding BlockRobotPos.Value.X}" Canvas.Top="{Binding BlockRobotPos.Value.Y}"
                                     Width="40" Height="20" VerticalAlignment="Top" />
 
                         </Canvas>
@@ -220,9 +220,18 @@
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Grid.Column="1" Header="FIELD" Margin="2" >
+                <GroupBox Grid.Column="1" Header="自己位置推定結果" Margin="2" >
                     <Grid>
-                        <Image Source="/ET2017-TuningTool;component/Image/Field.png" Margin="10,0,0,0" HorizontalAlignment="Left" Width="433" Height="277" VerticalAlignment="Top" />
+                        <Canvas HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,0,0,0">
+                            <Image Source="/ET2017-TuningTool;component/Image/Field.png" HorizontalAlignment="Left" Width="451" Height="296" VerticalAlignment="Top" />
+                            <Image  Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
+                                   Canvas.Left="{Binding SelfPositionRobotPos.Value.X}" Canvas.Top="{Binding SelfPositionRobotPos.Value.Y}"
+                                    Width="40" Height="20" VerticalAlignment="Top">
+                                <Image.RenderTransform>
+                                    <RotateTransform Angle="{Binding SelfPositionRobotAngle.Value}" />
+                                </Image.RenderTransform>
+                            </Image>
+                        </Canvas>
                     </Grid>
                 </GroupBox>
             </Grid>

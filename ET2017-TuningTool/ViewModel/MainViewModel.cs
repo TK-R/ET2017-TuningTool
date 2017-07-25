@@ -95,12 +95,30 @@ namespace ET2017_TuningTool
         /// </summary>
         public ReactiveProperty<Point> Green { get; }
 
-        public EV3Model RobotModel { get; set; } = new EV3Model();
         /// <summary>
-        /// ロボットの位置情報
+        /// ブロック並べフィールドの描画に用いる走行体情報クラス
         /// </summary>
-        public ReactiveProperty<Point> RobotPos { get; }
+        public EV3Model BlockRobotModel { get; set; } = new EV3Model();
 
+        /// <summary>
+        /// 自己位置推定結果の描画に用いる走行体情報クラス
+        /// </summary>
+        public EV3Model SelfPositionRobotModel { get; set; } = new EV3Model();
+
+        /// <summary>
+        /// ブロック並べフィールドにおけるロボットの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> BlockRobotPos { get; }
+
+        /// <summary>
+        /// 自己位置推定結果におけるロボットの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> SelfPositionRobotPos { get; }
+
+        /// <summary>
+        /// 自己位置推定結果におけるロボットの角度情報
+        /// </summary>
+        public ReactiveProperty<int> SelfPositionRobotAngle { get; }
 
         /// <summary>
         /// 運搬対象ブロックに接近する際の運搬経路のパス
@@ -235,7 +253,7 @@ namespace ET2017_TuningTool
             Green = BlockField.ObserveProperty(x => x.GreenPosition)
                        .Select(p => BlockPositionArray[p])
                        .ToReactiveProperty().AddTo(this.Disposable);
-            RobotPos = RobotModel.ObserveProperty(r => r.Position)
+            BlockRobotPos = BlockRobotModel.ObserveProperty(r => r.Position)
                               .ToReactiveProperty().AddTo(this.Disposable);
 
             // 入力値モデルを生成
@@ -302,8 +320,12 @@ namespace ET2017_TuningTool
             });
 
             //自己位置情報の更新を登録
-            Serial.ObserveProperty(s => s.RecentSelfPositionData)
-                  .Subscribe(r => Console.WriteLine("X:" + r.PositionX + ",Y:" + r.PositionY + ",Angle:" + r.Angle));
+            SelfPositionRobotPos = Serial.ObserveProperty(s => s.RecentSelfPositionData)
+                                         .Select(t => new Point(t.PositionX / 5510.0 * 451.0, t.PositionY / 3722.0 * 296.0))
+                                         .ToReactiveProperty().AddTo(this.Disposable);
+            SelfPositionRobotAngle = Serial.ObserveProperty(s => s.RecentSelfPositionData)
+                                         .Select(t => (int)t.Angle)
+                                         .ToReactiveProperty().AddTo(this.Disposable);
 
             // 接続コマンド押下イベントを定義
             ConnectCommand = SerialConnected
@@ -323,7 +345,7 @@ namespace ET2017_TuningTool
             });
 
 
-            var rule = new BlockMoveRule(RobotModel, BlockField);
+            var rule = new BlockMoveRule(BlockRobotModel, BlockField);
             
             // 初期位置コードを求める
             DecodeCommand = InitPostionCode.Select(c =>  c < 99999)
@@ -335,8 +357,8 @@ namespace ET2017_TuningTool
                 BlockField.MoveBlockWayPointArray = new Point[0];
 
                 BlockField.SetBlockPosition(InitPostionCode.Value, 0);
-                RobotModel.ResetPosition();
-                rule = new BlockMoveRule(RobotModel, BlockField);
+                BlockRobotModel.ResetPosition();
+                rule = new BlockMoveRule(BlockRobotModel, BlockField);
             });
 
             // 運搬コマンドの経路を登録する
@@ -350,7 +372,7 @@ namespace ET2017_TuningTool
             NextPositionCommand = InitPostionCode.Select(c => c < 99999)
                                                  .ToReactiveCommand().AddTo(this.Disposable);
 
-            NextPositionCommand.Subscribe(_ => rule.Update(RobotModel, BlockField));
+            NextPositionCommand.Subscribe(_ => rule.Update(BlockRobotModel, BlockField));
 
             // PIDゲインデータの通信を登録
             PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);
