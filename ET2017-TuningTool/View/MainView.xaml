@@ -210,7 +210,7 @@
                                    Data="{Binding MoveBlockWay.Value, Converter={StaticResource ResourceKey=PointsToPathConverter}}"/>
 
                             <Image  Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
-                                   Canvas.Left="{Binding Robot.Value.X}" Canvas.Top="{Binding Robot.Value.Y}"
+                                   Canvas.Left="{Binding RobotPos.Value.X}" Canvas.Top="{Binding RobotPos.Value.Y}"
                                     Width="30" Height="30" VerticalAlignment="Top" />
 
                         </Canvas>
