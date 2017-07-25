@@ -211,7 +211,7 @@
 
                             <Image  Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
                                    Canvas.Left="{Binding RobotPos.Value.X}" Canvas.Top="{Binding RobotPos.Value.Y}"
-                                    Width="30" Height="30" VerticalAlignment="Top" />
+                                    Width="40" Height="20" VerticalAlignment="Top" />
 
                         </Canvas>
                         <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="114,2,0,0" VerticalAlignment="Top" Width="86" Height="26"/>

@@ -59,15 +59,5 @@ namespace ET2017_TuningTool.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap EV3 {
-            get {
-                object obj = ResourceManager.GetObject("EV3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }
