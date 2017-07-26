@@ -228,47 +228,62 @@ namespace SerialLibrary
             if (!Runnning)
                 return false;
 
+            int size;
+            COMMAND command;
+
+            // データ領域の型に応じてヘッダを生成する
+            if (dataStruct is InputSignalData)
+            {
+                size = Marshal.SizeOf(typeof(InputSignalData));
+                command = COMMAND.INPUT_DATA_COMMAND;
+            }
+            else if (dataStruct is OutputSignalData)
+            {
+                size = Marshal.SizeOf(typeof(OutputSignalData));
+                command = COMMAND.OUTPUT_DATA_COMMAND;
+            }
+            else if (dataStruct is PIDData)
+            {
+                size = Marshal.SizeOf(typeof(PIDData));
+                command = COMMAND.PID_DATA_COMMAND;
+            }
+            else
+            {
+                throw new ApplicationException("データ領域型エラー");
+            }
+
+            var header = new Header { Head = 0xff, Command = (byte)command, Size = (ushort)size };
+
+            // シリアル送信のため、バイナリにシリアライズ
+            var dataBin = DataTools.RawSerialize(dataStruct);
+            return WriteByteData(command, dataBin);
+        }
+
+        /// <summary>
+        /// マルチバイト送信処理
+        /// </summary>
+        /// <param name="command">コマンドデータ</param>
+        /// <param name="data">データ領域</param>
+        /// <returns></returns>
+        public bool WriteByteData(COMMAND command, byte[] data)
+        {
             try
             {
-                int size;
-                COMMAND command;
-
-                // データ領域の型に応じてヘッダを生成する
-                if (dataStruct is InputSignalData)
-                {
-                    size = Marshal.SizeOf(typeof(InputSignalData));
-                    command = COMMAND.INPUT_DATA_COMMAND;
-                }
-                else if (dataStruct is OutputSignalData)
-                {
-                    size = Marshal.SizeOf(typeof(OutputSignalData));
-                    command = COMMAND.OUTPUT_DATA_COMMAND;
-                }else if(dataStruct is PIDData)
-                {
-                    size = Marshal.SizeOf(typeof(PIDData));
-                    command = COMMAND.PID_DATA_COMMAND;
-                }
-                else
-                {
-                    throw new ApplicationException("データ領域型エラー");
-                }
-
+                var size = data.Count();
                 var header = new Header { Head = 0xff, Command = (byte)command, Size = (ushort)size };
 
                 // シリアル送信のため、バイナリにシリアライズ
                 var headBin = DataTools.RawSerialize(header);
-                var dataBin = DataTools.RawSerialize(dataStruct);
 
                 // チェックサムの算出
-                byte sum = (byte)(dataBin.Sum(s => s));
+                byte sum = (byte)(data.Sum(s => s));
 
                 // 送信データの結合
                 List<byte> sendData = headBin.ToList();
-                sendData.AddRange(dataBin);
+                sendData.AddRange(data);
                 sendData.Add(sum);
 
                 Serial.Write(sendData.ToArray(), 0, sendData.Count);
-
             }
             catch (IOException)
             {
