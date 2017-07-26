@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     GlowBrush="{DynamicResource AccentColorBrush}"
-    Title="EV3 TOONING TOOL" Height="850" Width="1000" Closing="MetroWindow_Closing">
+    Title="EV3 TOONING TOOL" Height="716" Width="976" Closing="MetroWindow_Closing">
 
     <Window.DataContext>
         <local:MainViewModel/>
@@ -186,10 +186,10 @@
                             <local:PointsToPathConverter x:Key="PointsToPathConverter"/>
                         </Grid.Resources>
 
-                        <Label Content="初期位置:" FontSize="12" Margin="-6,0,0,268" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
-                        <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="60,2,0,0" HorizontalAlignment="Left" Width="46" Height="25" VerticalAlignment="Top"/>
-                        <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,32,0,0" Height="114" VerticalAlignment="Top" />
-                        <Canvas HorizontalAlignment="Left" Height="121"   VerticalAlignment="Top" Width="293" Margin="0,25,0,0">
+                        <Label Content="初期位置:" FontSize="12" Margin="-4,0,0,261" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
+                        <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="62,10,0,0" HorizontalAlignment="Left" Width="85" Height="25" VerticalAlignment="Top"/>
+                        <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,82,0,0" Height="114" VerticalAlignment="Top" />
+                        <Canvas HorizontalAlignment="Left" Height="121"   VerticalAlignment="Top" Width="293" Margin="0,75,0,0">
                             <Ellipse Fill="Yellow" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Yellow.Value.X}"  Canvas.Top="{Binding Yellow.Value.Y}"  />
                             <Ellipse Fill="Green" Height="20" Width="20" Stroke="Black"
@@ -214,8 +214,9 @@
                                     Width="40" Height="20" VerticalAlignment="Top" />
 
                         </Canvas>
-                        <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="114,2,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
-                        <Button Content="NEXT" Command="{Binding NextPositionCommand}"  HorizontalAlignment="Left" Margin="204,2,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
+                        <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="0,44,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
+                        <Button Content="NEXT" Command="{Binding NextPositionCommand}"  HorizontalAlignment="Left" Margin="91,44,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
+                        <Button Content="SEND" Command="{Binding SendRuleCommand}"  HorizontalAlignment="Left" Margin="165,44,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
 
                     </Grid>
                 </GroupBox>
@@ -243,7 +244,15 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <GroupBox Header="BLUETOOTH" Margin="2" VerticalAlignment="Top" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="199*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="11*"/>
+                    <RowDefinition Height="179*"/>
+                </Grid.RowDefinitions>
+                <GroupBox Header="BLUETOOTH" Margin="0.667,2,2,0" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="1" >
                     <Grid>
                         <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="5,37,0,65" HorizontalAlignment="Left" Width="168" />
                         <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="5,0,0,23" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="168" />

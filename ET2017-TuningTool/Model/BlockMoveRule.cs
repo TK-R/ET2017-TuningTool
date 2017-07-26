@@ -208,8 +208,12 @@ namespace ET2017_TuningTool.Model
 
             return true;
         }
-
-
+        
+        /// <summary>
+        /// 情報更新処理
+        /// </summary>
+        /// <param name="robot">走行体</param>
+        /// <param name="field">フィールド情報</param>
         public void Update(EV3Model robot, BlockFieldModel field)
         {
             // コマンドが既にない場合には何もしない
@@ -235,16 +239,14 @@ namespace ET2017_TuningTool.Model
             approach.Insert(0, robot.GetPosition());
             // 運搬元ブロック置き場の座標を追加
             approach.Add(srcPos);
-
-
+            
             // 運搬時のパスをアップデート
             var moveBlock = command.BlockMoveWay.Select(t => LineArray[t.WayPointNo].WayPoint).ToList();
             // 運搬元ブロック置場の座標を追加
             moveBlock.Insert(0, srcPos);
             // 運搬先ブロック置場の座標を追加
             moveBlock.Add(dstPos);
-
-
+        
             // ブロック置き場情報を更新
             field.PlaceArray[dstNo].OnBlockColor = command.TargetBlockColor;
             field.PlaceArray[srcNo].OnBlockColor = BlockColor.None;
@@ -258,6 +260,20 @@ namespace ET2017_TuningTool.Model
             field.MoveBlockWayPointArray = moveBlock.ToArray();
             
             BlockMoveCommandList.Remove(command);
+        }
+
+        public byte[] Serialize()
+        {
+            // 初期値としてブロック運搬コマンド数を格納
+            var list = new List<byte> { (byte)BlockMoveCommandList.Count() };
+
+            // 順番にブロック運搬コマンドをシリアライズして格納
+            foreach(var command in BlockMoveCommandList)
+            {
+                list.AddRange(command.Serialize());
+            }
+
+            return list.ToArray();
         }
     }
 }

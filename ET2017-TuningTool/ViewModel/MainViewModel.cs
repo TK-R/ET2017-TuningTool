@@ -51,6 +51,9 @@ namespace ET2017_TuningTool
         /// 次の配置場所を求めるコマンド
         /// </summary>
         public ReactiveCommand NextPositionCommand { get; private set; }
+        
+        public ReactiveCommand SendRuleCommand { get; private set; }
+
         #endregion
 
         #region シリアルポート関係
@@ -373,6 +376,15 @@ namespace ET2017_TuningTool
                                                  .ToReactiveCommand().AddTo(this.Disposable);
 
             NextPositionCommand.Subscribe(_ => rule.Update(BlockRobotModel, BlockField));
+
+            // ブロック運搬ルール送信
+            SendRuleCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
+            SendRuleCommand.Subscribe(_ =>
+            {
+                var data = rule.Serialize();
+                Serial.WriteByteData(COMMAND.BLOCK_MOVE_RULE_COMMNAD, data);
+            });
+
 
             // PIDゲインデータの通信を登録
             PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);

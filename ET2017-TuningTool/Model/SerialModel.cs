@@ -70,9 +70,26 @@ namespace ET2017_TuningTool.Model
 
         }
         
+        /// <summary>
+        /// 構造体書き込み処理
+        /// </summary>
+        /// <typeparam name="StructT">データ領域構造体型</typeparam>
+        /// <param name="dataStruct">データ領域構造体</param>
+        /// <returns>成功ならTrueを返す</returns>
         public bool WriteData<StructT>(StructT dataStruct)
         {
             return Serial.WriteData(dataStruct);
+        }
+
+        /// <summary>
+        /// データ書き込み処理
+        /// </summary>
+        /// <param name="command">シリアル電文コマンド</param>
+        /// <param name="data">データ領域</param>
+        /// <returns></returns>
+        public bool WriteByteData(COMMAND command, byte[] data)
+        {
+            return Serial.WriteByteData(command, data);
         }
 
         public void StopSerial()

@@ -28,30 +28,48 @@ namespace ET2017_TuningTool.Model
         public int DestinationBlockPlaceNo { set; get; }
 
         /// <summary>
+        /// 運搬元ブロック置き場までのアプローチ
+        /// </summary>
+        public Way[] ApproachWay { set; get; }
+
+        /// <summary>
         /// ブロック運搬経路
         /// </summary>
         public Way[] BlockMoveWay { set; get; }
 
         /// <summary>
-        /// 運搬元ブロック置き場までのアプローチ
+        /// ブロック運搬コマンドを電文フォーマットに合わせてシリアライズする
         /// </summary>
-        public Way[] ApproachWay { set; get; }
+        /// <returns>電文フォーマットのbyte配列</returns>
+        public byte[] Serialize()
+        {
+            var list = new List<byte> {
+                (byte)TargetBlockColor,         // 運搬対象ブロック色
+                (byte)SourceBlockPlaceNo,       // 運搬元ブロック置き場
+                (byte)DestinationBlockPlaceNo,  // 運搬先ブロック置き場
+                (byte)ApproachWay.Count()       // ブロック確保ウェイポイントの数
+            };
 
+            // ブロック確保ウェイポイントNoを追加
+            list.AddRange(ApproachWay.Select(a => (byte)a.WayPointNo));
+
+            // ブロック運搬ウェイポイントの数を追加
+            list.Add((byte)BlockMoveWay.Count());
+
+            // ブロック運搬ウェイポイントNoを追加
+            list.AddRange(BlockMoveWay.Select(b => (byte)b.WayPointNo));
+
+            return list.ToArray();
+        }
     }
 
     /// <summary>
     /// ブロック運搬経路の一区間を表すクラス
     /// </summary>
     public class Way
-    { 
-
+    {   
         /// <summary>
-        /// ウェイポイントの経由のみならTrue,以降ライントレースならFalse
-        /// </summary>
-        public bool IsWayPoint { set; get; }
-        
-        /// <summary>
-        /// ウェイポイントの座標
+        /// ウェイポイント番号
         /// </summary>
         public int WayPointNo { set; get; }
 

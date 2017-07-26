@@ -19,9 +19,14 @@ namespace SerialLibrary
         /// </summary>
         PID_DATA_COMMAND = 0x10,
         /// <summary>
+        /// ブロック運搬ルール電文
+        /// </summary>
+        BLOCK_MOVE_RULE_COMMNAD = 0x20, 
+        /// <summary>
         /// 自己位置情報電文
         /// </summary>
         SELF_POSITION_DATA_COMMAND = 0x30,
+
     };
 
 
