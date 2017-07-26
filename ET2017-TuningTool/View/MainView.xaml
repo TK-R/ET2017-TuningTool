@@ -224,7 +224,7 @@
                     <Grid>
                         <Canvas HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,0,0,0">
                             <Image Source="/ET2017-TuningTool;component/Image/Field.png" HorizontalAlignment="Left" Width="451" Height="296" VerticalAlignment="Top" />
-                            <Image  Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
+                            <Image RenderTransformOrigin="0.5,0.5" Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
                                    Canvas.Left="{Binding SelfPositionRobotPos.Value.X}" Canvas.Top="{Binding SelfPositionRobotPos.Value.Y}"
                                     Width="40" Height="20" VerticalAlignment="Top">
                                 <Image.RenderTransform>
