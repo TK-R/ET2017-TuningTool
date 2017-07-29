@@ -114,9 +114,14 @@ namespace ET2017_TuningTool
         public ReactiveProperty<Point> BlockRobotPos { get; }
 
         /// <summary>
-        /// 自己位置推定結果におけるロボットの位置情報
+        /// 自己位置推定結果におけるロボットの位置情報(描画用)
         /// </summary>
         public ReactiveProperty<Point> SelfPositionRobotPos { get; }
+
+        /// <summary>
+        /// 事項指定結果におけるロボットの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> SelfPositionRobotPosRaw { get; }
 
         /// <summary>
         /// 自己位置推定結果におけるロボットの角度情報
@@ -322,13 +327,20 @@ namespace ET2017_TuningTool
                 PID.UpdatePID(r);
             });
 
-            //自己位置情報の更新を登録
+            //自己位置情報の更新を登録（描画用）
             SelfPositionRobotPos = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                                          .Select(t => new Point(t.PositionX / 5510.0 * 451.0, t.PositionY / 3722.0 * 296.0))
                                          .ToReactiveProperty().AddTo(this.Disposable);
+        
             SelfPositionRobotAngle = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                                          .Select(t => (int)t.Angle)
                                          .ToReactiveProperty().AddTo(this.Disposable);
+
+            //自己位置情報の更新を登録（生データ）
+            SelfPositionRobotPosRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
+                                         .Select(t => new Point(t.PositionX , t.PositionY))
+                                         .ToReactiveProperty().AddTo(this.Disposable);
+
 
             // 接続コマンド押下イベントを定義
             ConnectCommand = SerialConnected
@@ -393,8 +405,8 @@ namespace ET2017_TuningTool
             PIDDGainData = PID.ObserveProperty(p => p.DGain).ToReactiveProperty().AddTo(this.Disposable);
 
             // 初期値を格納
-            PID.Power = 30;
-            PID.PGain = 0.2f;
+            PID.Power =15;
+            PID.PGain = 0.14f;
             PID.DGain = 0.1f;
 
             // 200ms値が確定したら、データを送信

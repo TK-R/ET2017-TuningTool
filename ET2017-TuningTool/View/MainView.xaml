@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     GlowBrush="{DynamicResource AccentColorBrush}"
-    Title="EV3 TOONING TOOL" Height="716" Width="976" Closing="MetroWindow_Closing">
+    Title="EV3 TOONING TOOL" Height="732" Width="978" Closing="MetroWindow_Closing">
 
     <Window.DataContext>
         <local:MainViewModel/>
@@ -30,10 +30,12 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Margin="2,4,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="100*"/>
-                <RowDefinition Height="350"/>
+                <RowDefinition Height="176*"/>
+                <RowDefinition Height="171*"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="170"/>
             </Grid.RowDefinitions>
-            <GroupBox Grid.Row="0" Header="ROBOT STATUS" Margin="4,1,0,3" >
+            <GroupBox Grid.Row="0" Header="ROBOT STATUS" Margin="4,1,0,3" Grid.RowSpan="2" >
                 <Grid>
                     <Grid.Resources>
                         <Style TargetType="lvc:CartesianChart">
@@ -175,19 +177,19 @@
                     </Grid>
                 </Grid>
             </GroupBox>
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="2" Grid.RowSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="300" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <GroupBox Grid.Column="0" Header="ブロック並べ攻略" Margin="2" >
+                <GroupBox Grid.Column="0" Header="ブロック並べ攻略" Margin="5,2,2,2" >
                     <Grid>
                         <Grid.Resources>
                             <local:PointsToPathConverter x:Key="PointsToPathConverter"/>
                         </Grid.Resources>
 
-                        <Label Content="初期位置:" FontSize="12" Margin="-4,0,0,261" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
-                        <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="62,10,0,0" HorizontalAlignment="Left" Width="85" Height="25" VerticalAlignment="Top"/>
+                        <Label Content="初期位置:" FontSize="12" Margin="0,0,0,287" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
+                        <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="61,0,0,0" HorizontalAlignment="Left" Width="85" Height="25" VerticalAlignment="Top"/>
                         <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,82,0,0" Height="114" VerticalAlignment="Top" />
                         <Canvas HorizontalAlignment="Left" Height="121"   VerticalAlignment="Top" Width="293" Margin="0,75,0,0">
                             <Ellipse Fill="Yellow" Height="20" Width="20" Stroke="Black"
@@ -214,16 +216,22 @@
                                     Width="40" Height="20" VerticalAlignment="Top" />
 
                         </Canvas>
-                        <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="0,44,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
-                        <Button Content="NEXT" Command="{Binding NextPositionCommand}"  HorizontalAlignment="Left" Margin="91,44,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
-                        <Button Content="SEND" Command="{Binding SendRuleCommand}"  HorizontalAlignment="Left" Margin="165,44,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
+                        <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="1,34,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
+                        <Button Content="NEXT" Command="{Binding NextPositionCommand}"  HorizontalAlignment="Left" Margin="92,34,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
+                        <Button Content="SEND" Command="{Binding SendRuleCommand}"  HorizontalAlignment="Left" Margin="166,34,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
 
                     </Grid>
                 </GroupBox>
 
                 <GroupBox Grid.Column="1" Header="自己位置推定結果" Margin="2" >
                     <Grid>
-                        <Canvas HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,0,0,0">
+                        <Label Margin="0,0,388,291" Content="座標 X : " />
+                        <Label Margin="46,0,0,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.X}" HorizontalContentAlignment="Right"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Label Margin="100,0,278,291" Content="座標 Y : " />
+                        <Label Margin="146,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.Y}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Label Margin="200,0,198,291" Content="方向 : " />
+                        <Label Margin="239,0,0,0"  Width="36" Height="26" Content="{Binding SelfPositionRobotAngle.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Canvas HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,25,0,0">
                             <Image Source="/ET2017-TuningTool;component/Image/Field.png" HorizontalAlignment="Left" Width="451" Height="296" VerticalAlignment="Top" />
                             <Image RenderTransformOrigin="0.5,0.5" Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
                                    Canvas.Left="{Binding SelfPositionRobotPos.Value.X}" Canvas.Top="{Binding SelfPositionRobotPos.Value.Y}"
