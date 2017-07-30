@@ -124,9 +124,15 @@ namespace ET2017_TuningTool
         public ReactiveProperty<Point> SelfPositionRobotPosRaw { get; }
 
         /// <summary>
-        /// 自己位置推定結果におけるロボットの角度情報
+        /// 自己位置推定結果におけるロボットの角度情報(描画用)
         /// </summary>
         public ReactiveProperty<int> SelfPositionRobotAngle { get; }
+
+
+        /// <summary>
+        /// 自己位置推定結果によるロボットの角度情報
+        /// </summary>
+        public ReactiveProperty<int> SelfPositionRobotAngleRaw { get; }
 
         /// <summary>
         /// 運搬対象ブロックに接近する際の運搬経路のパス
@@ -333,13 +339,17 @@ namespace ET2017_TuningTool
                                          .ToReactiveProperty().AddTo(this.Disposable);
         
             SelfPositionRobotAngle = Serial.ObserveProperty(s => s.RecentSelfPositionData)
-                                         .Select(t => (int)t.Angle)
+                                         .Select(t => (int)t.Angle * -1)
                                          .ToReactiveProperty().AddTo(this.Disposable);
 
             //自己位置情報の更新を登録（生データ）
             SelfPositionRobotPosRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                                          .Select(t => new Point(t.PositionX , t.PositionY))
                                          .ToReactiveProperty().AddTo(this.Disposable);
+            
+            SelfPositionRobotAngleRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
+                             .Select(t => (int)t.Angle)
+                             .ToReactiveProperty().AddTo(this.Disposable);
 
 
             // 接続コマンド押下イベントを定義
