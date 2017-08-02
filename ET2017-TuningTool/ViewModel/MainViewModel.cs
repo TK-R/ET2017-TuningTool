@@ -26,8 +26,7 @@ namespace ET2017_TuningTool
         private Subject<Unit> CommitTrigger { get; } = new Subject<Unit>();
 
         private IObservable<Unit> CommitAsObservable => this.CommitTrigger;
-
-
+        
         /// <summary>
         /// Rpの一斉解放用のオブジェクト
         /// </summary>
@@ -52,6 +51,9 @@ namespace ET2017_TuningTool
         /// </summary>
         public ReactiveCommand NextPositionCommand { get; private set; }
         
+        /// <summary>
+        /// 運搬ルール送信コマンド
+        /// </summary>
         public ReactiveCommand SendRuleCommand { get; private set; }
 
         #endregion
@@ -127,7 +129,6 @@ namespace ET2017_TuningTool
         /// 自己位置推定結果におけるロボットの角度情報(描画用)
         /// </summary>
         public ReactiveProperty<int> SelfPositionRobotAngle { get; }
-
 
         /// <summary>
         /// 自己位置推定結果によるロボットの角度情報
@@ -227,16 +228,31 @@ namespace ET2017_TuningTool
         public ReadOnlyReactiveProperty<int> GraphYMaxCount { get; }
         #endregion
 
+        #region 走行体制御
         public ReactiveProperty<float> PIDPowerData { get; }
         public ReactiveProperty<float> PIDPGainData { get; }
         public ReactiveProperty<float> PIDIGainData { get; }
         public ReactiveProperty<float> PIDDGainData { get; }
-
         public PIDModel PID { get; set; } = new PIDModel();
-
         public ReactiveProperty<bool> PCControlRobot { get; set; }
-
         public RobotControl RobotController { get; set; }
+
+        /// <summary>
+        /// 変更通知送信する際の目標座標（X）
+        /// </summary>
+        public ReactiveProperty<uint> TargetPositionX { get; } = new ReactiveProperty<uint>();
+        /// <summary>
+        /// 変更通知送信する際の目標座標（Y）
+        /// </summary>
+        public ReactiveProperty<uint> TargetPositionY { get; } = new ReactiveProperty<uint>();
+        /// <summary>
+        /// 変更通知送信する際の目標角度
+        /// </summary>
+        public ReactiveProperty<ushort> TargetAngle { get; } = new ReactiveProperty<ushort>(0);
+
+        public ReactiveCommand PositionResetCommand { get; private set; }
+
+        #endregion
 
         /// <summary>
         /// 入力値モデルを格納するリスト
@@ -406,8 +422,7 @@ namespace ET2017_TuningTool
                 var data = rule.Serialize();
                 Serial.WriteByteData(COMMAND.BLOCK_MOVE_RULE_COMMNAD, data);
             });
-
-
+            
             // PIDゲインデータの通信を登録
             PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);
             PIDPGainData = PID.ObserveProperty(p => p.PGain).ToReactiveProperty().AddTo(this.Disposable);
@@ -443,6 +458,18 @@ namespace ET2017_TuningTool
             PIDPGainData.Throttle(pidWait).Subscribe(_ => sendData());
             PIDIGainData.Throttle(pidWait).Subscribe(_ => sendData());
             PIDDGainData.Throttle(pidWait).Subscribe(_ => sendData());
+
+            // 自己位置推定値のリセットコマンドを定義
+            PositionResetCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
+            PositionResetCommand.Subscribe(_ =>
+            {
+                Serial.WriteData(new SelfPositionData
+                {
+                    PositionX = TargetPositionX.Value,
+                    PositionY = TargetPositionY.Value,
+                    Angle = TargetAngle.Value
+                });
+            });
 
 
             // ロボット制御クラスを初期化する

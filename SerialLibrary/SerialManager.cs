@@ -247,6 +247,11 @@ namespace SerialLibrary
                 size = Marshal.SizeOf(typeof(PIDData));
                 command = COMMAND.PID_DATA_COMMAND;
             }
+            else if(dataStruct is SelfPositionData)
+            {
+                size = Marshal.SizeOf(typeof(SelfPositionData));
+                command = COMMAND.SELF_POSITION_DATA_COMMAND;
+            }
             else
             {
                 throw new ApplicationException("データ領域型エラー");

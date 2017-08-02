@@ -226,9 +226,9 @@
                 <GroupBox Grid.Column="1" Header="自己位置推定結果" Margin="2" >
                     <Grid>
                         <Label Margin="0,0,388,291" Content="座標 X : " />
-                        <Label Margin="46,0,0,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.X}" HorizontalContentAlignment="Right"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                        <Label Margin="100,0,278,291" Content="座標 Y : " />
-                        <Label Margin="146,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.Y}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Label Margin="38,0,0,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.X}" HorizontalContentAlignment="Right"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Label Margin="93,0,285,291" Content="座標 Y : " />
+                        <Label Margin="137,0,0,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.Y}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         <Label Margin="200,0,198,291" Content="方向 : " />
                         <Label Margin="239,0,0,0"  Width="36" Height="26" Content="{Binding SelfPositionRobotAngleRaw.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         <Canvas HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,25,0,0">
@@ -260,50 +260,60 @@
                     <RowDefinition Height="11*"/>
                     <RowDefinition Height="179*"/>
                 </Grid.RowDefinitions>
-                <GroupBox Header="BLUETOOTH" Margin="0.667,2,2,0" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="1" >
-                    <Grid>
-                        <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="5,37,0,65" HorizontalAlignment="Left" Width="168" />
-                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="5,0,0,23" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="168" />
-                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="6,1,0,109" Height="24" HorizontalAlignment="Left" Width="168"
-                                  ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}"/>
+                <GroupBox Header="BLUETOOTH" Margin="1,2,2,0" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="1" Height="150" >
+                    <Grid Height="127">
+                        <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="10,29,0,0" HorizontalAlignment="Left" Width="168" VerticalAlignment="Top" />
+                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="10,0,0,29" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="168" />
+                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="10,0,0,103" Height="24" HorizontalAlignment="Left" Width="168"
+                                  ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}" VerticalAlignment="Bottom"/>
                     </Grid>
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="1" >
-                <GroupBox Header="PID - CONTROL" Margin="2,2,2,2">
-                    <Grid>
-                        <ComboBox  materialDesign:HintAssist.Hint="State No" Margin="10,2,10,218" />
-                        <Label Content="出力:" Margin="0,50,0,172" Height="24"/>
-                        <Label Content="比例:" Margin="0,90,0,132" Height="24"/>
-                        <Label Content="積分:" Margin="0,130,0,92" Height="24"/>
-                        <Label Content="微分:" Margin="0,168,0,54" Height="24"/>
-                        <TextBlock Text="{Binding PIDPowerData.Value,StringFormat={}{0:N1}}" Margin="27,55,113,167" TextAlignment="Right" Height="24"/>
-                        <TextBlock Text="{Binding PIDPGainData.Value,StringFormat={}{0:N2}}" Margin="27,95,113,127" TextAlignment="Right" Height="24"/>
-                        <TextBlock Text="{Binding PIDIGainData.Value,StringFormat={}{0:N2}}" Margin="27,135,113,87" TextAlignment="Right" Height="24"/>
-                        <TextBlock Text="{Binding PIDDGainData.Value,StringFormat={}{0:N2}}" Margin="27,173,113,49" TextAlignment="Right" Height="24"/>
+                <GroupBox Header="PID - CONTROL" Margin="2,2,0,59">
+                    <Grid Width="174" Height="195" VerticalAlignment="Top">
+                        <ComboBox  materialDesign:HintAssist.Hint="State No" Margin="10,2,10,0" VerticalAlignment="Top" />
+                        <Label Content="出力:" Margin="0,50,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="比例:" Margin="0,90,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="積分:" Margin="0,130,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="微分:" Margin="0,168,0,0" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDPowerData.Value,StringFormat={}{0:N1}}" Margin="27,55,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDPGainData.Value,StringFormat={}{0:N2}}" Margin="27,95,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDIGainData.Value,StringFormat={}{0:N2}}" Margin="27,135,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDDGainData.Value,StringFormat={}{0:N2}}" Margin="27,173,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
                         <Slider Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider"
-                                            Value="{Binding PIDPowerData.Value}" Margin="75,52,0,172" HorizontalAlignment="Left" Width="93" />
+                                            Value="{Binding PIDPowerData.Value}" Margin="75,52,0,0" HorizontalAlignment="Left" Width="93" Height="22" VerticalAlignment="Top" />
                         <Slider Minimum="0" Maximum="2" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDPGainData.Value}" Margin="75,92,0,132" HorizontalAlignment="Left" Width="93" />
+                                            Value="{Binding PIDPGainData.Value}" Margin="75,92,0,0" HorizontalAlignment="Left" Width="93" Height="22" VerticalAlignment="Top" />
                         <Slider Minimum="0" Maximum="1" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDIGainData.Value}" Margin="75,132,0,92" HorizontalAlignment="Left" Width="93" />
+                                            Value="{Binding PIDIGainData.Value}" Margin="75,132,0,0" HorizontalAlignment="Left" Width="93" Height="22" VerticalAlignment="Top" />
                         <Slider Minimum="0" Maximum="5" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDDGainData.Value}" Margin="75,172,0,54" HorizontalAlignment="Left" Width="93" />
+                                            Value="{Binding PIDDGainData.Value}" Margin="75,172,0,0" HorizontalAlignment="Left" Width="93" Height="20" VerticalAlignment="Top" />
                     </Grid>
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="2" Height="190" VerticalAlignment="Top">
-                <GroupBox Header="MESSAGE" Margin="2" >
+                <GroupBox Header="MESSAGE" Margin="4,-53,0,-10" >
                     <Grid>
                         <Label Content="PC制御：" Margin="0,0,60,111"/>
                         <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center"
-                                         ToolTip="Default ToggleButton Style" Margin="61,0,76,115" Height="21" IsChecked="{Binding PCControlRobot.Value, Mode=TwoWay}"/>
-                        <Button x:Name="StartButton" Content="START" Width="84" Margin="0,30,0,74" HorizontalAlignment="Left"/>
-                        <Button x:Name="ResetButton" Content="RESET" Margin="94,30,0,74" HorizontalAlignment="Left" Width="84"/>
+                                         ToolTip="Default ToggleButton Style" Margin="61,0,76,182" Height="21" IsChecked="{Binding PCControlRobot.Value, Mode=TwoWay}"/>
+                        <Button x:Name="StartButton" Content="START" Width="84" Margin="0,26,0,145" HorizontalAlignment="Left"/>
+                        <Button x:Name="ResetButton" Content="RESET" Margin="94,26,0,145" HorizontalAlignment="Left" Width="84"/>
+                        <TextBox Margin="66,108,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <TextBox Margin="66,138,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <TextBox Margin="66,168,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <Button Content="Position Send" Command="{Binding PositionResetCommand}" Width="178" Margin="0,72,0,99" HorizontalAlignment="Left"/>
+                        <Label Content="mm" Margin="148,110,0,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="mm" Margin="148,140,0,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="°" Margin="148,168,0,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="X座標：" Margin="10,111,120,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="Y座標：" Margin="10,141,120,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="角度：" Margin="17,171,113,0" Height="22" VerticalAlignment="Top" />
 
                     </Grid>
                 </GroupBox>
