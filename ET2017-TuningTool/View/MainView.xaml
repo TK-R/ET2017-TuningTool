@@ -305,8 +305,8 @@
                         <Button x:Name="StartButton" Content="START" Width="84" Margin="0,26,0,145" HorizontalAlignment="Left"/>
                         <Button x:Name="ResetButton" Content="RESET" Margin="94,26,0,145" HorizontalAlignment="Left" Width="84"/>
                         <TextBox Margin="66,108,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
-                        <TextBox Margin="66,138,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
-                        <TextBox Margin="66,168,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <TextBox Margin="66,138,0,0" Text="{Binding TargetPositionY.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <TextBox Margin="66,168,0,0" Text="{Binding TargetAngle.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
                         <Button Content="Position Send" Command="{Binding PositionResetCommand}" Width="178" Margin="0,72,0,99" HorizontalAlignment="Left"/>
                         <Label Content="mm" Margin="148,110,0,0" Height="22" VerticalAlignment="Top" />
                         <Label Content="mm" Margin="148,140,0,0" Height="22" VerticalAlignment="Top" />

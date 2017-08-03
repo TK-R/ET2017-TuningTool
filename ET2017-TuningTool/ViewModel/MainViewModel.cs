@@ -240,15 +240,15 @@ namespace ET2017_TuningTool
         /// <summary>
         /// 変更通知送信する際の目標座標（X）
         /// </summary>
-        public ReactiveProperty<uint> TargetPositionX { get; } = new ReactiveProperty<uint>();
+        public ReactiveProperty<uint> TargetPositionX { get; } = new ReactiveProperty<uint>(4790);
         /// <summary>
         /// 変更通知送信する際の目標座標（Y）
         /// </summary>
-        public ReactiveProperty<uint> TargetPositionY { get; } = new ReactiveProperty<uint>();
+        public ReactiveProperty<uint> TargetPositionY { get; } = new ReactiveProperty<uint>(100);
         /// <summary>
         /// 変更通知送信する際の目標角度
         /// </summary>
-        public ReactiveProperty<ushort> TargetAngle { get; } = new ReactiveProperty<ushort>(0);
+        public ReactiveProperty<ushort> TargetAngle { get; } = new ReactiveProperty<ushort>(270);
 
         public ReactiveCommand PositionResetCommand { get; private set; }
 
@@ -351,7 +351,7 @@ namespace ET2017_TuningTool
 
             //自己位置情報の更新を登録（描画用）
             SelfPositionRobotPos = Serial.ObserveProperty(s => s.RecentSelfPositionData)
-                                         .Select(t => new Point(t.PositionX / 5510.0 * 451.0, t.PositionY / 3722.0 * 296.0))
+                                         .Select(t => new Point((t.PositionX-240) / 5510.0 * 451.0 , (t.PositionY-100) / 3722.0 * 296.0))
                                          .ToReactiveProperty().AddTo(this.Disposable);
         
             SelfPositionRobotAngle = Serial.ObserveProperty(s => s.RecentSelfPositionData)
