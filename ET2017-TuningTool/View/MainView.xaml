@@ -224,13 +224,16 @@
                 </GroupBox>
 
                 <GroupBox Grid.Column="1" Header="自己位置推定結果" Margin="2" >
-                    <Grid>
+                    <Grid Margin="0,1,0,-1">
                         <Label Margin="0,0,388,291" Content="座標 X : " />
                         <Label Margin="38,0,0,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.X}" HorizontalContentAlignment="Right"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         <Label Margin="93,0,285,291" Content="座標 Y : " />
                         <Label Margin="137,0,0,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.Y}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         <Label Margin="200,0,198,291" Content="方向 : " />
                         <Label Margin="239,0,0,0"  Width="36" Height="26" Content="{Binding SelfPositionRobotAngleRaw.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Label Margin="295,0,95,291" Content="総距離 : " />
+                        <Label Margin="351,0,0,0"  Width="36" Height="26" Content="{Binding SelfPositionRobotDistanceRaw.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+
                         <Canvas HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,25,0,0">
                             <Image Source="/ET2017-TuningTool;component/Image/Field.png" HorizontalAlignment="Left" Width="451" Height="296" VerticalAlignment="Top" />
                             <Image RenderTransformOrigin="0.5,0.5" Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
@@ -261,16 +264,16 @@
                     <RowDefinition Height="179*"/>
                 </Grid.RowDefinitions>
                 <GroupBox Header="BLUETOOTH" Margin="1,2,2,0" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="1" Height="150" >
-                    <Grid Height="127">
+                    <Grid Height="108" Margin="0,0,0,-8" VerticalAlignment="Top" Width="186">
                         <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="10,29,0,0" HorizontalAlignment="Left" Width="168" VerticalAlignment="Top" />
-                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="10,0,0,29" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="168" />
-                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="10,0,0,103" Height="24" HorizontalAlignment="Left" Width="168"
-                                  ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}" VerticalAlignment="Bottom"/>
+                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="10,66,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168" />
+                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="10,0,0,0" Height="24" HorizontalAlignment="Left" Width="168"
+                                  ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}" VerticalAlignment="Top"/>
                     </Grid>
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="1" >
-                <GroupBox Header="PID - CONTROL" Margin="2,2,0,59">
+                <GroupBox Header="PID - CONTROL" Margin="2,-31,0,92">
                     <Grid Width="174" Height="195" VerticalAlignment="Top">
                         <ComboBox  materialDesign:HintAssist.Hint="State No" Margin="10,2,10,0" VerticalAlignment="Top" />
                         <Label Content="出力:" Margin="0,50,0,0" Height="24" VerticalAlignment="Top"/>
@@ -297,23 +300,26 @@
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="2" Height="190" VerticalAlignment="Top">
-                <GroupBox Header="MESSAGE" Margin="4,-53,0,-10" >
+                <GroupBox Header="MESSAGE" Margin="4,-87,0,-14" >
                     <Grid>
-                        <Label Content="PC制御：" Margin="0,0,60,111"/>
+                        <Label Content="PC制御：" Margin="0,0,60,0" Height="92" VerticalAlignment="Top"/>
                         <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center"
-                                         ToolTip="Default ToggleButton Style" Margin="61,0,76,182" Height="21" IsChecked="{Binding PCControlRobot.Value, Mode=TwoWay}"/>
-                        <Button x:Name="StartButton" Content="START" Width="84" Margin="0,26,0,145" HorizontalAlignment="Left"/>
-                        <Button x:Name="ResetButton" Content="RESET" Margin="94,26,0,145" HorizontalAlignment="Left" Width="84"/>
+                                         ToolTip="Default ToggleButton Style" Margin="66,0,71,220" Height="21" IsChecked="{Binding PCControlRobot.Value, Mode=TwoWay}"/>
+                        <Button x:Name="StartButton" Content="START" Width="84" Margin="0,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Button x:Name="ResetButton" Content="RESET" Margin="94,26,0,0" HorizontalAlignment="Left" Width="84" VerticalAlignment="Top"/>
                         <TextBox Margin="66,108,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
                         <TextBox Margin="66,138,0,0" Text="{Binding TargetPositionY.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
                         <TextBox Margin="66,168,0,0" Text="{Binding TargetAngle.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
-                        <Button Content="Position Send" Command="{Binding PositionResetCommand}" Width="178" Margin="0,72,0,99" HorizontalAlignment="Left"/>
+                        <TextBox Margin="66,198,0,0" Text="{Binding TargetDistance.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <Button Content="Position Send" Command="{Binding PositionResetCommand}" Width="178" Margin="0,72,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Label Content="mm" Margin="148,110,0,0" Height="22" VerticalAlignment="Top" />
                         <Label Content="mm" Margin="148,140,0,0" Height="22" VerticalAlignment="Top" />
                         <Label Content="°" Margin="148,168,0,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="mm" Margin="148,200,0,0" Height="22" VerticalAlignment="Top" />
                         <Label Content="X座標：" Margin="10,111,120,0" Height="22" VerticalAlignment="Top" />
                         <Label Content="Y座標：" Margin="10,141,120,0" Height="22" VerticalAlignment="Top" />
                         <Label Content="角度：" Margin="17,171,113,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="総距離：" Margin="5,201,114,0" Height="22" VerticalAlignment="Top" />
 
                     </Grid>
                 </GroupBox>

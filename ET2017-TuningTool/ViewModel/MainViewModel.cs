@@ -136,6 +136,11 @@ namespace ET2017_TuningTool
         public ReactiveProperty<int> SelfPositionRobotAngleRaw { get; }
 
         /// <summary>
+        /// 自己位置推定結果によるロボットの総走行距離
+        /// </summary>
+        public ReactiveProperty<uint> SelfPositionRobotDistanceRaw { get; }
+
+        /// <summary>
         /// 運搬対象ブロックに接近する際の運搬経路のパス
         /// </summary>
         public ReactiveProperty<Point[]> ApproachWay { get; }
@@ -249,6 +254,10 @@ namespace ET2017_TuningTool
         /// 変更通知送信する際の目標角度
         /// </summary>
         public ReactiveProperty<ushort> TargetAngle { get; } = new ReactiveProperty<ushort>(270);
+        /// <summary>
+        /// 変更通知送信する際の目標総距離(mm)
+        /// </summary>
+        public ReactiveProperty<uint> TargetDistance { get; } = new ReactiveProperty<uint>(0);
 
         public ReactiveCommand PositionResetCommand { get; private set; }
 
@@ -362,10 +371,12 @@ namespace ET2017_TuningTool
             SelfPositionRobotPosRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                                          .Select(t => new Point(t.PositionX , t.PositionY))
                                          .ToReactiveProperty().AddTo(this.Disposable);
-            
             SelfPositionRobotAngleRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                              .Select(t => (int)t.Angle)
                              .ToReactiveProperty().AddTo(this.Disposable);
+            SelfPositionRobotDistanceRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
+                                                 .Select(t => (uint)t.Distance)
+                                                 .ToReactiveProperty().AddTo(this.Disposable);
 
 
             // 接続コマンド押下イベントを定義
@@ -467,7 +478,8 @@ namespace ET2017_TuningTool
                 {
                     PositionX = TargetPositionX.Value,
                     PositionY = TargetPositionY.Value,
-                    Angle = TargetAngle.Value
+                    Angle = TargetAngle.Value,
+                    Distance = TargetDistance.Value
                 });
             });
 

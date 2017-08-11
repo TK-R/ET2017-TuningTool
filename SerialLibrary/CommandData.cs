@@ -211,7 +211,7 @@ namespace SerialLibrary
         public int State;
     }
 
-    [StructLayout(LayoutKind.Explicit, Size = 10, Pack = 1)]
+    [StructLayout(LayoutKind.Explicit, Size = 14, Pack = 1)]
     public struct SelfPositionData
     {
         /// <summary>
@@ -231,6 +231,12 @@ namespace SerialLibrary
         /// </summary>
         [FieldOffset(8)]
         public ushort Angle;
+
+        /// <summary>
+        /// 総走行距離
+        /// </summary>
+        [FieldOffset(10)]
+        public uint Distance;
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 2, Pack = 1)]

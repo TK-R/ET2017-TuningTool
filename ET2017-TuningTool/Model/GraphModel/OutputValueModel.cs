@@ -37,7 +37,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             Brush.Color = (Color)ColorConverter.ConvertFromString("#E91E63");
             MaxValue = 100;
             MinValue = -100;
-            Name = "Lモータ出力";
+            Name = "左モータ出力";
             Unit = "%";
         }
 
@@ -57,7 +57,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             Brush.Color = (Color)ColorConverter.ConvertFromString("#795548");
             MaxValue = 100;
             MinValue = -100;
-            Name = "Rモータ出力";
+            Name = "右モータ出力";
             Unit = "%";
         }
 
