@@ -69,7 +69,40 @@ namespace ET2017_TuningTool
         public ReactiveProperty<bool> SerialConnected { get; }
         #endregion
 
-        #region 座標データ
+        #region 自己位置推定データ
+        /// <summary>
+        /// 自己位置推定結果の描画に用いる走行体情報クラス
+        /// </summary>
+        public EV3Model SelfPositionRobotModel { get; set; } = new EV3Model();
+
+        /// <summary>
+        /// 自己位置推定結果におけるロボットの位置情報(描画用)
+        /// </summary>
+        public ReactiveProperty<Point> SelfPositionRobotPos { get; }
+
+        /// <summary>
+        /// 自己位置推定結果におけるロボットの位置情報
+        /// </summary>
+        public ReactiveProperty<Point> SelfPositionRobotPosRaw { get; }
+
+        /// <summary>
+        /// 自己位置推定結果におけるロボットの角度情報(描画用)
+        /// </summary>
+        public ReactiveProperty<int> SelfPositionRobotAngle { get; }
+
+        /// <summary>
+        /// 自己位置推定結果によるロボットの角度情報
+        /// </summary>
+        public ReactiveProperty<int> SelfPositionRobotAngleRaw { get; }
+
+        /// <summary>
+        /// 自己位置推定結果によるロボットの総走行距離
+        /// </summary>
+        public ReactiveProperty<uint> SelfPositionRobotDistanceRaw { get; }
+
+        #endregion
+
+        #region ブロック並べ攻略データ
 
         /// <summary>
         /// 初期配置コード
@@ -99,57 +132,22 @@ namespace ET2017_TuningTool
         /// 緑ブロックの位置情報
         /// </summary>
         public ReactiveProperty<Point> Green { get; }
-
         /// <summary>
         /// ブロック並べフィールドの描画に用いる走行体情報クラス
         /// </summary>
         public EV3Model BlockRobotModel { get; set; } = new EV3Model();
-
-        /// <summary>
-        /// 自己位置推定結果の描画に用いる走行体情報クラス
-        /// </summary>
-        public EV3Model SelfPositionRobotModel { get; set; } = new EV3Model();
-
         /// <summary>
         /// ブロック並べフィールドにおけるロボットの位置情報
         /// </summary>
         public ReactiveProperty<Point> BlockRobotPos { get; }
-
-        /// <summary>
-        /// 自己位置推定結果におけるロボットの位置情報(描画用)
-        /// </summary>
-        public ReactiveProperty<Point> SelfPositionRobotPos { get; }
-
-        /// <summary>
-        /// 事項指定結果におけるロボットの位置情報
-        /// </summary>
-        public ReactiveProperty<Point> SelfPositionRobotPosRaw { get; }
-
-        /// <summary>
-        /// 自己位置推定結果におけるロボットの角度情報(描画用)
-        /// </summary>
-        public ReactiveProperty<int> SelfPositionRobotAngle { get; }
-
-        /// <summary>
-        /// 自己位置推定結果によるロボットの角度情報
-        /// </summary>
-        public ReactiveProperty<int> SelfPositionRobotAngleRaw { get; }
-
-        /// <summary>
-        /// 自己位置推定結果によるロボットの総走行距離
-        /// </summary>
-        public ReactiveProperty<uint> SelfPositionRobotDistanceRaw { get; }
-
         /// <summary>
         /// 運搬対象ブロックに接近する際の運搬経路のパス
         /// </summary>
         public ReactiveProperty<Point[]> ApproachWay { get; }
-
         /// <summary>
         /// ブロックを運搬先ブロック置き場に運搬する際のパス
         /// </summary>
         public ReactiveProperty<Point[]> MoveBlockWay { get; }
-
         /// <summary>
         /// ブロックの座標を保持する構造体
         /// </summary>
@@ -171,7 +169,6 @@ namespace ET2017_TuningTool
             new Point(146, 100),
             new Point(192, 100),
         };
-
         /// <summary>
         /// ウェイポイントの座標を保持する構造体
         /// </summary>
@@ -209,9 +206,25 @@ namespace ET2017_TuningTool
 
         #region 入力信号電文情報
         /// <summary>
-        /// センサカラー情報
+        /// センサカラー値から生成したブラシ
         /// </summary>
         public ReadOnlyReactiveProperty<SolidColorBrush> SensorColor { get; }
+        /// <summary>
+        /// HSLカラー情報(色相)データ
+        /// </summary>
+        public ReadOnlyReactiveProperty<float> HueData { get; }
+        /// <summary>
+        /// HSLカラー情報(彩度)データ
+        /// </summary>
+        public ReadOnlyReactiveProperty<float> SaturationData { get; }
+        /// <summary>
+        /// HSLカラー情報(輝度)データ
+        /// </summary>
+        public ReadOnlyReactiveProperty<float> LuminosityData { get; }
+        /// <summary>
+        /// HSLカラー情報種別データ
+        /// </summary>
+        public ReadOnlyReactiveProperty<string> HSLKindString { get; }
         #endregion
 
         #region グラフ情報
@@ -322,10 +335,17 @@ namespace ET2017_TuningTool
             SerialConnected = Serial.ObserveProperty(s => s.Connected).Delay(TimeSpan.FromMilliseconds(500)).ToReactiveProperty().AddTo(this.Disposable);
 
             // センサカラーの表示
-            //SensorColor = Serial.ObserveProperty(s => s.RecentInputSignalData)
-            //                    .ObserveOnDispatcher() // UIスレッドに戻す
-            //                    .Select(v => new SolidColorBrush(Color.FromArgb(255, v.ColorR, v.ColorG, v.ColorB)))
-            //                    .ToReadOnlyReactiveProperty().AddTo(this.Disposable);
+            SensorColor = Serial.ObserveProperty(s => s.RecentInputSignalData)
+                                .ObserveOnDispatcher() // UIスレッドに戻す
+                                .Select(v => new SolidColorBrush(Color.FromArgb(255, (byte)v.ColorR, (byte)v.ColorG, (byte)v.ColorB)))
+                                .ToReadOnlyReactiveProperty().AddTo(this.Disposable);
+
+            // HSL情報の表示
+            HueData = Serial.ObserveProperty(s => s.RecentHSLColorData).Select(v => v.Hue).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
+            SaturationData = Serial.ObserveProperty(s => s.RecentHSLColorData).Select(v => v.Saturation).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
+            LuminosityData = Serial.ObserveProperty(s => s.RecentHSLColorData).Select(v => v.Luminosity).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
+            HSLKindString = Serial.ObserveProperty(s => s.RecentHSLColorData)
+                                  .Select(v => Enum.GetName(typeof(HSLKindEnum), v.HSLKind)).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
 
             // 入力値の更新を登録
             Serial.ObserveProperty(s => s.RecentInputSignalData)
@@ -377,7 +397,7 @@ namespace ET2017_TuningTool
             SelfPositionRobotDistanceRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                                                  .Select(t => (uint)t.Distance)
                                                  .ToReactiveProperty().AddTo(this.Disposable);
-
+     
 
             // 接続コマンド押下イベントを定義
             ConnectCommand = SerialConnected

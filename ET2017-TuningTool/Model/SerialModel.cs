@@ -9,6 +9,15 @@ using System.Threading.Tasks;
 
 namespace ET2017_TuningTool.Model
 {
+    public enum HSLKindEnum {
+        White = 0,
+        Black,
+        Red,
+        Yellow,
+        Blue,
+        Green,
+    }
+
     public class SerialModel : BindableBase
     {
         /// <summary>

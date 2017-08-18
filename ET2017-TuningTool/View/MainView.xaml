@@ -172,8 +172,6 @@
                                 </lvc:Axis>
                             </lvc:CartesianChart.AxisY>
                         </lvc:CartesianChart>
-
-
                     </Grid>
                 </Grid>
             </GroupBox>
@@ -182,56 +180,87 @@
                     <ColumnDefinition Width="300" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <GroupBox Grid.Column="0" Header="ブロック並べ攻略" Margin="5,2,2,2" >
-                    <Grid>
-                        <Grid.Resources>
-                            <local:PointsToPathConverter x:Key="PointsToPathConverter"/>
-                        </Grid.Resources>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="230"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0" Header="カラーセンサ色情報" Margin="4,2,3,2">
+                        <Grid Margin="0,0,0,0">
+                            <Label Content="Hue（色相）：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+                            <Label Content="Saturation（彩度）：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="0,24,0,0"/>
+                            <Label Content="Luminosity（輝度）：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="0,48,0,0"/>
 
-                        <Label Content="初期位置:" FontSize="12" Margin="0,0,0,287" HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
-                        <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="61,0,0,0" HorizontalAlignment="Left" Width="85" Height="25" VerticalAlignment="Top"/>
-                        <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,82,0,0" Height="114" VerticalAlignment="Top" />
-                        <Canvas HorizontalAlignment="Left" Height="121"   VerticalAlignment="Top" Width="293" Margin="0,75,0,0">
-                            <Ellipse Fill="Yellow" Height="20" Width="20" Stroke="Black"
+                            <Label Content="{Binding HueData.Value}" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="124,0,0,0"/>
+                            <Label Content="{Binding SaturationData.Value}" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="124,24,0,0" />
+                            <Label Content="{Binding LuminosityData.Value}" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="124,48,0,0"/>
+
+                            <Label Content="種別：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="199,0,0,0"/>
+                            <Label Content="{Binding HSLKindString.Value}" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="236,0,-16,0" Width="55"/>
+
+                            <Label Content="色：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="199,24,0,0"/>
+                            <Rectangle  Fill="{Binding SensorColor.Value}" Margin="240,29,-1,42" RenderTransformOrigin="0.5,0.5">
+                                <Rectangle.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleY="-1"/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Rectangle.RenderTransform>
+                            </Rectangle>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="ブロック並べ攻略" Margin="4,2,3,0" Height="227" VerticalAlignment="Top" >
+                        <Grid>
+                            <Grid.Resources>
+                                <local:PointsToPathConverter x:Key="PointsToPathConverter"/>
+                            </Grid.Resources>
+                            <Label Content="初期位置：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="0,-1,0,0"/>
+                            <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="61,-6,0,0" HorizontalAlignment="Left" Width="85" Height="25" VerticalAlignment="Top"/>
+                            <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,62,0,0" Height="114" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                            <Canvas HorizontalAlignment="Left" Height="121"   VerticalAlignment="Top" Width="293" Margin="0,60,-19,-4" Grid.ColumnSpan="2">
+                                <Ellipse Fill="Yellow" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Yellow.Value.X}"  Canvas.Top="{Binding Yellow.Value.Y}"  />
-                            <Ellipse Fill="Green" Height="20" Width="20" Stroke="Black"
+                                <Ellipse Fill="Green" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Green.Value.X}" Canvas.Top="{Binding Green.Value.Y}"  />
-                            <Ellipse Fill="Blue" Height="20" Width="20" Stroke="Black" 
+                                <Ellipse Fill="Blue" Height="20" Width="20" Stroke="Black" 
                                    Canvas.Left="{Binding Blue.Value.X}" Canvas.Top="{Binding Blue.Value.Y}"  />
-                            <Ellipse Fill="Red" Height="20" Width="20" Stroke="Black"
+                                <Ellipse Fill="Red" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Red.Value.X}" Canvas.Top="{Binding Red.Value.Y}"  />
-                            <Ellipse Fill="Black" Height="20" Width="20" Stroke="Black"
+                                <Ellipse Fill="Black" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Black.Value.X}" Canvas.Top="{Binding Black.Value.Y}"   />
 
-                            <Path  Stroke="Purple" StrokeThickness="5" 
+                                <Path  Stroke="Purple" StrokeThickness="5" 
                                    Canvas.Top="10" Canvas.Left="0"
                                    Data="{Binding ApproachWay.Value, Converter={StaticResource ResourceKey=PointsToPathConverter}}"/>
 
-                            <Path  Stroke="Orange" StrokeThickness="5" 
+                                <Path  Stroke="Orange" StrokeThickness="5" 
                                    Canvas.Top="10" Canvas.Left="0"
                                    Data="{Binding MoveBlockWay.Value, Converter={StaticResource ResourceKey=PointsToPathConverter}}"/>
 
-                            <Image  Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
+                                <Image  Source="/ET2017-TuningTool;component/Image/robot.png"  HorizontalAlignment="Left"
                                    Canvas.Left="{Binding BlockRobotPos.Value.X}" Canvas.Top="{Binding BlockRobotPos.Value.Y}"
                                     Width="40" Height="20" VerticalAlignment="Top" />
+                            </Canvas>
+                            <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="1,26,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
+                            <Button Content="NEXT" Command="{Binding NextPositionCommand}"  HorizontalAlignment="Left" Margin="92,26,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
+                            <Button Content="SEND" Command="{Binding SendRuleCommand}"  HorizontalAlignment="Left" Margin="166,26,0,0" VerticalAlignment="Top" Width="69" Height="26" Grid.ColumnSpan="2"/>
 
-                        </Canvas>
-                        <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="1,34,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
-                        <Button Content="NEXT" Command="{Binding NextPositionCommand}"  HorizontalAlignment="Left" Margin="92,34,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
-                        <Button Content="SEND" Command="{Binding SendRuleCommand}"  HorizontalAlignment="Left" Margin="166,34,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
+                        </Grid>
+                    </GroupBox>
 
-                    </Grid>
-                </GroupBox>
 
+                </Grid>
                 <GroupBox Grid.Column="1" Header="自己位置推定結果" Margin="2" >
                     <Grid Margin="0,1,0,-1">
-                        <Label Margin="0,0,388,291" Content="座標 X : " />
+                        <Label Margin="0,0,388,291" Content="座標 X： " />
                         <Label Margin="38,0,0,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.X}" HorizontalContentAlignment="Right"  VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                        <Label Margin="93,0,285,291" Content="座標 Y : " />
+                        <Label Margin="93,0,285,291" Content="座標 Y：" />
                         <Label Margin="137,0,0,0"  Width="50" Height="26" Content="{Binding SelfPositionRobotPosRaw.Value.Y}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                        <Label Margin="200,0,198,291" Content="方向 : " />
+                        <Label Margin="200,0,198,291" Content="方向：" />
                         <Label Margin="239,0,0,0"  Width="36" Height="26" Content="{Binding SelfPositionRobotAngleRaw.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                        <Label Margin="295,0,95,291" Content="総距離 : " />
+                        <Label Margin="295,0,95,291" Content="総距離：" />
                         <Label Margin="351,0,0,0"  Width="36" Height="26" Content="{Binding SelfPositionRobotDistanceRaw.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
                         <Canvas HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,25,0,0">
@@ -263,7 +292,7 @@
                     <RowDefinition Height="11*"/>
                     <RowDefinition Height="179*"/>
                 </Grid.RowDefinitions>
-                <GroupBox Header="BLUETOOTH" Margin="1,2,2,0" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="1" Height="150" >
+                <GroupBox Header="BLUETOOTH" Margin="1,1,2,0" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="1" Height="150" >
                     <Grid Height="108" Margin="0,0,0,-8" VerticalAlignment="Top" Width="186">
                         <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="10,29,0,0" HorizontalAlignment="Left" Width="168" VerticalAlignment="Top" />
                         <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="10,66,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168" />
@@ -273,13 +302,13 @@
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="1" >
-                <GroupBox Header="PID - CONTROL" Margin="2,-31,0,92">
+                <GroupBox Header="PID - CONTROL" Margin="2,-36,2,97">
                     <Grid Width="174" Height="195" VerticalAlignment="Top">
                         <ComboBox  materialDesign:HintAssist.Hint="State No" Margin="10,2,10,0" VerticalAlignment="Top" />
-                        <Label Content="出力:" Margin="0,50,0,0" Height="24" VerticalAlignment="Top"/>
-                        <Label Content="比例:" Margin="0,90,0,0" Height="24" VerticalAlignment="Top"/>
-                        <Label Content="積分:" Margin="0,130,0,0" Height="24" VerticalAlignment="Top"/>
-                        <Label Content="微分:" Margin="0,168,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="出力：" Margin="0,50,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="比例：" Margin="0,90,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="積分：" Margin="0,130,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="微分：" Margin="0,168,0,0" Height="24" VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding PIDPowerData.Value,StringFormat={}{0:N1}}" Margin="27,55,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding PIDPGainData.Value,StringFormat={}{0:N2}}" Margin="27,95,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding PIDIGainData.Value,StringFormat={}{0:N2}}" Margin="27,135,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
@@ -298,9 +327,7 @@
                                             Value="{Binding PIDDGainData.Value}" Margin="75,172,0,0" HorizontalAlignment="Left" Width="93" Height="20" VerticalAlignment="Top" />
                     </Grid>
                 </GroupBox>
-            </Grid>
-            <Grid Grid.Row="2" Height="190" VerticalAlignment="Top">
-                <GroupBox Header="MESSAGE" Margin="4,-87,0,-14" >
+                <GroupBox Header="MESSAGE" Margin="2,208,2,-205" >
                     <Grid>
                         <Label Content="PC制御：" Margin="0,0,60,0" Height="92" VerticalAlignment="Top"/>
                         <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center"
@@ -324,6 +351,7 @@
                     </Grid>
                 </GroupBox>
             </Grid>
+            <Grid Grid.Row="2" Height="190" VerticalAlignment="Top"/>
         </Grid>
     </Grid>
 </Controls:MetroWindow>
