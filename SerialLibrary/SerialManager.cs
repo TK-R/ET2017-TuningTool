@@ -82,6 +82,22 @@ namespace SerialLibrary
             }
         }
 
+        private HSLColorData _recentHSLColorData;
+        /// <summary>
+        /// 最後に受信したHSL情報電文のデータ領域
+        /// </summary>
+        internal HSLColorData RecentHSLColorData
+        {
+            set
+            {
+                _recentHSLColorData = value;
+                ReceiveHSLColorData?.Invoke(_recentHSLColorData);   
+            }
+            get
+            {
+                return _recentHSLColorData;
+            }
+        }
 
         /// <summary>
         /// シリアル通信でデータを送受信中ならtrueを返す
@@ -124,6 +140,11 @@ namespace SerialLibrary
         /// 自己位置情報電文を受信した際にコールするデリゲート
         /// </summary>
         public Action<SelfPositionData> ReceiveSelfPositionData;
+
+        /// <summary>
+        /// HSL情報電文を受信した際にコールするデリゲート
+        /// </summary>
+        public Action<HSLColorData> ReceiveHSLColorData;
 
         /// <summary>
         /// ポート名称を指定してシリアル通信を開始する

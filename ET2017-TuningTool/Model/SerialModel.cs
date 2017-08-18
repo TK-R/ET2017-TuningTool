@@ -62,7 +62,10 @@ namespace ET2017_TuningTool.Model
                 ReceiveOutputSignal = received => RecentOutputSignalData = received,
 
                 // 自己位置情報電文受信時に、対応するプロパティを更新する処理を登録
-                ReceiveSelfPositionData = received => RecentSelfPositionData = received
+                ReceiveSelfPositionData = received => RecentSelfPositionData = received,
+
+                // HSL情報電文受信時に、対応するプロパティを更新する処理を追加
+                ReceiveHSLColorData = received => RecentHSLColorData = received
             };
 
             // シリアル通信を開始
@@ -149,6 +152,14 @@ namespace ET2017_TuningTool.Model
         {
             get { return _RecentSelfPositionData; }
             set { SetProperty(ref _RecentSelfPositionData, value); }
+        }
+
+        private HSLColorData _RecentHSLColorData;
+
+        public HSLColorData RecentHSLColorData
+        {
+            get { return _RecentHSLColorData; }
+            set { SetProperty(ref _RecentHSLColorData, value); }
         }
     }
 }

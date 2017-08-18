@@ -26,6 +26,10 @@ namespace SerialLibrary
         /// 自己位置情報電文
         /// </summary>
         SELF_POSITION_DATA_COMMAND = 0x30,
+        /// <summary>
+        /// HSL情報電文
+        /// </summary>
+        HSL_COLOR_DATA_COMMAND = 0x31,
 
     };
 
@@ -237,6 +241,34 @@ namespace SerialLibrary
         /// </summary>
         [FieldOffset(10)]
         public uint Distance;
+    }
+
+    [StructLayout(LayoutKind.Explicit, Size = 13, Pack = 1)]
+    public struct HSLColorData
+    {
+        /// <summary>
+        /// 色相
+        /// </summary>
+        [FieldOffset(0)]
+        public float Hue;
+
+        /// <summary>
+        /// 彩度
+        /// </summary>
+        [FieldOffset(4)]
+        public float Saturation;
+
+        /// <summary>
+        /// 輝度
+        /// </summary>
+        [FieldOffset(8)]
+        public float Luminosity;
+
+        /// <summary>
+        /// 色種別
+        /// </summary>
+        [FieldOffset(12)]
+        public byte HSLKind;
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 2, Pack = 1)]

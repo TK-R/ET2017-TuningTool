@@ -61,6 +61,9 @@ namespace SerialLibrary
                 case COMMAND.SELF_POSITION_DATA_COMMAND:
                     Context.CurrentState = new SelfPositionDataState(Context);
                     break;
+                case COMMAND.HSL_COLOR_DATA_COMMAND:
+                    Context.CurrentState = new HSLDataState(Context);
+                    break;
                 default:
                     Context.CurrentState = new HeaderState(Context);
                     break;
@@ -143,6 +146,25 @@ namespace SerialLibrary
             {
                 // チェックサムが一致したら、構造体を構築
                 Context.RecentPositionData = DataTools.RawDeserialize<SelfPositionData>(buff.ToArray(), 0);
+            }
+
+            Context.CurrentState = new HeaderState(Context);
+        }
+    }
+
+
+    internal class HSLDataState : SerialState
+    {
+        internal HSLDataState(SerialManager manager) : base(manager) { }
+        internal override void Receive(byte data)
+        {
+            buff.Add(data);
+            if (buff.Count < Marshal.SizeOf(typeof(HSLColorData)) + 1) return;
+
+            if (buff.Last() == (byte)buff.Take(Marshal.SizeOf(typeof(HSLColorData))).Sum(t => t))
+            {
+                // チェックサムが一致したら、構造体を構築
+                Context.RecentHSLColorData = DataTools.RawDeserialize<HSLColorData>(buff.ToArray(), 0);
             }
 
             Context.CurrentState = new HeaderState(Context);
