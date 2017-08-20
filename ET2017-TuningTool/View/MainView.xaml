@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:ET2017_TuningTool"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
@@ -22,6 +23,13 @@
         <Controls:WindowCommands/>
     </Controls:MetroWindow.RightWindowCommands>
 
+    <Window.Resources>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}"  x:Key="PIDStateNoKey">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:PIDStateNo" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -304,7 +312,8 @@
             <Grid Grid.Row="1" >
                 <GroupBox Header="PID - CONTROL" Margin="2,-36,2,97">
                     <Grid Width="174" Height="195" VerticalAlignment="Top">
-                        <ComboBox  materialDesign:HintAssist.Hint="State No" Margin="10,2,10,0" VerticalAlignment="Top" />
+                        <ComboBox  materialDesign:HintAssist.Hint="State No" Margin="10,2,10,0" VerticalAlignment="Top" 
+                                   ItemsSource="{Binding Source={StaticResource PIDStateNoKey}}"  SelectedItem="{Binding SelectedStateNo.Value}"/>
                         <Label Content="出力：" Margin="0,50,0,0" Height="24" VerticalAlignment="Top"/>
                         <Label Content="比例：" Margin="0,90,0,0" Height="24" VerticalAlignment="Top"/>
                         <Label Content="積分：" Margin="0,130,0,0" Height="24" VerticalAlignment="Top"/>

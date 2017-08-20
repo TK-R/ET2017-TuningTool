@@ -20,6 +20,13 @@ using System.Reactive;
 namespace ET2017_TuningTool
 {
 
+    public enum PIDStateNo
+    {
+        LineTracePIDState = 1,
+        BlockMovePIDState = 10,
+        ETSumoPIDState = 20
+    }
+
     public class MainViewModel : BindableBase, IDisposable
     {
 
@@ -247,6 +254,8 @@ namespace ET2017_TuningTool
         #endregion
 
         #region 走行体制御
+
+        public ReactiveProperty<PIDStateNo> SelectedStateNo { get; } = new ReactiveProperty<PIDStateNo>(PIDStateNo.LineTracePIDState);
         public ReactiveProperty<float> PIDPowerData { get; }
         public ReactiveProperty<float> PIDPGainData { get; }
         public ReactiveProperty<float> PIDIGainData { get; }
@@ -453,7 +462,7 @@ namespace ET2017_TuningTool
                 var data = rule.Serialize();
                 Serial.WriteByteData(COMMAND.BLOCK_MOVE_RULE_COMMNAD, data);
             });
-            
+
             // PIDゲインデータの通信を登録
             PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);
             PIDPGainData = PID.ObserveProperty(p => p.PGain).ToReactiveProperty().AddTo(this.Disposable);
@@ -480,7 +489,9 @@ namespace ET2017_TuningTool
                     BasePower = PIDPowerData.Value,
                     PGain = PIDPGainData.Value,
                     IGain = PIDIGainData.Value,
-                    DGain = PIDDGainData.Value
+                    DGain = PIDDGainData.Value,
+                    State = (int)SelectedStateNo.Value
+
                 });
             }
 
