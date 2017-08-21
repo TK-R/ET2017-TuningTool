@@ -49,16 +49,19 @@ namespace ET2017_TuningTool.Model
                 (byte)DestinationBlockPlaceNo,  // 運搬先ブロック置き場
                 (byte)ApproachWay.Count()       // ブロック確保ウェイポイントの数
             };
-
+            
             // ブロック確保ウェイポイントNoを追加
             list.AddRange(ApproachWay.Select(a => (byte)a.WayPointNo));
 
-            // ブロック運搬ウェイポイントの数を追加
-            list.Add((byte)BlockMoveWay.Count());
+            // ブロック運搬経路が存在する場合（最終コマンドではない）場合
+            if (BlockMoveWay != null)
+            {
+                // ブロック運搬ウェイポイントの数を追加
+                list.Add((byte)BlockMoveWay.Count());
 
-            // ブロック運搬ウェイポイントNoを追加
-            list.AddRange(BlockMoveWay.Select(b => (byte)b.WayPointNo));
-
+                // ブロック運搬ウェイポイントNoを追加
+                list.AddRange(BlockMoveWay.Select(b => (byte)b.WayPointNo));
+            }
             return list.ToArray();
         }
     }

@@ -84,6 +84,45 @@ namespace ET2017_TuningTool.Model
 
                 BlockMoveCommandList.Add(command);
             }
+
+            // No10に接近する、最終コマンドを追加する
+            BlockMoveCommandList.Add(CalculateLastMoveCommand());
+        }
+
+        /// <summary>
+        /// 縦列駐車に遷移するために、No10のブロック置き場へ移動するための経路を算出する
+        /// </summary>
+        /// <returns></returns>
+        private BlockMoveCommand CalculateLastMoveCommand()
+        {
+
+            BlockPlace srcPlace = PlaceArray.Where(p => p.No == 10).First();
+            var currentWaypoint = LineArray.Where(t => t.WayPoint == RobotPosition).FirstOrDefault();
+            if (currentWaypoint == null) return null;
+
+            var startWayPoint = LineArray.Where(l => l.WayPoint != RobotPosition) // 現在いるウェイポイント以外で、
+                                    .Where(l => l.NearLineNo.Contains(currentWaypoint.No)) // 現在いるウェイポイントに近いラインのうち、
+                                    .FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+
+            var approachWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
+                                                        l.EndPlaceNo == srcPlace.No)
+                                        .FindMin(l => l.GetDistance(RobotPosition)).No;     // そのうち、最もロボットに近い点
+
+
+            var di = new Dijkstra(LineArray);
+            var approach = di.GetRouteNodeNo(startWayPoint, approachWayPoint);
+
+            var command = new BlockMoveCommand
+            {
+                SourceBlockPlaceNo = srcPlace.No,
+                DestinationBlockPlaceNo = 0,
+                TargetBlockColor = BlockColor.Black,
+                ApproachWay = approach.Select(a => new Way { WayPointNo = a }).ToArray(),
+                BlockMoveWay = null,
+            };
+
+            return command;
+
         }
 
         /// <summary>
@@ -254,30 +293,37 @@ namespace ET2017_TuningTool.Model
             approach.Insert(0, robot.GetPosition());
             // 運搬元ブロック置き場の座標を追加
             approach.Add(srcPos);
-            
-            // 運搬時のパスをアップデート
-            var moveBlock = command.BlockMoveWay.Select(t => LineArray[t.WayPointNo].WayPoint).ToList();
-            // 運搬元ブロック置場の座標を追加
-            moveBlock.Insert(0, srcPos);
-            // 運搬先ブロック置場の座標を追加
-            moveBlock.Add(dstPos);
-        
-            // ブロック置き場情報を更新
-            field.PlaceArray[dstNo].OnBlockColor = command.TargetBlockColor;
-            field.PlaceArray[srcNo].OnBlockColor = BlockColor.None;
-            field.UpdatePositionFromPlace();
-
-            // 走行体情報を更新
-            //robot.Position = field.PlaceArray[dstNo].GetPosition();
-            var nextPos  = LineArray[command.BlockMoveWay.Last().WayPointNo].WayPoint;
-            nextPos.X -= 20;
-            nextPos.Y -= 10;
-            robot.Position = nextPos;
-
 
             // 経路情報を更新
             field.ApproachWayPointArray = approach.ToArray();
-            field.MoveBlockWayPointArray = moveBlock.ToArray();
+
+            // 運搬時のパスをアップデート
+            if (command.BlockMoveWay != null)
+            {
+                var moveBlock = command.BlockMoveWay.Select(t => LineArray[t.WayPointNo].WayPoint).ToList();
+                // 運搬元ブロック置場の座標を追加
+                moveBlock.Insert(0, srcPos);
+                // 運搬先ブロック置場の座標を追加
+                moveBlock.Add(dstPos);
+                field.MoveBlockWayPointArray = moveBlock.ToArray();
+
+                // 走行体情報を更新
+                var nextPos = LineArray[command.BlockMoveWay.Last().WayPointNo].WayPoint;
+                nextPos.X -= 20;
+                nextPos.Y -= 10;
+                robot.Position = nextPos;
+
+                // ブロック置き場情報を更新
+                field.PlaceArray[dstNo].OnBlockColor = command.TargetBlockColor;
+                field.PlaceArray[srcNo].OnBlockColor = BlockColor.None;
+                field.UpdatePositionFromPlace();
+            }
+            else
+            {
+                // 最終コマンドの場合
+                field.MoveBlockWayPointArray = new Point[0];
+                robot.Position = field.PlaceArray[10].GetPosition();
+            }
             
             BlockMoveCommandList.Remove(command);
         }
