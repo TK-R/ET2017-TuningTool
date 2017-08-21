@@ -22,7 +22,10 @@ namespace ET2017_TuningTool
 
     public enum PIDStateNo
     {
-        LineTracePIDState = 1,
+        LineTraceStraight = 1,
+        LineTraceHighSpeedCurve,
+        LineTraceMiddleSpeedCurve,
+        LineTraceSlowSpeedCurve,
         BlockMovePIDState = 10,
         ETSumoPIDState = 20
     }
@@ -255,7 +258,7 @@ namespace ET2017_TuningTool
 
         #region 走行体制御
 
-        public ReactiveProperty<PIDStateNo> SelectedStateNo { get; } = new ReactiveProperty<PIDStateNo>(PIDStateNo.LineTracePIDState);
+        public ReactiveProperty<PIDStateNo> SelectedStateNo { get; } = new ReactiveProperty<PIDStateNo>(PIDStateNo.LineTraceStraight);
         public ReactiveProperty<float> PIDPowerData { get; }
         public ReactiveProperty<float> PIDPGainData { get; }
         public ReactiveProperty<float> PIDIGainData { get; }
@@ -267,11 +270,11 @@ namespace ET2017_TuningTool
         /// <summary>
         /// 変更通知送信する際の目標座標（X）
         /// </summary>
-        public ReactiveProperty<uint> TargetPositionX { get; } = new ReactiveProperty<uint>(4790);
+        public ReactiveProperty<uint> TargetPositionX { get; } = new ReactiveProperty<uint>(5190);
         /// <summary>
         /// 変更通知送信する際の目標座標（Y）
         /// </summary>
-        public ReactiveProperty<uint> TargetPositionY { get; } = new ReactiveProperty<uint>(100);
+        public ReactiveProperty<uint> TargetPositionY { get; } = new ReactiveProperty<uint>(430);
         /// <summary>
         /// 変更通知送信する際の目標角度
         /// </summary>
