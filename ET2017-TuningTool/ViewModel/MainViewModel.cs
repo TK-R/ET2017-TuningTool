@@ -473,9 +473,10 @@ namespace ET2017_TuningTool
             PIDDGainData = PID.ObserveProperty(p => p.DGain).ToReactiveProperty().AddTo(this.Disposable);
 
             // 初期値を格納
-            PID.Power =15;
-            PID.PGain = 0.14f;
-            PID.DGain = 0.1f;
+            PID.Power =65;
+            PID.PGain = 0.04f;
+            PID.IGain = 0.02f;
+            PID.DGain = 0.53f;
 
             // 200ms値が確定したら、データを送信
             void sendData()
