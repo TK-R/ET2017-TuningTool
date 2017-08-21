@@ -311,6 +311,10 @@ namespace SerialLibrary
 
                 Serial.Write(sendData.ToArray(), 0, sendData.Count);
             }
+            catch (TimeoutException)
+            {
+                return false;
+            }
             catch (IOException)
             {
                 return false;

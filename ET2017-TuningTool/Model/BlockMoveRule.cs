@@ -154,7 +154,20 @@ namespace ET2017_TuningTool.Model
             var di = new Dijkstra(LineArray);
 
 
-            var startWayPoint = LineArray.FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+            int startWayPoint = 0;
+        
+            // 既にロボットがウェイポイント上にいる（初回コマンドではない）場合
+            if (LineArray.Any(l => l.WayPoint == RobotPosition))
+            {
+                var currentWaypoint = LineArray.Where(t => t.WayPoint == RobotPosition).First().No;
+                startWayPoint = LineArray.Where(l => l.WayPoint != RobotPosition) // 現在いるウェイポイント以外で、
+                                         .Where(l => l.NearLineNo.Contains(currentWaypoint)) // 現在いるウェイポイントに近いラインのうち、
+                                         .FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+            }
+            else
+            {
+                startWayPoint = LineArray.FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+            }
 
             var approachWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
                                                    l.EndPlaceNo == srcPlace.No)
@@ -183,8 +196,8 @@ namespace ET2017_TuningTool.Model
             };
 
             // 運搬後のポジションに更新
-            RobotPosition = dstPlace.GetPosition();
-
+            //RobotPosition = dstPlace.GetPosition();
+            RobotPosition = LineArray[dstWayPoint].WayPoint;
             return command;
         }
 
@@ -255,8 +268,13 @@ namespace ET2017_TuningTool.Model
             field.UpdatePositionFromPlace();
 
             // 走行体情報を更新
-            robot.Position = field.PlaceArray[dstNo].GetPosition();
-            
+            //robot.Position = field.PlaceArray[dstNo].GetPosition();
+            var nextPos  = LineArray[command.BlockMoveWay.Last().WayPointNo].WayPoint;
+            nextPos.X -= 20;
+            nextPos.Y -= 10;
+            robot.Position = nextPos;
+
+
             // 経路情報を更新
             field.ApproachWayPointArray = approach.ToArray();
             field.MoveBlockWayPointArray = moveBlock.ToArray();

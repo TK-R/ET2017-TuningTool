@@ -462,6 +462,14 @@ namespace ET2017_TuningTool
             SendRuleCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
             SendRuleCommand.Subscribe(_ =>
             {
+                // 運搬経路は初期化
+                BlockField.ApproachWayPointArray = new Point[0];
+                BlockField.MoveBlockWayPointArray = new Point[0];
+
+                BlockField.SetBlockPosition(InitPostionCode.Value, 0);
+                BlockRobotModel.ResetPosition();
+                rule = new BlockMoveRule(BlockRobotModel, BlockField);
+
                 var data = rule.Serialize();
                 Serial.WriteByteData(COMMAND.BLOCK_MOVE_RULE_COMMNAD, data);
             });
