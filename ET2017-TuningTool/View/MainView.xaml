@@ -226,7 +226,7 @@
                             </Grid.Resources>
                             <Label Content="初期位置：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="0,-1,0,0"/>
                             <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="61,-6,0,0" HorizontalAlignment="Left" Width="85" Height="25" VerticalAlignment="Top"/>
-                            <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,62,0,0" Height="114" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+                            <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,66,0,-3" Height="114" VerticalAlignment="Top" />
                             <Canvas HorizontalAlignment="Left" Height="121"   VerticalAlignment="Top" Width="293" Margin="0,60,-19,-4" Grid.ColumnSpan="2">
                                 <Ellipse Fill="Yellow" Height="20" Width="20" Stroke="Black"
                                    Canvas.Left="{Binding Yellow.Value.X}"  Canvas.Top="{Binding Yellow.Value.Y}"  />
