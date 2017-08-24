@@ -14,6 +14,7 @@ namespace ET2017_TuningTool.Model.GraphModel
             typeof(LeftMotorAngle), // 左モータ角度
             typeof(RightMotorAngle), // 右モータ角度
             typeof(ReflectedLightGraphModel), // 反射
+            typeof(ControlMillSecond),  // 処理にかかった時間
             typeof(Angle), // 角位置
             typeof(AngularVelocity), // 角速度
             typeof(ColorRValue), // カラーセンサのR
@@ -76,13 +77,34 @@ namespace ET2017_TuningTool.Model.GraphModel
     }
 
     /// <summary>
+    /// 周期処理にかかった時間
+    /// </summary>
+    public class ControlMillSecond : InputValueModel
+    {
+        public ControlMillSecond()
+        {
+            Brush.Color = (Color)ColorConverter.ConvertFromString("#9b59b6");
+            Name = "処理時間";
+            MaxValue = 50;
+            MinValue = 0;
+            Unit = "msec";
+        }
+
+        internal override double GetInputValue(InputSignalData data)
+        {
+            return data.ConrolMillSec;
+        }
+    }
+
+    /// <summary>
     /// 角速度センサから取得した角位置
     /// </summary>
     public class Angle : InputValueModel
     {
         public Angle()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#9b59b6");
+            Brush.Color = Colors.Transparent;
+
             Name = "角位置";
             MaxValue = 30;
             MinValue = -30;
@@ -103,7 +125,8 @@ namespace ET2017_TuningTool.Model.GraphModel
     {
         public AngularVelocity()
         {
-            Brush.Color = (Color)ColorConverter.ConvertFromString("#3498db");
+            Brush.Color = Colors.Transparent;
+
             Name = "角速度";
             MaxValue = 360;
             MinValue = -360;

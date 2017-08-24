@@ -132,7 +132,7 @@ namespace SerialLibrary
         /// 予備1
         /// </summary>
         [FieldOffset(19)]
-        public ushort reserved1;
+        public ushort ConrolMillSec;
         /// <summary>
         /// 予備2
         /// </summary>
