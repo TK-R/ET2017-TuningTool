@@ -27,9 +27,12 @@ namespace ET2017_TuningTool
         LineTraceMiddleSpeedCurve,
         LineTraceSlowSpeedCurve,
         BlockMovePIDState = 10,
+        BlockMoveHighPIDState,
         ETSumoPIDState = 20,
-        ETTrainSlow = 21,
-        ETTrainHigh = 22,
+        ETSumoHighPIDState,
+        ETTrainSlow = 30,
+        ETTrainHigh,
+        ForwardPID = 99,
     }
 
     public class MainViewModel : BindableBase, IDisposable
@@ -483,10 +486,10 @@ namespace ET2017_TuningTool
             PIDDGainData = PID.ObserveProperty(p => p.DGain).ToReactiveProperty().AddTo(this.Disposable);
 
             // 初期値を格納
-            PID.Power =65;
-            PID.PGain = 0.04f;
-            PID.IGain = 0.02f;
-            PID.DGain = 0.53f;
+            PID.Power =100;
+            PID.PGain = 0.3f;
+            PID.IGain = 0.01f;
+            PID.DGain = 0.4f;
 
             // 200ms値が確定したら、データを送信
             void sendData()

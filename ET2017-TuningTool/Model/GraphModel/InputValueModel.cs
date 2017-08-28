@@ -15,13 +15,12 @@ namespace ET2017_TuningTool.Model.GraphModel
             typeof(RightMotorAngle), // 右モータ角度
             typeof(ReflectedLightGraphModel), // 反射
             typeof(ControlMillSecond),  // 処理にかかった時間
-            typeof(Angle), // 角位置
+            typeof(BatteryVoltageModel), // バッテリ電圧
+            typeof(BatteryCurrentModel), // バッテリ電流
             typeof(AngularVelocity), // 角速度
             typeof(ColorRValue), // カラーセンサのR
             typeof(ColorGValue), // カラーセンサのG
             typeof(ColorBValue), // カラーセンサのB
-            typeof(BatteryVoltageModel), // バッテリ電圧
-            typeof(BatteryCurrentModel), // バッテリ電流
         };
 
 
