@@ -27,7 +27,9 @@ namespace ET2017_TuningTool
         LineTraceMiddleSpeedCurve,
         LineTraceSlowSpeedCurve,
         BlockMovePIDState = 10,
-        ETSumoPIDState = 20
+        ETSumoPIDState = 20,
+        ETTrainSlow = 21,
+        ETTrainHigh = 22,
     }
 
     public class MainViewModel : BindableBase, IDisposable
