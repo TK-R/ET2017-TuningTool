@@ -51,6 +51,17 @@ namespace ET2017_TuningTool.Model
         }
 
         /// <summary>
+        /// PID制御に用いるステアリング値
+        /// </summary>
+        private sbyte _steering;
+        public sbyte Steering
+        {
+            get { return _steering; }
+            set { SetProperty(ref _steering, value); }
+        }
+        
+
+        /// <summary>
         /// 受信した電文データを元に保持していうｒ情報を更新する
         /// </summary>
         /// <param name="p"></param>

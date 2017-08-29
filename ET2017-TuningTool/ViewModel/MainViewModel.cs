@@ -268,6 +268,8 @@ namespace ET2017_TuningTool
         public ReactiveProperty<float> PIDPGainData { get; }
         public ReactiveProperty<float> PIDIGainData { get; }
         public ReactiveProperty<float> PIDDGainData { get; }
+        public ReactiveProperty<sbyte> PIDSteeringData { get; }
+
         public PIDModel PID { get; set; } = new PIDModel();
         public ReactiveProperty<bool> PCControlRobot { get; set; }
         public RobotControl RobotController { get; set; }
@@ -484,12 +486,15 @@ namespace ET2017_TuningTool
             PIDPGainData = PID.ObserveProperty(p => p.PGain).ToReactiveProperty().AddTo(this.Disposable);
             PIDIGainData = PID.ObserveProperty(p => p.IGain).ToReactiveProperty().AddTo(this.Disposable);
             PIDDGainData = PID.ObserveProperty(p => p.DGain).ToReactiveProperty().AddTo(this.Disposable);
+            PIDSteeringData = PID.ObserveProperty(p => p.Steering).ToReactiveProperty().AddTo(this.Disposable);
+
 
             // 初期値を格納
             PID.Power =100;
             PID.PGain = 0.3f;
             PID.IGain = 0.01f;
             PID.DGain = 0.4f;
+            PID.Steering = 0;
 
             // 200ms値が確定したら、データを送信
             void sendData()
@@ -507,6 +512,7 @@ namespace ET2017_TuningTool
                     PGain = PIDPGainData.Value,
                     IGain = PIDIGainData.Value,
                     DGain = PIDDGainData.Value,
+                    Steering = PIDSteeringData.Value,
                     State = (int)SelectedStateNo.Value
 
                 });
@@ -517,6 +523,7 @@ namespace ET2017_TuningTool
             PIDPGainData.Throttle(pidWait).Subscribe(_ => sendData());
             PIDIGainData.Throttle(pidWait).Subscribe(_ => sendData());
             PIDDGainData.Throttle(pidWait).Subscribe(_ => sendData());
+            PIDSteeringData.Throttle(pidWait).Subscribe(_ => sendData());
 
             // 自己位置推定値のリセットコマンドを定義
             PositionResetCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);

@@ -181,7 +181,7 @@ namespace SerialLibrary
     /// <summary>
     /// PIDゲインデータ
     /// </summary>
-    [StructLayout(LayoutKind.Explicit, Size = 20, Pack = 1)]
+    [StructLayout(LayoutKind.Explicit, Size = 21, Pack = 1)]
     public struct PIDData
     {
         /// <summary>
@@ -209,9 +209,15 @@ namespace SerialLibrary
         public float DGain;
 
         /// <summary>
-        /// ステート番号
+        /// ステアリング値
         /// </summary>
         [FieldOffset(16)]
+        public sbyte Steering;
+
+        /// <summary>
+        /// ステート番号
+        /// </summary>
+        [FieldOffset(17)]
         public int State;
     }
 
