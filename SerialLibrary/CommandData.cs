@@ -209,16 +209,17 @@ namespace SerialLibrary
         public float DGain;
 
         /// <summary>
-        /// ステアリング値
-        /// </summary>
-        [FieldOffset(16)]
-        public sbyte Steering;
-
-        /// <summary>
         /// ステート番号
         /// </summary>
-        [FieldOffset(17)]
+        [FieldOffset(16)]
         public int State;
+
+
+        /// <summary>
+        /// ステアリング値
+        /// </summary>
+        [FieldOffset(20)]
+        public sbyte Steering;
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 14, Pack = 1)]
