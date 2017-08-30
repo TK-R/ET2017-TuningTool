@@ -23,14 +23,21 @@ namespace ET2017_TuningTool
     public enum PIDStateNo
     {
         LineTraceStraight = 1,
-        LineTraceHighSpeedCurve,
-        LineTraceMiddleSpeedCurve,
-        LineTraceSlowSpeedCurve,
-        BlockMovePIDState = 10,
+        pR_B,
+        pR_C,
+        pR_D,
+        pR_E,
+        pL_B,
+        pL_C,
+        pL_D,
+        pL_E,
+        pL_F,
+        pL_G,
+        BlockMovePIDState = 30,
         BlockMoveHighPIDState,
-        ETSumoPIDState = 20,
+        ETSumoPIDState,
         ETSumoHighPIDState,
-        ETTrainSlow = 30,
+        ETTrainSlow,
         ETTrainHigh,
         ForwardPID = 99,
     }
@@ -297,6 +304,7 @@ namespace ET2017_TuningTool
 
         /// <summary>
         /// 入力値モデルを格納するリスト
+        /// 
         /// </summary>
         public List<InputValueModel> InputModels { get; set; } = new List<InputValueModel>();
 
