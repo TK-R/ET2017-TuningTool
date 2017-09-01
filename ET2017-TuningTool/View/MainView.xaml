@@ -350,24 +350,24 @@
                                          ToolTip="Default ToggleButton Style" Margin="66,3,71,0" Height="21" IsChecked="{Binding PCControlRobot.Value, Mode=TwoWay}"/>
                         <Button x:Name="StartButton" Content="START" Width="84" Margin="0,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Button x:Name="ResetButton" Content="RESET" Margin="94,26,0,0" HorizontalAlignment="Left" Width="84" VerticalAlignment="Top"/>
-                        <TextBox Margin="66,108,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
-                        <TextBox Margin="66,138,0,0" Text="{Binding TargetPositionY.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
-                        <TextBox Margin="66,168,0,0" Text="{Binding TargetAngle.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
-                        <TextBox Margin="66,198,0,0" Text="{Binding TargetDistance.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
-                        <Button Content="Position Send" Command="{Binding PositionResetCommand}" Width="178" Margin="0,72,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <Label Content="mm" Margin="148,110,0,0" Height="22" VerticalAlignment="Top" />
-                        <Label Content="mm" Margin="148,140,0,0" Height="22" VerticalAlignment="Top" />
-                        <Label Content="°" Margin="148,168,0,0" Height="22" VerticalAlignment="Top" />
-                        <Label Content="mm" Margin="148,200,0,0" Height="22" VerticalAlignment="Top" />
-                        <Label Content="X座標：" Margin="10,111,120,0" Height="22" VerticalAlignment="Top" />
-                        <Label Content="Y座標：" Margin="10,141,120,0" Height="22" VerticalAlignment="Top" />
-                        <Label Content="角度：" Margin="17,171,113,0" Height="22" VerticalAlignment="Top" />
-                        <Label Content="総距離：" Margin="5,201,114,0" Height="22" VerticalAlignment="Top" />
+                        <TextBox Margin="66,106,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <TextBox Margin="66,136,0,0" Text="{Binding TargetPositionY.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <TextBox Margin="66,166,0,0" Text="{Binding TargetAngle.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <TextBox Margin="66,196,0,-5" Text="{Binding TargetDistance.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
+                        <Button Content="Position Send" Command="{Binding PositionResetCommand}" Width="178" Margin="0,66,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Label Content="mm" Margin="148,108,0,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="mm" Margin="148,138,0,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="°" Margin="148,166,0,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="mm" Margin="148,198,0,-4" Height="22" VerticalAlignment="Top" />
+                        <Label Content="X座標：" Margin="10,109,120,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="Y座標：" Margin="10,139,120,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="角度：" Margin="17,169,113,0" Height="22" VerticalAlignment="Top" />
+                        <Label Content="総距離：" Margin="5,199,114,-5" Height="22" VerticalAlignment="Top" />
 
                     </Grid>
                 </GroupBox>
             </Grid>
-            <Grid Grid.Row="2" Height="190" VerticalAlignment="Top"/>
+            <Grid Grid.Row="1" Height="190" VerticalAlignment="Top" Margin="0,298,0,0" Grid.RowSpan="2"/>
         </Grid>
     </Grid>
 </Controls:MetroWindow>
