@@ -218,8 +218,9 @@ namespace ET2017_TuningTool.Model
 
             var dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
                                                    l.EndPlaceNo == dstPlace.No)
-                                                   .FindMin(w => w.GetDistance(srcPlace.GetPosition()))    // その中でも、運搬元ブロック置き場に最も近い
-                                                   .No;
+                                       .Where(l => l.No != 23 && l.No != 24 && l.No != 25)                // さらに狭い最下段のウェイポイントではない
+                                       .FindMin(w => w.GetDistance(srcPlace.GetPosition()))    // その中でも、運搬元ブロック置き場に最も近い
+                                       .No;
 
             
             var approach = di.GetRouteNodeNo(startWayPoint, approachWayPoint);
