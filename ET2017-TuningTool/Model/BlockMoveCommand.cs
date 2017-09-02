@@ -61,6 +61,10 @@ namespace ET2017_TuningTool.Model
 
                 // ブロック運搬ウェイポイントNoを追加
                 list.AddRange(BlockMoveWay.Select(b => (byte)b.WayPointNo));
+            } else
+            {
+                // ブロック運搬経路がない場合には、数（0)のみ追加
+                list.Add(0);
             }
             return list.ToArray();
         }
