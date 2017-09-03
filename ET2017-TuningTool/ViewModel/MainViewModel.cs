@@ -42,9 +42,10 @@ namespace ET2017_TuningTool
         ForwardPID = 99,
     }
 
+
     public class MainViewModel : BindableBase, IDisposable
     {
-
+        private int GreenPos = 1;
         private Subject<Unit> CommitTrigger { get; } = new Subject<Unit>();
 
         private IObservable<Unit> CommitAsObservable => this.CommitTrigger;
@@ -455,7 +456,7 @@ namespace ET2017_TuningTool
                 BlockField.ApproachWayPointArray = new Point[0];
                 BlockField.MoveBlockWayPointArray = new Point[0];
 
-                BlockField.SetBlockPosition(InitPostionCode.Value, 0);
+                BlockField.SetBlockPosition(InitPostionCode.Value, GreenPos);
                 BlockRobotModel.ResetPosition();
                 rule = new BlockMoveRule(BlockRobotModel, BlockField);
             });
@@ -481,7 +482,7 @@ namespace ET2017_TuningTool
                 BlockField.ApproachWayPointArray = new Point[0];
                 BlockField.MoveBlockWayPointArray = new Point[0];
 
-                BlockField.SetBlockPosition(InitPostionCode.Value, 0);
+                BlockField.SetBlockPosition(InitPostionCode.Value, GreenPos);
                 BlockRobotModel.ResetPosition();
                 rule = new BlockMoveRule(BlockRobotModel, BlockField);
 
