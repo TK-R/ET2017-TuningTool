@@ -140,6 +140,8 @@ namespace ET2017_TuningTool
         /// 初期配置コード
         /// </summary>
         public ReactiveProperty<int> InitPostionCode { get; set; } = new ReactiveProperty<int>(12008);
+
+        public ReactiveProperty<int> GreenBlockPos { get; set; } = new ReactiveProperty<int>(2);
         /// <summary>
         /// フィールドのブロック情報管理クラス
         /// </summary>
@@ -465,7 +467,7 @@ namespace ET2017_TuningTool
                 BlockField.ApproachWayPointArray = new Point[0];
                 BlockField.MoveBlockWayPointArray = new Point[0];
 
-                BlockField.SetBlockPosition(InitPostionCode.Value, 0);
+                BlockField.SetBlockPosition(InitPostionCode.Value, GreenBlockPos.Value);
                 BlockRobotModel.ResetPosition();
                 rule = new BlockMoveRule(BlockRobotModel, BlockField);
             });
@@ -491,7 +493,7 @@ namespace ET2017_TuningTool
                 BlockField.ApproachWayPointArray = new Point[0];
                 BlockField.MoveBlockWayPointArray = new Point[0];
 
-                BlockField.SetBlockPosition(InitPostionCode.Value, 0);
+                BlockField.SetBlockPosition(InitPostionCode.Value, GreenBlockPos.Value);
                 BlockRobotModel.ResetPosition();
                 rule = new BlockMoveRule(BlockRobotModel, BlockField);
 

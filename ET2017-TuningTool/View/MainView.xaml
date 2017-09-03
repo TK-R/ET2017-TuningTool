@@ -224,7 +224,7 @@
                             <Grid.Resources>
                                 <local:PointsToPathConverter x:Key="PointsToPathConverter"/>
                             </Grid.Resources>
-                            <Label Content="初期位置：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="0,-1,0,0"/>
+                            <Label Content="初期位置：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="0,-4,0,0"/>
                             <TextBox Text="{Binding InitPostionCode.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="61,-6,0,0" HorizontalAlignment="Left" Width="85" Height="25" VerticalAlignment="Top"/>
                             <Image Source="/ET2017-TuningTool;component/Image/BlockSortField.png" HorizontalAlignment="Left" Width="272" Margin="0,66,0,-3" Height="114" VerticalAlignment="Top" />
                             <Canvas HorizontalAlignment="Left" Height="121"   VerticalAlignment="Top" Width="293" Margin="0,60,-19,-4" Grid.ColumnSpan="2">
@@ -254,6 +254,8 @@
                             <Button Content="DECODE" Command="{Binding DecodeCommand}"  HorizontalAlignment="Left" Margin="1,26,0,0" VerticalAlignment="Top" Width="86" Height="26"/>
                             <Button Content="NEXT" Command="{Binding NextPositionCommand}"  HorizontalAlignment="Left" Margin="92,26,0,0" VerticalAlignment="Top" Width="69" Height="26"/>
                             <Button Content="SEND" Command="{Binding SendRuleCommand}"  HorizontalAlignment="Left" Margin="166,26,0,0" VerticalAlignment="Top" Width="69" Height="26" Grid.ColumnSpan="2"/>
+                            <Label Content="緑位置：" FontSize="12" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="187,-4,0,0"/>
+                            <TextBox Text="{Binding GreenBlockPos.Value, Mode=TwoWay}"  TextAlignment="Right" Margin="236,-6,0,0" HorizontalAlignment="Left" Width="39" Height="25" VerticalAlignment="Top"/>
 
                         </Grid>
                     </GroupBox>
