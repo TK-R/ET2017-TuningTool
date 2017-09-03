@@ -30,7 +30,10 @@ namespace SerialLibrary
         /// HSL情報電文
         /// </summary>
         HSL_COLOR_DATA_COMMAND = 0x31,
-
+        /// <summary>
+        /// Bluetooth制御電文
+        /// </summary>
+        BLUETOOTH_CONTROL_COMMNAD = 0x40
     };
 
 
@@ -250,6 +253,10 @@ namespace SerialLibrary
         public uint Distance;
     }
 
+
+    /// <summary>
+    /// HSLカラー電文
+    /// </summary>
     [StructLayout(LayoutKind.Explicit, Size = 13, Pack = 1)]
     public struct HSLColorData
     {
@@ -276,6 +283,19 @@ namespace SerialLibrary
         /// </summary>
         [FieldOffset(12)]
         public byte HSLKind;
+    }
+
+    /// <summary>
+    /// Bluetooth送信制御電文
+    /// </summary>
+    [StructLayout(LayoutKind.Explicit, Size = 1, Pack = 1)]
+    public struct BluetoothControl
+    {
+        /// <summary>
+        /// 送信ON
+        /// </summary>
+        [FieldOffset(0)]
+        public byte SendON;
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 2, Pack = 1)]

@@ -74,6 +74,16 @@ namespace ET2017_TuningTool
         public ReactiveCommand NextPositionCommand { get; private set; }
         
         /// <summary>
+        /// Bluetooth送信開始コマンド
+        /// </summary>
+        public ReactiveCommand BluetoothONCommand { get; private set; }
+
+        /// <summary>
+        /// Bluetooth送信停止コマンド
+        /// </summary>
+        public ReactiveCommand BluetoothOFFCommnad { get; private set; }
+
+        /// <summary>
         /// 運搬ルール送信コマンド
         /// </summary>
         public ReactiveCommand SendRuleCommand { get; private set; }
@@ -546,6 +556,15 @@ namespace ET2017_TuningTool
                 });
             });
 
+            // 送信停止コマンド
+            BluetoothOFFCommnad = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
+            BluetoothOFFCommnad.Subscribe(_ =>
+                Serial.WriteData(new BluetoothControl { SendON = 0 }));
+
+            // 送信開始コマンド
+            BluetoothONCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
+            BluetoothONCommand.Subscribe(_ => 
+                Serial.WriteData(new BluetoothControl { SendON = 1 }));
 
             // ロボット制御クラスを初期化する
             RobotController = new RobotControl();

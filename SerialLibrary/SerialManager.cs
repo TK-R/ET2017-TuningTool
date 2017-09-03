@@ -273,6 +273,11 @@ namespace SerialLibrary
                 size = Marshal.SizeOf(typeof(SelfPositionData));
                 command = COMMAND.SELF_POSITION_DATA_COMMAND;
             }
+            else if(dataStruct is BluetoothControl)
+            {
+                size = Marshal.SizeOf(typeof(BluetoothControl));
+                command = COMMAND.BLUETOOTH_CONTROL_COMMNAD;
+            }
             else
             {
                 throw new ApplicationException("データ領域型エラー");

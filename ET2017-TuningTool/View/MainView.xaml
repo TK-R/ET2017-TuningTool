@@ -345,16 +345,13 @@
                 </GroupBox>
                 <GroupBox Header="MESSAGE" Margin="2,239,2,-205" >
                     <Grid>
-                        <Label Content="PC制御：" Margin="0,0,60,0" Height="92" VerticalAlignment="Top"/>
-                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Top"
-                                         ToolTip="Default ToggleButton Style" Margin="66,3,71,0" Height="21" IsChecked="{Binding PCControlRobot.Value, Mode=TwoWay}"/>
-                        <Button x:Name="StartButton" Content="START" Width="84" Margin="0,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <Button x:Name="ResetButton" Content="RESET" Margin="94,26,0,0" HorizontalAlignment="Left" Width="84" VerticalAlignment="Top"/>
+                        <Button x:Name="StartButton" Command="{Binding BluetoothONCommand}" Content="START" Width="84" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,8,0,0"/>
+                        <Button x:Name="ResetButton" Command="{Binding BluetoothOFFCommnad}" Content="STOP" Margin="94,8,0,0" HorizontalAlignment="Left" Width="84" VerticalAlignment="Top"/>
                         <TextBox Margin="66,106,0,0" Text="{Binding TargetPositionX.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
                         <TextBox Margin="66,136,0,0" Text="{Binding TargetPositionY.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
                         <TextBox Margin="66,166,0,0" Text="{Binding TargetAngle.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
                         <TextBox Margin="66,196,0,-5" Text="{Binding TargetDistance.Value}" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Width="82" Height="25" VerticalAlignment="Top"/>
-                        <Button Content="Position Send" Command="{Binding PositionResetCommand}" Width="178" Margin="0,66,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Button Content="Position Send" Command="{Binding PositionResetCommand}" Width="178" Margin="0,56,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Label Content="mm" Margin="148,108,0,0" Height="22" VerticalAlignment="Top" />
                         <Label Content="mm" Margin="148,138,0,0" Height="22" VerticalAlignment="Top" />
                         <Label Content="°" Margin="148,166,0,0" Height="22" VerticalAlignment="Top" />
