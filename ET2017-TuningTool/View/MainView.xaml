@@ -337,10 +337,10 @@
                         <Slider Minimum="0" Maximum="1" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
                                             Value="{Binding PIDIGainData.Value}" Margin="75,118,0,0" HorizontalAlignment="Left" Width="93" Height="22" VerticalAlignment="Top" />
-                        <Slider Minimum="0" Maximum="1" Style="{StaticResource MaterialDesignSlider}" 
+                        <Slider Minimum="0" Maximum="2" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
                                             Value="{Binding PIDDGainData.Value}" Margin="75,153,0,0" HorizontalAlignment="Left" Width="93" Height="20" VerticalAlignment="Top" />
-                        <Slider Minimum="-100" Maximum="100" Style="{StaticResource MaterialDesignSlider}" 
+                        <Slider Minimum="-50" Maximum="50" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
                                             Value="{Binding PIDSteeringData.Value}" Margin="75,184,0,-9" HorizontalAlignment="Left" Width="93" Height="20" VerticalAlignment="Top" />
                     </Grid>

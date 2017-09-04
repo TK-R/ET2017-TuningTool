@@ -510,10 +510,10 @@ namespace ET2017_TuningTool
 
 
             // 初期値を格納
-            PID.Power =100;
-            PID.PGain = 0.3f;
-            PID.IGain = 0.01f;
-            PID.DGain = 0.4f;
+            PID.Power =66.7f;
+            PID.PGain = 0.08f;
+            PID.IGain = 0.0f;
+            PID.DGain = 0.9f;
             PID.Steering = 0;
 
             // 200ms値が確定したら、データを送信
