@@ -63,7 +63,7 @@ namespace ET2017_TuningTool.Model.GraphModel
         public ReflectedLightGraphModel()
         {
             Brush.Color = (Color)ColorConverter.ConvertFromString("#1abc9c");
-            MaxValue = 100;
+            MaxValue = 255;
             MinValue = 0;
             Name = "反射光";
             Unit = "%";
