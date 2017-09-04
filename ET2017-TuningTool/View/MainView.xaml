@@ -271,7 +271,7 @@
                         <Label Margin="200,0,198,291" Content="方向：" />
                         <Label Margin="239,0,0,0"  Width="36" Height="26" Content="{Binding SelfPositionRobotAngleRaw.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         <Label Margin="295,0,95,291" Content="総距離：" />
-                        <Label Margin="351,0,0,0"  Width="36" Height="26" Content="{Binding SelfPositionRobotDistanceRaw.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Label Margin="351,0,0,0"  Width="59" Height="26" Content="{Binding SelfPositionRobotDistanceRaw.Value}" HorizontalContentAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
                         <Canvas HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="0,25,0,0">
                             <Image Source="/ET2017-TuningTool;component/Image/Field.png" HorizontalAlignment="Left" Width="451" Height="296" VerticalAlignment="Top" />
