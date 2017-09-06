@@ -84,9 +84,6 @@ namespace ET2017_TuningTool.Model
 
                 BlockMoveCommandList.Add(command);
             }
-
-            // No10に接近する、最終コマンドを追加する
-            BlockMoveCommandList.Add(CalculateLastMoveCommand());
         }
 
         /// <summary>
