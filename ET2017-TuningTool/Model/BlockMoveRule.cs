@@ -209,19 +209,34 @@ namespace ET2017_TuningTool.Model
                                                    l.EndPlaceNo == srcPlace.No)
                                        .FindMin(l => l.GetDistance(RobotPosition)).No;     // そのうち、最もロボットに近い点
 
-            var moveStartWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
-                                                   l.EndPlaceNo == srcPlace.No) 
-                                             .FindMin(l => l.GetDistance(dstPlace.GetPosition())).No; // そのうち、最も終点に近い点
+            var moveStartLine = LineArray.Where(l => l.No != 26)
+                                         .Where(l => l.StartPlaceNo == srcPlace.No || l.StartPlaceNo == dstPlace.No)
+                                         .Where(l => l.EndPlaceNo == srcPlace.No || l.EndPlaceNo == dstPlace.No);
 
-            var dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
-                                                   l.EndPlaceNo == dstPlace.No)
-                                       .Where(l => l.No != 23 && l.No != 24 && l.No != 25)                // さらに狭い最下段のウェイポイントではない
-                                       .FindMin(w => w.GetDistance(srcPlace.GetPosition()))    // その中でも、運搬元ブロック置き場に最も近い
-                                       .No;
+            int[] blockMove;
+            int dstWayPoint;
+            if (moveStartLine.Count() != 0)
+            {
+                blockMove = new int[1];
+                blockMove[0] = moveStartLine.First().No;
+                dstWayPoint = moveStartLine.First().No;
+            }
+            else
+            {
+                var moveStartWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
+                                                  l.EndPlaceNo == srcPlace.No)
+                                            .FindMin(l => l.GetDistance(dstPlace.GetPosition())).No; // そのうち、最も終点に近い点
 
+                 dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
+                                       l.EndPlaceNo == dstPlace.No)
+                           .Where(l => l.No != 23 && l.No != 24 && l.No != 25)                // さらに狭い最下段のウェイポイントではない
+                           .FindMin(w => w.GetDistance(srcPlace.GetPosition()))    // その中でも、運搬元ブロック置き場に最も近い
+                           .No;
+                 blockMove = di.GetRouteNodeNo(moveStartWayPoint, dstWayPoint);
+
+            }
             
             var approach = di.GetRouteNodeNo(startWayPoint, approachWayPoint);
-            var blockMove = di.GetRouteNodeNo(moveStartWayPoint, dstWayPoint);
             
             var command = new BlockMoveCommand {
                 SourceBlockPlaceNo = srcPlace.No,
