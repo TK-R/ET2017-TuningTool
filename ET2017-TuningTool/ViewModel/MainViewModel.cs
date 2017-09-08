@@ -139,7 +139,7 @@ namespace ET2017_TuningTool
         /// <summary>
         /// 初期配置コード
         /// </summary>
-        public ReactiveProperty<int> InitPostionCode { get; set; } = new ReactiveProperty<int>(12008);
+        public ReactiveProperty<int> InitPostionCode { get; set; } = new ReactiveProperty<int>(12085);
 
         public ReactiveProperty<int> GreenBlockPos { get; set; } = new ReactiveProperty<int>(2);
         /// <summary>
