@@ -58,7 +58,7 @@ namespace ET2017_TuningTool.Model
             new Line{ No = 23, StartPlaceNo = 11, EndPlaceNo = 12, WayPoint = new Point(96,103), NearLineNo = new int[] {17,18} },
             new Line{ No = 24, StartPlaceNo = 12, EndPlaceNo = 13, WayPoint = new Point(136,103), NearLineNo = new int[] {11, 12, 18, 19} },
             new Line{ No = 25, StartPlaceNo = 13, EndPlaceNo = 14, WayPoint = new Point(179,103), NearLineNo = new int[] {19, 20}},
-            new Line{ No = 26, StartPlaceNo = 9, EndPlaceNo = 9, WayPoint = new Point (18,90), NearLineNo = new int[] { 9,21}}
+            new Line{ No = 26, StartPlaceNo = 9, EndPlaceNo = 9, WayPoint = new Point (18,90), NearLineNo = new int[] { 21}}
         };
         
         /// <summary>
@@ -197,6 +197,7 @@ namespace ET2017_TuningTool.Model
             {
                 var currentWaypoint = LineArray.Where(t => t.WayPoint == RobotPosition).First().No;
                 startWayPoint = LineArray.Where(l => l.WayPoint != RobotPosition) // 現在いるウェイポイント以外で、
+                                         .Where(l => l.No != 0 && l.No != 1 && l.No != 2)
                                          .Where(l => l.NearLineNo.Contains(currentWaypoint)) // 現在いるウェイポイントに近いラインのうち、
                                          .FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
             }
@@ -207,9 +208,11 @@ namespace ET2017_TuningTool.Model
 
             var approachWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
                                                    l.EndPlaceNo == srcPlace.No)
-                                       .FindMin(l => l.GetDistance(RobotPosition)).No;     // そのうち、最もロボットに近い点
+                                            .Where(l => l.No != 0 && l.No != 1 && l.No != 2)
+                                            .FindMin(l => l.GetDistance(RobotPosition)).No;     // そのうち、最もロボットに近い点
 
             var moveStartLine = LineArray.Where(l => l.No != 26)
+                                         .Where(l => l.No != approachWayPoint)
                                          .Where(l => l.StartPlaceNo == srcPlace.No || l.StartPlaceNo == dstPlace.No)
                                          .Where(l => l.EndPlaceNo == srcPlace.No || l.EndPlaceNo == dstPlace.No);
 
@@ -225,6 +228,8 @@ namespace ET2017_TuningTool.Model
             {
                 var moveStartWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
                                                   l.EndPlaceNo == srcPlace.No)
+                                                 .Where(l => l.No != approachWayPoint)
+                                                 .Where(l => l.No != 0 && l.No != 1 && l.No != 2)
                                             .FindMin(l => l.GetDistance(dstPlace.GetPosition())).No; // そのうち、最も終点に近い点
 
                  dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
