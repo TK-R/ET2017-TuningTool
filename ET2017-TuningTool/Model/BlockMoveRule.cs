@@ -191,18 +191,30 @@ namespace ET2017_TuningTool.Model
 
 
             int startWayPoint = 0;
-        
+
+
+
             // 既にロボットがウェイポイント上にいる（初回コマンドではない）場合
             if (LineArray.Any(l => l.WayPoint == RobotPosition))
             {
-                var currentWaypoint = LineArray.Where(t => t.WayPoint == RobotPosition).First().No;
-                startWayPoint = LineArray.Where(l => l.WayPoint != RobotPosition) // 現在いるウェイポイント以外で、
+                var currentWaypoint = LineArray.Where(t => t.WayPoint == RobotPosition).First();
+
+                // 現在いるウェイポイントが、始点か終点が運搬開始ブロック置き場に接している（一手でアプローチ可能な場合）
+                if (currentWaypoint.StartPlaceNo == srcPlace.No || currentWaypoint.EndPlaceNo == srcPlace.No)
+                {
+                    startWayPoint = currentWaypoint.No;
+                }
+                else
+                {
+                    startWayPoint = LineArray.Where(l => l.WayPoint != RobotPosition) // 現在いるウェイポイント以外で、
                                          .Where(l => l.No != 0 && l.No != 1 && l.No != 2)
-                                         .Where(l => l.NearLineNo.Contains(currentWaypoint)) // 現在いるウェイポイントに近いラインのうち、
+                                         .Where(l => l.NearLineNo.Contains(currentWaypoint.No)) // 現在いるウェイポイントに近いラインのうち、
                                          .FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+                }
             }
             else
             {
+                // 初回コマンドの場合
                 startWayPoint = LineArray.FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
             }
 
