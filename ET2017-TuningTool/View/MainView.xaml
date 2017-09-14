@@ -331,7 +331,7 @@
                         <Slider Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider"
                                             Value="{Binding PIDPowerData.Value}" Margin="75,51,0,0" HorizontalAlignment="Left" Width="93" Height="22" VerticalAlignment="Top" />
-                        <Slider Minimum="0" Maximum="1" Style="{StaticResource MaterialDesignSlider}" 
+                        <Slider Minimum="0" Maximum="1.5" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
                                             Value="{Binding PIDPGainData.Value}" Margin="75,83,0,0" HorizontalAlignment="Left" Width="93" Height="22" VerticalAlignment="Top" />
                         <Slider Minimum="0" Maximum="1" Style="{StaticResource MaterialDesignSlider}" 
