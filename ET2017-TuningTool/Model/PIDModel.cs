@@ -59,10 +59,19 @@ namespace ET2017_TuningTool.Model
             get { return _steering; }
             set { SetProperty(ref _steering, value); }
         }
-        
 
         /// <summary>
-        /// 受信した電文データを元に保持していうｒ情報を更新する
+        /// どの状態で用いるPIDゲインかを示すステート番号
+        /// </summary>
+        private int _stateNo;
+        public int StateNo
+        {
+            get { return _stateNo; }
+            set { SetProperty(ref _stateNo, value); }
+        }        
+
+        /// <summary>
+        /// 受信した電文データを元に保持している情報を更新する
         /// </summary>
         /// <param name="p"></param>
         public void UpdatePID(PIDData p)
@@ -71,6 +80,8 @@ namespace ET2017_TuningTool.Model
             PGain = p.PGain;
             IGain = p.IGain;
             DGain = p.DGain;
+            Steering = p.Steering;
+            StateNo = p.State;
         }
     }
 }
