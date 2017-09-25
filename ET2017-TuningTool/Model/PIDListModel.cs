@@ -48,7 +48,6 @@ namespace ET2017_TuningTool.Model
             //書き込むファイルを開く（UTF-8 BOM無し）
             using (var sw = new StreamWriter(fileName, false, new UTF8Encoding(false)))
             {
-                //XmlSerializerオブジェクトを作成
                 //オブジェクトの型を指定する
                 var serializer = new XmlSerializer(typeof(PIDListModel));
 

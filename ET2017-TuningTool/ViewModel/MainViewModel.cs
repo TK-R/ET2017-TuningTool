@@ -30,6 +30,7 @@ namespace ET2017_TuningTool
         pL_E,
         pL_F,
         pL_G,
+        LastStraight,
         BlockMovePIDState = 30,
         BlockMoveHighPIDState,
         ETSumoPIDState,
