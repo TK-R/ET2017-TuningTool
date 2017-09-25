@@ -536,6 +536,9 @@ namespace ET2017_TuningTool
                     State = (int)SelectedStateNo.Value
 
                 });
+
+                var list = new PIDListModel();
+                list.SaveAsFile("");
             }
 
             var pidWait = TimeSpan.FromMilliseconds(500);

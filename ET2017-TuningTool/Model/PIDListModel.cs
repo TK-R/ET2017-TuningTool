@@ -41,7 +41,23 @@ namespace ET2017_TuningTool.Model
 
         public bool SaveAsFile(string fileName)
         {
-             return true;
+            //保存先のファイル名
+            fileName = Environment.CurrentDirectory + "\\hoge.xml";
+
+            //XmlSerializerオブジェクトを作成
+            //オブジェクトの型を指定する
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(PIDListModel));
+            //書き込むファイルを開く（UTF-8 BOM無し）
+            System.IO.StreamWriter sw = new System.IO.StreamWriter(
+                fileName, false, new System.Text.UTF8Encoding(false));
+            //シリアル化し、XMLファイルに保存する
+            serializer.Serialize(sw, this);
+            //ファイルを閉じる
+            sw.Close();
+
+
+            return true;
         }
 
 
