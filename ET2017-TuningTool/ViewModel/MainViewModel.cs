@@ -512,7 +512,7 @@ namespace ET2017_TuningTool
             var pidWait = TimeSpan.FromMilliseconds(500);
             PIDData.Throttle(pidWait).Subscribe(_ => sendData());
 
-            SelectedStateNo.Subscribe(no => PIDData.Value = PIDList.Value.PIDPrametorArray[(int)no]);
+            SelectedStateNo.Subscribe(no => PIDData.Value = PIDList.Value.PIDPrametorArray.Where(p => p.StateNo == (int)no).First());
 
             // 自己位置推定値のリセットコマンドを定義
             PositionResetCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
