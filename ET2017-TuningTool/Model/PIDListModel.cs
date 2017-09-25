@@ -1,65 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using ET2017_TuningTool;
 
 namespace ET2017_TuningTool.Model
 {
+
     public class PIDListModel
     {
-        public enum PIDStateNo
-        {
-            LineTraceStraight = 1,
-            pR_B,
-            pR_C,
-            pR_D,
-            pR_E,
-            pL_B,
-            pL_C,
-            pL_D,
-            pL_E,
-            pL_F,
-            pL_G,
-            BlockMovePIDState = 30,
-            BlockMoveHighPIDState,
-            ETSumoPIDState,
-            ETSumoHighPIDState,
-            ETTrainSlow,
-            ETTrainHigh,
-            ForwardPID = 99,
-        }
+        public  string FileName;
+
         
-        private PIDModel[] PIDPrametorArray { get; set; }
+        public PIDModel[] PIDPrametorArray { get;  set; }
 
-        public PIDListModel()
+
+        public static PIDListModel LoadFromFile(string fileName)
         {
-            PIDPrametorArray = Enum.GetValues(typeof(PIDStateNo)).Cast<PIDStateNo>()
-                                   .Select(p => new PIDModel { StateNo = (int)p }).ToArray();
+
+            // 指定されたファイルが存在しない場合には、規定値で新規作成
+            if (!File.Exists(fileName))
+            {
+                var blankPidListModel = new PIDListModel();
+
+                blankPidListModel.PIDPrametorArray = Enum.GetValues(typeof(PIDStateNo)).Cast<PIDStateNo>()
+                                                    .Select(p => new PIDModel { StateNo = (int)p, StateName = Enum.GetName(typeof(PIDStateNo), p) })
+                                                    .ToArray();
+                return blankPidListModel;
+            }
+
+            using (var sr = new StreamReader(fileName, new UTF8Encoding(false)))
+            {
+                // 指定されたファイルが存在する場合には、デシリアライズして返す
+                var serializer = new XmlSerializer(typeof(PIDListModel));
+                var pidListModel = serializer.Deserialize(sr) as PIDListModel;
+
+                return pidListModel;
+            }
         }
 
-
+        
         public bool SaveAsFile(string fileName)
         {
-            //保存先のファイル名
-            fileName = Environment.CurrentDirectory + "\\hoge.xml";
-
-            //XmlSerializerオブジェクトを作成
-            //オブジェクトの型を指定する
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(PIDListModel));
             //書き込むファイルを開く（UTF-8 BOM無し）
-            System.IO.StreamWriter sw = new System.IO.StreamWriter(
-                fileName, false, new System.Text.UTF8Encoding(false));
-            //シリアル化し、XMLファイルに保存する
-            serializer.Serialize(sw, this);
-            //ファイルを閉じる
-            sw.Close();
+            using (var sw = new StreamWriter(fileName, false, new UTF8Encoding(false)))
+            {
+                //XmlSerializerオブジェクトを作成
+                //オブジェクトの型を指定する
+                var serializer = new XmlSerializer(typeof(PIDListModel));
 
+                //シリアル化し、XMLファイルに保存する
+                serializer.Serialize(sw, this);
 
-            return true;
+                return true;
+            }
         }
-
-
     }
 }

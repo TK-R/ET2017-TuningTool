@@ -1,7 +1,6 @@
 ﻿using ET2017_TuningTool.Model;
 using ET2017_TuningTool.Model.GraphModel;
 using LiveCharts;
-using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
@@ -13,13 +12,11 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media;
-using RobotController;
 using System.Reactive.Subjects;
 using System.Reactive;
 
 namespace ET2017_TuningTool
 {
-
     public enum PIDStateNo
     {
         LineTraceStraight = 1,
@@ -42,13 +39,9 @@ namespace ET2017_TuningTool
         ForwardPID = 99,
     }
 
+
     public class MainViewModel : BindableBase, IDisposable
     {
-
-        private Subject<Unit> CommitTrigger { get; } = new Subject<Unit>();
-
-        private IObservable<Unit> CommitAsObservable => this.CommitTrigger;
-        
         /// <summary>
         /// Rpの一斉解放用のオブジェクト
         /// </summary>
@@ -72,7 +65,7 @@ namespace ET2017_TuningTool
         /// 次の配置場所を求めるコマンド
         /// </summary>
         public ReactiveCommand NextPositionCommand { get; private set; }
-        
+
         /// <summary>
         /// Bluetooth送信開始コマンド
         /// </summary>
@@ -145,7 +138,7 @@ namespace ET2017_TuningTool
         /// <summary>
         /// フィールドのブロック情報管理クラス
         /// </summary>
-        BlockFieldModel BlockField =  new BlockFieldModel();
+        BlockFieldModel BlockField = new BlockFieldModel();
         /// <summary>
         /// 黄色ブロックの位置情報
         /// </summary>
@@ -265,7 +258,7 @@ namespace ET2017_TuningTool
         /// <summary>
         /// グラフに表示する入力値データを格納する
         /// </summary>
-        public List<ReadOnlyReactiveProperty<ChartValues<double>>> InputGraphValueList { get; set; } 
+        public List<ReadOnlyReactiveProperty<ChartValues<double>>> InputGraphValueList { get; set; }
             = new List<ReadOnlyReactiveProperty<ChartValues<double>>>();
 
         /// <summary>
@@ -283,16 +276,11 @@ namespace ET2017_TuningTool
         #region 走行体制御
 
         public ReactiveProperty<PIDStateNo> SelectedStateNo { get; } = new ReactiveProperty<PIDStateNo>(PIDStateNo.LineTraceStraight);
-        public ReactiveProperty<float> PIDPowerData { get; }
-        public ReactiveProperty<float> PIDPGainData { get; }
-        public ReactiveProperty<float> PIDIGainData { get; }
-        public ReactiveProperty<float> PIDDGainData { get; }
-        public ReactiveProperty<sbyte> PIDSteeringData { get; }
 
-        public PIDModel PID { get; set; } = new PIDModel();
-        public ReactiveProperty<bool> PCControlRobot { get; set; }
-        public RobotControl RobotController { get; set; }
+        public ReactiveProperty<PIDListModel> PIDList { get; } = new ReactiveProperty<PIDListModel>(PIDListModel.LoadFromFile(Environment.CurrentDirectory + "\\recent.xml"));
 
+        public ReactiveProperty<PIDModel> PIDData { get; } = new ReactiveProperty<PIDModel>(new PIDModel { PGain = 1.0f });
+        
         /// <summary>
         /// 変更通知送信する際の目標座標（X）
         /// </summary>
@@ -316,7 +304,6 @@ namespace ET2017_TuningTool
 
         /// <summary>
         /// 入力値モデルを格納するリスト
-        /// 
         /// </summary>
         public List<InputValueModel> InputModels { get; set; } = new List<InputValueModel>();
 
@@ -414,7 +401,7 @@ namespace ET2017_TuningTool
             Serial.ObserveProperty(s => s.RecentPIDData)
                   .Subscribe(r =>
             {
-                PID.UpdatePID(r);
+                PIDData.Value.UpdatePID(r);
             });
 
             //自己位置情報の更新を登録（描画用）
@@ -446,7 +433,6 @@ namespace ET2017_TuningTool
             ConnectCommand.Subscribe(_ =>
             {
                 Serial.StartSerial(SelectPortName.Value);
-                RobotController.Serial = Serial.Serial;
             });
             
             // 切断コマンドはシリアル通信が接続中のみ実行可能なコマンドとして定義する
@@ -501,20 +487,6 @@ namespace ET2017_TuningTool
                 Serial.WriteByteData(COMMAND.BLOCK_MOVE_RULE_COMMNAD, data);
             });
 
-            // PIDゲインデータの通信を登録
-            PIDPowerData = PID.ObserveProperty(p => p.Power).ToReactiveProperty().AddTo(this.Disposable);
-            PIDPGainData = PID.ObserveProperty(p => p.PGain).ToReactiveProperty().AddTo(this.Disposable);
-            PIDIGainData = PID.ObserveProperty(p => p.IGain).ToReactiveProperty().AddTo(this.Disposable);
-            PIDDGainData = PID.ObserveProperty(p => p.DGain).ToReactiveProperty().AddTo(this.Disposable);
-            PIDSteeringData = PID.ObserveProperty(p => p.Steering).ToReactiveProperty().AddTo(this.Disposable);
-
-
-            // 初期値を格納
-            PID.Power =66.7f;
-            PID.PGain = 0.08f;
-            PID.IGain = 0.0f;
-            PID.DGain = 0.9f;
-            PID.Steering = 0;
 
             // 200ms値が確定したら、データを送信
             void sendData()
@@ -523,30 +495,24 @@ namespace ET2017_TuningTool
                 if (!Serial.Connected)
                     return;
 
-                // PC制御中なら、内部のコントローラにPIDパラメータを反映
-                SetControllerPID();
-
                 Serial.WriteData(new PIDData
                 {
-                    BasePower = PIDPowerData.Value,
-                    PGain = PIDPGainData.Value,
-                    IGain = PIDIGainData.Value,
-                    DGain = PIDDGainData.Value,
-                    Steering = PIDSteeringData.Value,
-                    State = (int)SelectedStateNo.Value
+                    BasePower = PIDData.Value.Power,
+                    PGain = PIDData.Value.PGain,
+                    IGain = PIDData.Value.IGain,
+                    DGain = PIDData.Value.DGain,
+                    Steering = PIDData.Value.Steering,
+                    State = PIDData.Value.StateNo
 
                 });
 
-                var list = new PIDListModel();
-                list.SaveAsFile("");
             }
 
+
             var pidWait = TimeSpan.FromMilliseconds(500);
-            PIDPowerData.Throttle(pidWait).Subscribe(_ => sendData());
-            PIDPGainData.Throttle(pidWait).Subscribe(_ => sendData());
-            PIDIGainData.Throttle(pidWait).Subscribe(_ => sendData());
-            PIDDGainData.Throttle(pidWait).Subscribe(_ => sendData());
-            PIDSteeringData.Throttle(pidWait).Subscribe(_ => sendData());
+            PIDData.Throttle(pidWait).Subscribe(_ => sendData());
+
+            SelectedStateNo.Subscribe(no => PIDData.Value = PIDList.Value.PIDPrametorArray[(int)no]);
 
             // 自己位置推定値のリセットコマンドを定義
             PositionResetCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
@@ -571,43 +537,23 @@ namespace ET2017_TuningTool
             BluetoothONCommand.Subscribe(_ => 
                 Serial.WriteData(new BluetoothControl { SendON = 1 }));
 
-            // ロボット制御クラスを初期化する
-            RobotController = new RobotControl();
-            PCControlRobot = RobotController.ToReactivePropertyAsSynchronized(r => r.Running)
-                                       .AddTo(this.Disposable);
-
-            SetControllerPID();
-
         }
 
-        /// <summary>
-        /// 自身の保持するロボット制御コントローラにPID値をセットする
-        /// </summary>
-        private void SetControllerPID()
-        {
-            var pidList = new List<RobotController.GameStrategy.PIDParametor>()
-                    {
-                        new RobotController.GameStrategy.PIDParametor { StateNo = 0,
-                                                                        Power = PIDPowerData.Value,
-                                                                        PGain = PIDPGainData.Value,
-                                                                        IGain = PIDIGainData.Value,
-                                                                        DGain = PIDDGainData.Value }
-                    };
-            RobotController.SetPIDParametor(pidList);
-            
-        }
 
         /// <summary>
         /// オブジェクト解放時には、シリアルポートを停止する
         /// </summary>
         public void  Dispose()
         {
+            // PIDパラメータを保存する
+            PIDList.Value.SaveAsFile(Environment.CurrentDirectory + "\\recent.xml");
+
+
             this.Disposable.Dispose();
 
             if (Serial != null)
                 Serial.StopSerial();
 
-            RobotController.ThreadStop();
         }
 
     }

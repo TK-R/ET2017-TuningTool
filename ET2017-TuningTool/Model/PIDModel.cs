@@ -68,7 +68,17 @@ namespace ET2017_TuningTool.Model
         {
             get { return _stateNo; }
             set { SetProperty(ref _stateNo, value); }
-        }        
+        }
+
+        private string _stateName;
+        /// <summary>
+        /// 度の状態で用いるPIDゲインかを示す名称
+        /// </summary>
+        public string StateName
+        {
+            get { return _stateName; }
+            set { SetProperty(ref _stateName, value); }
+        }
 
         /// <summary>
         /// 受信した電文データを元に保持している情報を更新する
