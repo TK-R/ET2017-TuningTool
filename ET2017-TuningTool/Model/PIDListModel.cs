@@ -24,11 +24,12 @@ namespace ET2017_TuningTool.Model
             // 指定されたファイルが存在しない場合には、規定値で新規作成
             if (!File.Exists(fileName))
             {
-                var blankPidListModel = new PIDListModel();
-
-                blankPidListModel.PIDPrametorArray = Enum.GetValues(typeof(PIDStateNo)).Cast<PIDStateNo>()
+                var blankPidListModel = new PIDListModel()
+                {
+                    PIDPrametorArray = Enum.GetValues(typeof(PIDStateNo)).Cast<PIDStateNo>()
                                                     .Select(p => new PIDModel { StateNo = (int)p, StateName = Enum.GetName(typeof(PIDStateNo), p) })
-                                                    .ToArray();
+                                                    .ToArray()
+                };
                 return blankPidListModel;
             }
 

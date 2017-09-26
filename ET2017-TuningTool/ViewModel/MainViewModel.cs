@@ -53,10 +53,12 @@ namespace ET2017_TuningTool
         /// シリアルポート接続コマンド
         /// </summary>
         public ReactiveCommand ConnectCommand { get; private set; }
+        
         /// <summary>
         /// シリアルポート切断コマンド
         /// </summary>
         public ReactiveCommand DisconnectCommand { get; private set; }
+
         /// <summary>
         /// 初期位置コードのデコードコマンド
         /// </summary>
@@ -81,6 +83,11 @@ namespace ET2017_TuningTool
         /// 運搬ルール送信コマンド
         /// </summary>
         public ReactiveCommand SendRuleCommand { get; private set; }
+
+        /// <summary>
+        /// PID情報コピーコマンド
+        /// </summary>
+        public ReactiveCommand PIDCopyCommand { get; private set; }
 
         #endregion
 
@@ -513,7 +520,14 @@ namespace ET2017_TuningTool
             var pidWait = TimeSpan.FromMilliseconds(500);
             PIDData.Throttle(pidWait).Subscribe(_ => sendData());
 
+            // PID情報の入れ替え処理
             SelectedStateNo.Subscribe(no => PIDData.Value = PIDList.Value.PIDPrametorArray.Where(p => p.StateNo == (int)no).First());
+
+            // PID情報をクリップボードへコピーする処理を定義
+            PIDCopyCommand = new ReactiveCommand();
+            PIDCopyCommand.Subscribe(_ =>
+                Clipboard.SetText(PIDData.Value.GetHeaderText())
+            );
 
             // 自己位置推定値のリセットコマンドを定義
             PositionResetCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);

@@ -93,5 +93,18 @@ namespace ET2017_TuningTool.Model
             Steering = p.Steering;
             StateNo = p.State;
         }
+
+        /// <summary>
+        /// ソースコードに記載するための文字列を返す
+        /// </summary>
+        /// <returns></returns>
+        public string GetHeaderText()
+        {
+            return "PIDData line" + StateName + " = {" +
+                Power + ", " + PGain + ", " + IGain + ", " + DGain + ", " + StateName + ", " + Steering + "};" + Environment.NewLine +
+                "SetPIDData(" + StateName + ");";
+
+
+        }
     }
 }
