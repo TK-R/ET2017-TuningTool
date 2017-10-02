@@ -405,6 +405,10 @@ namespace ET2017_TuningTool
             Serial.ObserveProperty(s => s.RecentOutputSignalData)
                   .Subscribe(r => LogWriteModel.Write(r));
 
+            // 自己位置情報のログ出力の登録
+            Serial.ObserveProperty(s => s.RecentSelfPositionData)
+                  .Subscribe(r => LogWriteModel.Write(r));
+
             // PIDの更新を登録
             Serial.ObserveProperty(s => s.RecentPIDData)
                   .Subscribe(r =>
