@@ -217,7 +217,6 @@ namespace SerialLibrary
         [FieldOffset(16)]
         public int State;
 
-
         /// <summary>
         /// ステアリング値
         /// </summary>

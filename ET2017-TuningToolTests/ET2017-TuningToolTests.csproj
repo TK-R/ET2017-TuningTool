@@ -102,6 +102,7 @@
   <ItemGroup>
     <Compile Include="Model\BlockFieldModelTests.cs" />
     <Compile Include="Model\DijkstraTests.cs" />
+    <Compile Include="Model\PIDListModelTests.cs" />
     <Compile Include="Model\PlaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -152,6 +152,7 @@
     <Compile Include="Model\GraphModel\OutputValueModel.cs" />
     <Compile Include="Model\Line.cs" />
     <Compile Include="Model\LogWriteModel.cs" />
+    <Compile Include="Model\PIDListModel.cs" />
     <Compile Include="Model\PIDModel.cs" />
     <Compile Include="View\PointsToPathConverter.cs" />
     <Compile Include="Model\SerialModel.cs" />
@@ -233,6 +234,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\Field.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
