@@ -160,7 +160,12 @@ namespace ET2017_TuningTool.Model
         public SelfPositionData RecentSelfPositionData
         {
             get { return _RecentSelfPositionData; }
-            set { SetProperty(ref _RecentSelfPositionData, value); }
+            set
+            {
+                // 同一の値を受信しても通知処理が実施されるように、SetProperyは使わない。
+                _RecentSelfPositionData = value;
+                OnPropertyChanged("RecentSelfPositionData");
+            }
         }
 
         private HSLColorData _RecentHSLColorData;
