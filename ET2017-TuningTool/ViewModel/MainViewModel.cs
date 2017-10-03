@@ -141,7 +141,7 @@ namespace ET2017_TuningTool
         /// </summary>
         public ReactiveProperty<int> InitPostionCode { get; set; } = new ReactiveProperty<int>(12085);
 
-        public ReactiveProperty<int> GreenBlockPos { get; set; } = new ReactiveProperty<int>(2);
+        public ReactiveProperty<int> GreenBlockPos { get; set; } = new ReactiveProperty<int>(8);
         /// <summary>
         /// フィールドのブロック情報管理クラス
         /// </summary>
