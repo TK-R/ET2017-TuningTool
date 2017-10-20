@@ -102,9 +102,7 @@ namespace ET2017_TuningTool.Model
         {
             return "PIDData line" + StateName + " = {" +
                 Power + ", " + PGain + ", " + IGain + ", " + DGain + ", " + StateName + ", " + Steering + "};" + Environment.NewLine +
-                "SetPIDData(" + StateName + ");";
-
-
+                "SetPIDData(line" + StateName + ");";
         }
     }
 }

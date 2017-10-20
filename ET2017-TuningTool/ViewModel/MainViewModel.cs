@@ -85,6 +85,11 @@ namespace ET2017_TuningTool
         public ReactiveCommand SendRuleCommand { get; private set; }
 
         /// <summary>
+        /// PID情報送信コマンド
+        /// </summary>
+        public ReactiveCommand PIDSendCommand { get; private set; }
+
+        /// <summary>
         /// PID情報コピーコマンド
         /// </summary>
         public ReactiveCommand PIDCopyCommand { get; private set; }
@@ -499,9 +504,9 @@ namespace ET2017_TuningTool
                 Serial.WriteByteData(COMMAND.BLOCK_MOVE_RULE_COMMNAD, data);
             });
 
-
-            // 200ms値が確定したら、データを送信
-            void sendData()
+            // PIDパラメータ送信コマンドを定義
+            PIDSendCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
+            PIDSendCommand.Subscribe(_ =>
             {
                 // 接続中以外は何もしない
                 if (!Serial.Connected)
@@ -517,12 +522,7 @@ namespace ET2017_TuningTool
                     State = PIDData.Value.StateNo
 
                 });
-
-            }
-
-
-            var pidWait = TimeSpan.FromMilliseconds(500);
-            PIDData.Throttle(pidWait).Subscribe(_ => sendData());
+            });
 
             // PID情報の入れ替え処理
             SelectedStateNo.Subscribe(no => PIDData.Value = PIDList.Value.PIDPrametorArray.Where(p => p.StateNo == (int)no).First());
