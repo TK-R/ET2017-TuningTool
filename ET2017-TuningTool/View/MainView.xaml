@@ -304,25 +304,25 @@
                 </Grid.RowDefinitions>
                 <GroupBox Header="BLUETOOTH" Margin="1,1,2,0" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="1" Height="150" >
                     <Grid Height="108" Margin="0,0,0,-8" VerticalAlignment="Top" Width="186">
-                        <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="10,29,0,0" HorizontalAlignment="Left" Width="168" VerticalAlignment="Top" />
-                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="10,66,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168" />
-                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Margin="10,0,0,0" Height="24" HorizontalAlignment="Left" Width="168"
-                                  ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}" VerticalAlignment="Top"/>
+                        <Button Content="CONNECT" Command="{Binding ConnectCommand}" Margin="0,29,0,0" HorizontalAlignment="Left" Width="178" VerticalAlignment="Top" />
+                        <Button Content="DISCONNECT" Command="{Binding DisconnectCommand}" Margin="0,68,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="178" />
+                        <ComboBox materialDesign:HintAssist.Hint="Select Port" Height="24" HorizontalAlignment="Left" Width="178"
+                                  ItemsSource="{Binding SerialPortNames.Value}" SelectedItem="{Binding SelectPortName.Value}" VerticalAlignment="Top" Margin="0,-1,0,0"/>
                     </Grid>
                 </GroupBox>
             </Grid>
             <Grid Grid.Row="1" >
                 <GroupBox Header="PID - CONTROL" Margin="2,-36,2,66">
-                    <Grid Width="174" Height="195" VerticalAlignment="Top">
+                    <Grid Width="179" Height="227" VerticalAlignment="Top" Margin="0,0,0,-7">
                         <ComboBox  materialDesign:HintAssist.Hint="State No" VerticalAlignment="Top" 
-                                   ItemsSource="{Binding Source={StaticResource PIDStateNoKey}}"  SelectedItem="{Binding SelectedStateNo.Value}" Margin="10,0,0,0"/>
-                        <Button Content="SEND" Command="{Binding PIDSendCommand}" Margin="10,38,94,125" />
-                        <Button Content="COPY" Command="{Binding PIDCopyCommand}" Margin="104,38,0,125" />
+                                   ItemsSource="{Binding Source={StaticResource PIDStateNoKey}}"  SelectedItem="{Binding SelectedStateNo.Value}" Margin="0,-1,0,0"/>
+                        <Button Content="SEND" Command="{Binding PIDSendCommand}" Margin="0,31,95,164" />
+                        <Button Content="COPY" Command="{Binding PIDCopyCommand}" Margin="94,31,1,164" />
                         <Label Content="出力：" Margin="0,74,0,0" Height="24" VerticalAlignment="Top"/>
-                        <Label Content="比例：" Margin="0,106,0,0" Height="24" VerticalAlignment="Top"/>
-                        <Label Content="積分：" Margin="0,141,0,0" Height="24" VerticalAlignment="Top"/>
-                        <Label Content="微分：" Margin="0,175,0,-4" Height="24" VerticalAlignment="Top"/>
-                        <Label Content="操舵：" Margin="0,206,0,-49" Height="38" VerticalAlignment="Top"/>
+                        <Label Content="比例：" Margin="0,104,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="積分：" Margin="0,134,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="微分：" Margin="0,164,0,0" Height="24" VerticalAlignment="Top"/>
+                        <Label Content="操舵：" Margin="0,194,0,0" Height="38" VerticalAlignment="Top"/>
 
                         <TextBlock Text="{Binding PIDData.Value.Power,StringFormat={}{0:N1}}" Margin="27,79,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding PIDData.Value.PGain,StringFormat={}{0:N2}}" Margin="27,111,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
@@ -332,19 +332,19 @@
 
                         <Slider Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider"
-                                            Value="{Binding PIDData.Value.Power}" Margin="75,75,0,0" HorizontalAlignment="Left" Width="99" Height="22" VerticalAlignment="Top" />
+                                            Value="{Binding PIDData.Value.Power}" Margin="75,75,0,0" HorizontalAlignment="Left" Width="103" Height="22" VerticalAlignment="Top" />
                         <Slider Minimum="0" Maximum="1.5" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDData.Value.PGain}" Margin="75,107,0,0" HorizontalAlignment="Left" Width="99" Height="22" VerticalAlignment="Top" />
+                                            Value="{Binding PIDData.Value.PGain}" Margin="75,105,0,0" HorizontalAlignment="Left" Width="103" Height="22" VerticalAlignment="Top" />
                         <Slider Minimum="0" Maximum="1" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDData.Value.IGain}" Margin="75,142,0,0" HorizontalAlignment="Left" Width="99" Height="22" VerticalAlignment="Top" />
+                                            Value="{Binding PIDData.Value.IGain}" Margin="75,135,0,0" HorizontalAlignment="Left" Width="103" Height="22" VerticalAlignment="Top" />
                         <Slider Minimum="0" Maximum="2" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDData.Value.DGain}" Margin="75,177,0,-2" HorizontalAlignment="Left" Width="99" Height="20" VerticalAlignment="Top" />
+                                            Value="{Binding PIDData.Value.DGain}" Margin="75,165,0, 0" HorizontalAlignment="Left" Width="103" Height="22" VerticalAlignment="Top" />
                         <Slider Minimum="-50" Maximum="50" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider" 
-                                            Value="{Binding PIDData.Value.Steering}" Margin="75,208,0,-33" HorizontalAlignment="Left" Width="99" Height="20" VerticalAlignment="Top" />
+                                            Value="{Binding PIDData.Value.Steering}" Margin="75, 195,0, 0" HorizontalAlignment="Left" Width="103" Height="22" VerticalAlignment="Top" />
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="MESSAGE" Margin="2,239,2,-205" >
