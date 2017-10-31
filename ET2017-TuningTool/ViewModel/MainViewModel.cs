@@ -310,9 +310,22 @@ namespace ET2017_TuningTool
         /// 変更通知送信する際の目標総距離(mm)
         /// </summary>
         public ReactiveProperty<uint> TargetDistance { get; } = new ReactiveProperty<uint>(0);
-
+        /// <summary>
+        /// 自己位置再設定コマンド送信処理
+        /// </summary>
         public ReactiveCommand PositionResetCommand { get; private set; }
-
+        /// <summary>
+        /// 画面にバインドされる画像名称
+        /// </summary>
+        public ReactiveProperty<string> ImageName { get; set; }
+        /// <summary>
+        /// コースを強調するか否か
+        /// </summary>
+        public ReactiveProperty<bool> EmphasizesCourse { get; set; } = new ReactiveProperty<bool>(true);
+        /// <summary>
+        /// 画像ソースのヘッダ文字列
+        /// </summary>
+        private readonly string NameHeader = "/ET2017-TuningTool;component/Image/Field";
         #endregion
 
         /// <summary>
@@ -364,7 +377,7 @@ namespace ET2017_TuningTool
                 var prop = model.ObserveProperty(m => m.GraphValue).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
                 OutputGraphValueList.Add(prop);
             }
-            
+
             // グラフ点数を定義
             GraphYMaxCount = InputModels.First().ObserveProperty(m => m.GraphMaxCount).ToReadOnlyReactiveProperty().AddTo(this.Disposable);
 
@@ -396,7 +409,7 @@ namespace ET2017_TuningTool
 
             // ログ出力の登録
             Serial.ObserveProperty(s => s.RecentInputSignalData)
-                  .Subscribe(r => LogWriteModel.Write(r));    
+                  .Subscribe(r => LogWriteModel.Write(r));
 
             // 出力値の更新を登録
             Serial.ObserveProperty(s => s.RecentOutputSignalData)
@@ -405,7 +418,7 @@ namespace ET2017_TuningTool
             {
                 foreach (var m in OutputModels) m.UpdateValue(r);
             });
-            
+
             // ログ出力の登録
             Serial.ObserveProperty(s => s.RecentOutputSignalData)
                   .Subscribe(r => LogWriteModel.Write(r));
@@ -423,16 +436,16 @@ namespace ET2017_TuningTool
 
             //自己位置情報の更新を登録（描画用）
             SelfPositionRobotPos = Serial.ObserveProperty(s => s.RecentSelfPositionData)
-                                         .Select(t => new Point((t.PositionX-240) / 5510.0 * 451.0 , (t.PositionY-100) / 3722.0 * 296.0))
+                                         .Select(t => new Point((t.PositionX - 240) / 5510.0 * 451.0, (t.PositionY - 100) / 3722.0 * 296.0))
                                          .ToReactiveProperty().AddTo(this.Disposable);
-        
+
             SelfPositionRobotAngle = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                                          .Select(t => (int)t.Angle * -1)
                                          .ToReactiveProperty().AddTo(this.Disposable);
 
             //自己位置情報の更新を登録（生データ）
             SelfPositionRobotPosRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
-                                         .Select(t => new Point(t.PositionX , t.PositionY))
+                                         .Select(t => new Point(t.PositionX, t.PositionY))
                                          .ToReactiveProperty().AddTo(this.Disposable);
             SelfPositionRobotAngleRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                              .Select(t => (int)t.Angle)
@@ -440,7 +453,7 @@ namespace ET2017_TuningTool
             SelfPositionRobotDistanceRaw = Serial.ObserveProperty(s => s.RecentSelfPositionData)
                                                  .Select(t => (uint)t.Distance)
                                                  .ToReactiveProperty().AddTo(this.Disposable);
-     
+
 
             // 接続コマンド押下イベントを定義
             ConnectCommand = SerialConnected
@@ -451,29 +464,29 @@ namespace ET2017_TuningTool
             {
                 Serial.StartSerial(SelectPortName.Value);
             });
-            
+
             // 切断コマンドはシリアル通信が接続中のみ実行可能なコマンドとして定義する
             DisconnectCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
-            DisconnectCommand.Subscribe(_ => {
-               Serial.StopSerial();
+            DisconnectCommand.Subscribe(_ =>
+            {
+                Serial.StopSerial();
             });
-
 
             var rule = new BlockMoveRule(BlockRobotModel, BlockField);
-            
+
             // 初期位置コードを求める
-            DecodeCommand = InitPostionCode.Select(c =>  c < 99999)
+            DecodeCommand = InitPostionCode.Select(c => c < 99999)
                 .ToReactiveCommand().AddTo(this.Disposable);
-            DecodeCommand.Subscribe( _ =>
-            {
+            DecodeCommand.Subscribe(_ =>
+           {
                 // 運搬経路は初期化
                 BlockField.ApproachWayPointArray = new Point[0];
-                BlockField.MoveBlockWayPointArray = new Point[0];
+               BlockField.MoveBlockWayPointArray = new Point[0];
 
-                BlockField.SetBlockPosition(InitPostionCode.Value, GreenBlockPos.Value);
-                BlockRobotModel.ResetPosition();
-                rule = new BlockMoveRule(BlockRobotModel, BlockField);
-            });
+               BlockField.SetBlockPosition(InitPostionCode.Value, GreenBlockPos.Value);
+               BlockRobotModel.ResetPosition();
+               rule = new BlockMoveRule(BlockRobotModel, BlockField);
+           });
 
             // 運搬コマンドの経路を登録する
             ApproachWay = BlockField.ObserveProperty(b => b.ApproachWayPointArray)
@@ -553,9 +566,19 @@ namespace ET2017_TuningTool
 
             // 送信開始コマンド
             BluetoothONCommand = SerialConnected.ToReactiveCommand().AddTo(this.Disposable);
-            BluetoothONCommand.Subscribe(_ => 
+            BluetoothONCommand.Subscribe(_ =>
                 Serial.WriteData(new BluetoothControl { SendON = 1 }));
 
+            // 画像再描画
+            ImageName = SelectedStateNo.CombineLatest(EmphasizesCourse, (No, flag) =>
+            {
+                // 強調未指定時または難所選択時には通常画像を表示
+                if (flag == false || No > PIDStateNo.LastStraight)
+                    return NameHeader + ".png";
+                else
+                    return NameHeader + "_" + No.ToString() + ".png";
+
+            }).ToReactiveProperty().AddTo(this.Disposable);
         }
 
 

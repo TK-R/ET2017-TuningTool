@@ -183,6 +183,19 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Resource Include="Image\robot.png" />
+    <Resource Include="Image\Field_LastStraight.png" />
+    <Resource Include="Image\Field_LineTraceStraight.png" />
+    <Resource Include="Image\Field_pL_B.png" />
+    <Resource Include="Image\Field_pL_C.png" />
+    <Resource Include="Image\Field_pL_D.png" />
+    <Resource Include="Image\Field_pL_E.png" />
+    <Resource Include="Image\Field_pL_F.png" />
+    <Resource Include="Image\Field_pR_B.png" />
+    <Resource Include="Image\Field_pR_C.png" />
+    <Resource Include="Image\Field_pR_D.png" />
+    <Resource Include="Image\Field_pR_E.png" />
+    <Resource Include="Image\Field_pL_G.png" />
+    <Resource Include="Image\Field.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -231,9 +244,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\BlockSortField.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Image\Field.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
