@@ -325,11 +325,11 @@
                         <Label Content="微分：" Margin="0,164,0,0" Height="24" VerticalAlignment="Top"/>
                         <Label Content="操舵：" Margin="0,194,0,0" Height="38" VerticalAlignment="Top"/>
 
-                        <TextBlock Text="{Binding PIDData.Value.Power,StringFormat={}{0:N1}}" Margin="27,79,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding PIDData.Value.PGain,StringFormat={}{0:N2}}" Margin="27,111,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding PIDData.Value.IGain,StringFormat={}{0:N2}}" Margin="27,146,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding PIDData.Value.DGain,StringFormat={}{0:N2}}" Margin="27,180,113,-9" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding PIDData.Value.Steering}" Margin="27,211,113,-40" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDData.Value.Power,StringFormat={}{0:N1}}" Margin="27,80,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDData.Value.PGain,StringFormat={}{0:N2}}" Margin="27,110,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDData.Value.IGain,StringFormat={}{0:N2}}" Margin="27,140,113,0" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDData.Value.DGain,StringFormat={}{0:N2}}" Margin="27,170,113,-9" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding PIDData.Value.Steering}" Margin="27,200,113,-40" TextAlignment="Right" Height="24" VerticalAlignment="Top"/>
 
                         <Slider Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignSlider}" 
                                             ToolTip="MaterialDesignDiscreteSlider"
