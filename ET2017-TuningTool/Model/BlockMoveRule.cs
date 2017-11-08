@@ -241,13 +241,12 @@ namespace ET2017_TuningTool.Model
                 var moveStartWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
                                                   l.EndPlaceNo == srcPlace.No)
                                                  .Where(l => l.No != approachWayPoint)
-                                                 .Where(l => l.No != 0 && l.No != 1 && l.No != 2)
+                                                 .Where(l => l.No != 3 && l.No != 8 && l.No != 1)
                                             .FindMin(l => l.GetDistance(dstPlace.GetPosition())).No; // そのうち、最も終点に近い点
 
                  dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
                                        l.EndPlaceNo == dstPlace.No)
                            .Where(l => l.No != 23 && l.No != 24 && l.No != 25)                // さらに狭い最下段のウェイポイントではない
-//                           .Where(l => l.No != 11 && l.No != 12)
                            .FindMin(w => w.GetDistance(srcPlace.GetPosition()))    // その中でも、運搬元ブロック置き場に最も近い
                            .No;
                  blockMove = di.GetRouteNodeNo(moveStartWayPoint, dstWayPoint);
