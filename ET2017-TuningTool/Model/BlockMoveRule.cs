@@ -206,10 +206,20 @@ namespace ET2017_TuningTool.Model
                 }
                 else
                 {
-                    startWayPoint = LineArray.Where(l => l.WayPoint != RobotPosition) // 現在いるウェイポイント以外で、
-                                  //       .Where(l => l.No != 0 && l.No != 1 && l.No != 2)
-                                         .Where(l => l.NearLineNo.Contains(currentWaypoint.No)) // 現在いるウェイポイントに近いラインのうち、
-                                         .FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+                    var points = LineArray.Where(l => l.WayPoint != RobotPosition) // 現在いるウェイポイント以外で、
+                                         .Where(l => l.NearLineNo.Contains(currentWaypoint.No)); // 現在いるウェイポイントから移動可能なライン
+
+                    // 23-25を含み、かつ複数の候補が存在する場合
+                    if (points.Any(p => p.No == 23 || p.No == 24 || p.No == 25) && points.Count() > 1) {
+                        // 23-25を除く候補から、最も近い点を算出
+                        startWayPoint = points.Where(p => p.No != 23 && p.No != 24 && p.No != 25)
+                                              .FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+                    }
+                    else
+                    {
+                        // 最も近い点を算出
+                        startWayPoint = points.FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+                    }
                 }
             }
             else
@@ -246,10 +256,10 @@ namespace ET2017_TuningTool.Model
 
                  dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
                                        l.EndPlaceNo == dstPlace.No)
-                           .Where(l => l.No != 23 && l.No != 24 && l.No != 25)                // さらに狭い最下段のウェイポイントではない
-                           .FindMin(w => w.GetDistance(srcPlace.GetPosition()))    // その中でも、運搬元ブロック置き場に最も近い
-                           .No;
-                 blockMove = di.GetRouteNodeNo(moveStartWayPoint, dstWayPoint);
+                                        .Where(l => l.No != 24 )                // さらに狭い最下段のウェイポイントではない
+                                        .FindMin(w => w.GetDistance(srcPlace.GetPosition())).No;    // その中でも、運搬元ブロック置き場に最も近い
+
+                blockMove = di.GetRouteNodeNo(moveStartWayPoint, dstWayPoint);
 
             }
             
