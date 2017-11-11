@@ -45,18 +45,18 @@ namespace ET2017_TuningTool.Model
             new Line{ No = 10, StartPlaceNo = 4, EndPlaceNo = 7, WayPoint = new Point(71,45) ,NearLineNo = new int[] {4, 5, 9, 11, 15, 17} },
             new Line{ No = 11, StartPlaceNo = 5, EndPlaceNo = 7, WayPoint = new Point(114,45) ,NearLineNo = new int[] {4, 5, 10, 12, 18, 19, 24} },
             new Line{ No = 12, StartPlaceNo = 5, EndPlaceNo = 8, WayPoint = new Point(157,45) ,NearLineNo = new int[] {6, 7, 11, 13, 18, 19, 24} },
-            new Line{ No = 13, StartPlaceNo = 6, EndPlaceNo = 8, WayPoint = new Point(200,45) ,NearLineNo = new int[] {6, 7, 12, 14, 16, 20, 22} },
+            new Line{ No = 13, StartPlaceNo = 6, EndPlaceNo = 8, WayPoint = new Point(200,45) ,NearLineNo = new int[] {6, 7, 12, 16, 20, 22} },
             new Line{ No = 14, StartPlaceNo = 3, EndPlaceNo = 10, WayPoint = new Point(254,45) ,NearLineNo = new int[] {8, 16} },
             new Line{ No = 15, StartPlaceNo = 4, EndPlaceNo = 9, WayPoint = new Point(39,57) ,NearLineNo = new int[] {3, 9, 10, 17, 21} },
             new Line{ No = 16, StartPlaceNo = 6, EndPlaceNo = 10, WayPoint = new Point(232,57) ,NearLineNo = new int[] {8, 13, 14, 20, 22} },
             new Line{ No = 17, StartPlaceNo = 7, EndPlaceNo = 11, WayPoint = new Point(84,79) ,NearLineNo = new int[] {10, 15, 18, 21, 23} },
-            new Line{ No = 18, StartPlaceNo = 7, EndPlaceNo = 12, WayPoint = new Point(107,79) ,NearLineNo = new int[] {11, 12, 17, 19, 23, 24} },
-            new Line{ No = 19, StartPlaceNo = 8, EndPlaceNo = 13, WayPoint = new Point(168,79) ,NearLineNo = new int[] {11, 12, 18, 20, 24, 25} },
+            new Line{ No = 18, StartPlaceNo = 7, EndPlaceNo = 12, WayPoint = new Point(107,79) ,NearLineNo = new int[] {11, 12, 17, 19, 23} },
+            new Line{ No = 19, StartPlaceNo = 8, EndPlaceNo = 13, WayPoint = new Point(168,79) ,NearLineNo = new int[] {11, 12, 18, 20, 25} },
             new Line{ No = 20, StartPlaceNo = 8, EndPlaceNo = 14, WayPoint = new Point(191,79) ,NearLineNo = new int[] {13, 16, 19, 12, 25} },
             new Line{ No = 21, StartPlaceNo = 9, EndPlaceNo = 11, WayPoint = new Point(49,91) ,NearLineNo = new int[] {10, 15, 17} },
             new Line{ No = 22, StartPlaceNo = 10, EndPlaceNo = 14, WayPoint = new Point(222,91), NearLineNo = new int[] {13, 16, 20} },
             new Line{ No = 23, StartPlaceNo = 11, EndPlaceNo = 12, WayPoint = new Point(96,103), NearLineNo = new int[] {17,18} },
-            new Line{ No = 24, StartPlaceNo = 12, EndPlaceNo = 13, WayPoint = new Point(136,103), NearLineNo = new int[] {11, 12, 18, 19} },
+            new Line{ No = 24, StartPlaceNo = 12, EndPlaceNo = 13, WayPoint = new Point(136,103), NearLineNo = new int[] {11, 12} },
             new Line{ No = 25, StartPlaceNo = 13, EndPlaceNo = 14, WayPoint = new Point(179,103), NearLineNo = new int[] {19, 20}},
             new Line{ No = 26, StartPlaceNo = 9, EndPlaceNo = 9, WayPoint = new Point (18,90), NearLineNo = new int[] { 21}}
         };
@@ -130,18 +130,16 @@ namespace ET2017_TuningTool.Model
         private BlockMoveCommand CalculateBlockMoveCommand()
         {
             // 移動していない（=ブロック色と置き場の色が異なる置き場を検出）
-            var notMovedBlock = PlaceArray
-                .Where(p => p.OnBlockColor != BlockColor.None)
-                .Where(p => !TargetNo.Contains(p.No) || AvailableMoveBlock(p.OnBlockColor, p.PlaceColor));
+            var notMovedBlock = PlaceArray.Where(p => p.OnBlockColor != BlockColor.None)
+                                          .Where(p => !TargetNo.Contains(p.No) || AvailableMoveBlock(p.OnBlockColor, p.PlaceColor));
 
             // 完了している場合
             if (notMovedBlock.Count() == 0)
                 return null;
 
             // 運搬先となりうる（上にブロックが置かれていない）置き場を列挙する    
-            var MoveAvailablePlace = PlaceArray
-                .Where(p => TargetNo.Contains(p.No))
-                .Where(p => p.OnBlockColor == BlockColor.None);
+            var MoveAvailablePlace = PlaceArray.Where(p => TargetNo.Contains(p.No))
+                                               .Where(p => p.OnBlockColor == BlockColor.None);
 
             // 運搬可能なブロックを列挙する
             var MoveAvailableBlock =
@@ -151,28 +149,23 @@ namespace ET2017_TuningTool.Model
             BlockPlace srcPlace, dstPlace;
             if (MoveAvailableBlock.Count() == 0) // 運搬可能なブロックがなく、すでに埋まっているケース
             {
-                // 赤ブロック置き場で、違うブロックが乗っている個所を取得
-                var redP = PlaceArray
-                                     .Where(p => p.PlaceColor == BlockColor.Red)
-                                     .Where(p => p.OnBlockColor != BlockColor.Black)
+                // 赤ブロックまたは黒ブロックが乗っている場所で、違うブロックが乗っている個所を取得
+                var redP = PlaceArray.Where(p => p.OnBlockColor == BlockColor.Red || p.OnBlockColor == BlockColor.Black)
                                      .FindMin(p => p.GetDistance(RobotPosition));
                 if (redP != null)
                 {
-                    // 赤ブロック置き場を対象とする
                     srcPlace = redP;
                 }
                 else
                 {
                     // 異なる色のブロックが乗っており、かつ最も近い個所を対象とする　
-                    srcPlace = PlaceArray
-                                         .Where(p => p.OnBlockColor != p.PlaceColor)
+                    srcPlace = PlaceArray.Where(p => p.OnBlockColor != p.PlaceColor)
                                          .FindMin(p => p.GetDistance(RobotPosition));
                 }
 
                 // ブロックが置かれておらず、対象の置き場から最も近い場所を対象とする
-                dstPlace = PlaceArray
-                                  .Where(p => p.OnBlockColor == BlockColor.None)
-                                  .FindMin(p => p.GetDistance(redP.No));
+                dstPlace = PlaceArray.Where(p => p.OnBlockColor == BlockColor.None)
+                                     .FindMin(p => p.GetDistance(srcPlace.No));
 
             }
             else // 運搬可能なブロックが存在するケース
@@ -210,7 +203,8 @@ namespace ET2017_TuningTool.Model
                                          .Where(l => l.NearLineNo.Contains(currentWaypoint.No)); // 現在いるウェイポイントから移動可能なライン
 
                     // 23-25を含み、かつ複数の候補が存在する場合
-                    if (points.Any(p => p.No == 23 || p.No == 24 || p.No == 25) && points.Count() > 1) {
+                    if (points.Any(p => p.No == 23 || p.No == 24 || p.No == 25) && points.Count() > 1)
+                    {
                         // 23-25を除く候補から、最も近い点を算出
                         startWayPoint = points.Where(p => p.No != 23 && p.No != 24 && p.No != 25)
                                               .FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
@@ -219,13 +213,26 @@ namespace ET2017_TuningTool.Model
                     {
                         // 最も近い点を算出
                         startWayPoint = points.FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+
                     }
                 }
             }
             else
             {
+                if (srcPlace.No == 9)
+                {
+                    // 最も近い点を算出
+                    startWayPoint = LineArray.Where(l => l.WayPoint != RobotPosition)
+                                             .FindMin(l => l.GetDistance(RobotPosition)).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+                }
+                else
+                {   // 初手がNo9以外を運搬する場合、26は無視
+                    startWayPoint = LineArray.Where(l => l.WayPoint != RobotPosition)
+                                             .Where(l => l.No != 26)
+                                             .FindMin(l => l.GetDistance(RobotPosition)).No;   // ロボット位置+始点の位置から一番近いウェイポイント
+                }
+
                 // 初回コマンドの場合
-                startWayPoint = LineArray.FindMin(l => l.GetDistance(RobotPosition) + l.GetDistance(srcPlace.GetPosition())).No;   // ロボット位置+始点の位置から一番近いウェイポイント
             }
 
             var approachWayPoint = LineArray.Where(l => l.StartPlaceNo == srcPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
@@ -254,10 +261,23 @@ namespace ET2017_TuningTool.Model
                                                  .Where(l => l.No != 3 && l.No != 8 && l.No != 1)
                                             .FindMin(l => l.GetDistance(dstPlace.GetPosition())).No; // そのうち、最も終点に近い点
 
-                 dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
+                // 五角形の内側を厳しいコースで移動する場合
+                if ((dstPlace.No == 8 || dstPlace.No == 7) && (srcPlace.No == 12 || srcPlace.No == 13))
+                {
+                    dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
+                                                           l.EndPlaceNo == dstPlace.No)
+                                                            .Where(l => l.No != 18 && l.No != 19)                // さらに狭い最下段のウェイポイントではない
+                                                            .FindMin(w => w.GetDistance(srcPlace.GetPosition())).No;    // その中でも、運搬元ブロック置き場に最も近い
+
+                }
+                else
+                {
+                    dstWayPoint = LineArray.Where(l => l.StartPlaceNo == dstPlace.No || // 始点か終点が運搬開始ブロック置き場に接している
                                        l.EndPlaceNo == dstPlace.No)
-                                        .Where(l => l.No != 24 )                // さらに狭い最下段のウェイポイントではない
+                                        .Where(l => l.No != 24)                // さらに狭い最下段のウェイポイントではない
                                         .FindMin(w => w.GetDistance(srcPlace.GetPosition())).No;    // その中でも、運搬元ブロック置き場に最も近い
+                }
+
 
                 blockMove = di.GetRouteNodeNo(moveStartWayPoint, dstWayPoint);
 

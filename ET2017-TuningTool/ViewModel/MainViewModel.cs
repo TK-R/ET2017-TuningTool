@@ -485,7 +485,13 @@ namespace ET2017_TuningTool
 
                BlockField.SetBlockPosition(InitPostionCode.Value, GreenBlockPos.Value);
                BlockRobotModel.ResetPosition();
-               rule = new BlockMoveRule(BlockRobotModel, BlockField);
+               try
+               {
+                   rule = new BlockMoveRule(BlockRobotModel, BlockField);
+               }catch (Exception)
+               {
+                   
+               }
            });
 
             // 運搬コマンドの経路を登録する
